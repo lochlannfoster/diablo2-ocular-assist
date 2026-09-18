@@ -20,13 +20,13 @@ follow it.
 
 QUEST  Blade of the Old Religion: Gidbinn
 
-XP AT YOUR LEVEL  (monsters lvl 50)
+EXP RANGES  (your clvl vs monster lvl 50)
 100%  45–55     43–81%  42–44 · 56–58     ≤24%  ≤41 · ≥59
 ```
 
 - **Title** — area, difficulty (coloured green / amber / red) and the area
   level for that difficulty; towns show "town".
-- **XP AT YOUR LEVEL** — the experience rate you get here, by character level. D2 pays full
+- **EXP RANGES** — the experience rate you get here, by character level. D2 pays full
   experience while your level is within 5 of the monster level (= area level
   in Nightmare/Hell), then 81 / 62 / 43 / 24 % at 6 / 7 / 8 / 9 apart and 5 %
   from 10 on ([PureDiablo](https://www.purediablo.com/d2wiki/Experience)).

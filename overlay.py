@@ -155,13 +155,13 @@ class Overlay:
         self.root.add_css_class("root")
         self.win.set_child(self.root)
 
-        self.title_label = self._label("title")
-        self.wp_head_label = self._label("head", "wp")
+        self.title_label = self._label("title", wrap=False)
+        self.wp_head_label = self._label("head", "wp", wrap=False)
         self.wp_label = self._label("hint", "wp")
-        self.next_head_label = self._label("head", "next")
+        self.next_head_label = self._label("head", "next", wrap=False)
         self.next_tip_label = self._label("hint", "next")
         self.quest_labels = [self._label("hint", "quest"), self._label("hint", "quest")]
-        self.exp_head_label = self._label("head", "exp")
+        self.exp_head_label = self._label("head", "exp", wrap=False)
         self.exp_label = self._label("hint", "exp")
         self.next_label = self.next_head_label
         # Gaps between sections.
@@ -338,7 +338,7 @@ class Overlay:
         if level:
             b = areas.exp_bands(level)
             self.exp_head_label.set_markup(
-                f"XP AT YOUR LEVEL  <span foreground=\"#8a9a94\">(monsters lvl {level})</span>")
+                f"EXP RANGES  <span foreground=\"#8a9a94\">(your clvl vs monster lvl {level})</span>")
             self.exp_label.set_markup(
                 f"{band('100%', rng(b['good']), GOOD)}     "
                 f"{band('43–81%', rng(b['avg_low']) + ' · ' + rng(b['avg_high']), AVG)}     "
