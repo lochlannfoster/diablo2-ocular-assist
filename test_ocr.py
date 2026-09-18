@@ -71,3 +71,13 @@ def test_game_name_line_is_skipped():
     raw = "@4:13 PITI\nGAIME: HBT\nROeGUE ENCAMPMENT\n"
     assert ocr.recognise(raw, NAMES).area == "Rogue Encampment"
     assert ocr.recognise("GAME: CRYPT\n", NAMES).area is None
+
+
+def test_small_caps_o_read_as_e_still_matches():
+    # Real frame: tesseract reads D2R's dotted O as "e" and adds a stray "[".
+    raw = "@7:14 P\n\nGame: RASI\n\nBLeopD [Meer\nDifFrFicuLTY: NIGHTMARE\n"
+    reading = ocr.recognise(raw, NAMES)
+    assert reading.area == "Blood Moor" and reading.difficulty == "nightmare"
+    assert ocr.match("BLeeD [Meer", NAMES)[0] == "Blood Moor"
+    # Genuine E's are unaffected: the unfixed variant still scores 1.0.
+    assert ocr.match("DEN OF EVIL", NAMES) == ("Den of Evil", 1.0)

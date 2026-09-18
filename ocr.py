@@ -23,7 +23,7 @@ MIN_SCORE = 0.75
 
 # Lines that can never be an area name; skipping them saves a fuzzy pass and
 # stops "Difficulty: Normal" from ever competing with a real name.
-_SKIP = re.compile(r"difficulty|^\s*game\b|^\s*\d{1,2}:\d{2}|^\s*$", re.IGNORECASE)
+_SKIP = re.compile(r"difficulty|^\s*game\b|^\s*\d{1,2}:\d{2}|^\s*$|^\W*[A-Za-z]+:", re.IGNORECASE)
 _NOISE = re.compile(r"[^A-Za-z0-9' ]+")
 
 # Tesseract's usual misreads of a lone digit after "Level". Only applied in
@@ -32,7 +32,6 @@ _DIGIT_FIXES = {"i": "1", "l": "1", "|": "1", "!": "1", "z": "2", "s": "5",
                 "b": "6", "g": "9", "o": "0"}
 
 
-_DIFFICULTY = re.compile(r"difficulty\W*([^\n]+)", re.IGNORECASE)
 _DIFFICULTY_NAMES = ("normal", "nightmare", "hell")
 
 
@@ -45,18 +44,24 @@ class Reading:
 
 
 def read_difficulty(raw: str) -> str | None:
-    """The difficulty line, fuzzy-matched the same way as area names
-    ("NIGHTITIARE" is what tesseract makes of the game's font)."""
-    found = _DIFFICULTY.search(raw)
-    if not found:
-        return None
-    word = normalise(found.group(1))
-    best, best_score = None, 0.0
-    for name in _DIFFICULTY_NAMES:
-        score = difflib.SequenceMatcher(None, word, name).ratio()
-        if score > best_score:
-            best, best_score = name, score
-    return best if best_score >= 0.6 else None
+    """The difficulty line, fuzzy-matched the same way as area names: both
+    the label ("DifFrFicuLTY") and the value ("NIGHTITIARE") come out of
+    tesseract mangled, so neither is matched literally."""
+    for line in raw.splitlines():
+        words = line.split()
+        for i, label in enumerate(words):
+            label = _NOISE.sub("", label).lower()
+            if difflib.SequenceMatcher(None, label, "difficulty").ratio() < 0.7:
+                continue
+            word = normalise(" ".join(words[i + 1:]))
+            best, best_score = None, 0.0
+            for name in _DIFFICULTY_NAMES:
+                score = difflib.SequenceMatcher(None, word, name).ratio()
+                if score > best_score:
+                    best, best_score = name, score
+            if best_score >= 0.6:
+                return best
+    return None
 
 
 def gold_only(image: Image.Image) -> Image.Image:
@@ -126,16 +131,29 @@ def normalise(text: str) -> str:
     return " ".join(words)
 
 
+# D2R's small-caps font: every letter is a capital, so lowercase letters in
+# the OCR output are misreads. The worst offender is the dotted "O" glyph,
+# which tesseract calls "e" ("BLeeD [Meer" for Blood Moor).
+_SMALL_CAPS_E = re.compile(r"(?<=[A-Za-z])e|e(?=[A-Za-z])")
+
+
+def _variants(text: str) -> list[str]:
+    fixed = _SMALL_CAPS_E.sub("O", text.replace("[", "").replace("]", ""))
+    return [text, fixed] if fixed != text else [text]
+
+
 def match(text: str, names: list[str]) -> tuple[str | None, float]:
-    """Best area name for one OCR line, with its similarity score."""
-    cleaned = normalise(text)
-    if not cleaned:
-        return None, 0.0
+    """Best area name for one OCR line, with its similarity score. The line
+    is scored as read and with the small-caps fix applied; the better wins."""
     best, best_score = None, 0.0
-    for name in names:
-        score = difflib.SequenceMatcher(None, cleaned, normalise(name)).ratio()
-        if score > best_score:
-            best, best_score = name, score
+    for variant in _variants(text):
+        cleaned = normalise(variant)
+        if not cleaned:
+            continue
+        for name in names:
+            score = difflib.SequenceMatcher(None, cleaned, normalise(name)).ratio()
+            if score > best_score:
+                best, best_score = name, score
     return best, best_score
 
 

@@ -9,19 +9,21 @@ interval = 1.0        # seconds between reads
 # Where the area name is, as fractions of the game window (the clock / area /
 # difficulty block in the top-right corner).
 [capture.region]
-x = 0.72
-y = 0.0197
-w = 0.0784
-h = 0.0896
+x = 0.7208
+y = 0.0235
+w = 0.0765
+h = 0.1261
 
 [overlay]
 output = "DP-3"            # monitor the game is on, by connector; "" = compositor default
 anchor = "top-left"            # top-left | top-right | bottom-left | bottom-right
 margin_x = 16        # logical (scaled) pixels from the side edge
 margin_y = 45        # logical pixels from the top/bottom edge
-font_size = 29
+font_size = 24
 width = 30              # minimum characters per line; long tips wrap
 hotkeys = true          # read /dev/input for Ctrl+F9..F12 while D2R runs
+follow_focus = true  # show the overlay only while the game window is focused
+hide_unread = true   # hide it while the area name cannot be read (map off, menus)
 
 [overlay.sections]
 waypoint = true
