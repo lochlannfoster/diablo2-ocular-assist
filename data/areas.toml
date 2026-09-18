@@ -10,6 +10,8 @@
 #   source         where the rule comes from (see below)
 #   levels         area level on [Normal, Nightmare, Hell]; [0,0,0] for towns
 #   quests         quest objectives located in this area (may be empty)
+#   uniques        superunique monsters that spawn here
+#   notes          other zone-specific facts worth a line
 #   ocr_name       optional: the on-screen name when it differs from the key
 #                  (Act 2 and Act 3 both have "Sewers Level 1/2"; the overlay
 #                  picks by the act you were last in)
@@ -49,6 +51,8 @@ confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
 quests = []
+uniques = []
+notes = ["Cow portal: Wirt's Leg + Tome of Town Portal in the Cube (after Baal dies on this difficulty)."]
 
 [area."Blood Moor"]
 act = 1
@@ -60,6 +64,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [1, 36, 67]
 quests = []
+uniques = []
+notes = []
 
 [area."Den of Evil"]
 act = 1
@@ -71,6 +77,8 @@ confidence = "high"
 source = "maxroll"
 levels = [1, 36, 79]
 quests = ["Den of Evil: clear every monster"]
+uniques = ["Corpsefire"]
+notes = []
 
 [area."Cold Plains"]
 act = 1
@@ -82,6 +90,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [2, 36, 68]
 quests = []
+uniques = ["Bishibosh"]
+notes = []
 
 [area."Burial Grounds"]
 act = 1
@@ -93,6 +103,8 @@ confidence = "high"
 source = "maxroll"
 levels = [3, 36, 80]
 quests = ["Sisters' Burial Grounds: Blood Raven"]
+uniques = ["Blood Raven"]
+notes = []
 
 [area."Crypt"]
 act = 1
@@ -104,6 +116,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [3, 37, 83]
 quests = []
+uniques = ["Bonebreaker"]
+notes = []
 
 [area."Mausoleum"]
 act = 1
@@ -115,6 +129,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [3, 37, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."Cave Level 1"]
 act = 1
@@ -126,6 +142,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [2, 36, 77]
 quests = []
+uniques = ["Coldcrow"]
+notes = []
 
 [area."Cave Level 2"]
 act = 1
@@ -137,6 +155,8 @@ confidence = "high"
 source = "maxroll"
 levels = [2, 37, 78]
 quests = []
+uniques = []
+notes = []
 
 [area."Stony Field"]
 act = 1
@@ -148,6 +168,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [4, 37, 68]
 quests = ["Search for Cain: Cairn Stones + Scroll"]
+uniques = ["Rakanishu"]
+notes = ["Tristram portal opens at the Cairn Stones once you have the Scroll of Inifuss."]
 
 [area."Tristram"]
 act = 1
@@ -159,6 +181,8 @@ confidence = "high"
 source = "maxroll"
 levels = [6, 39, 76]
 quests = ["Search for Cain: free Cain"]
+uniques = ["Griswold"]
+notes = ["Wirt's corpse drops Wirt's Leg for the cow level."]
 
 [area."Underground Passage Level 1"]
 act = 1
@@ -170,6 +194,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [4, 37, 69]
 quests = []
+uniques = []
+notes = []
 
 [area."Underground Passage Level 2"]
 act = 1
@@ -181,6 +207,8 @@ confidence = "high"
 source = "maxroll"
 levels = [4, 38, 83]
 quests = []
+uniques = []
+notes = []
 
 [area."Dark Wood"]
 act = 1
@@ -192,6 +220,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [5, 38, 68]
 quests = ["Search for Cain: Tree of Inifuss"]
+uniques = ["Treehead Woodfist"]
+notes = []
 
 [area."Hole Level 1"]
 act = 1
@@ -203,6 +233,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [5, 38, 80]
 quests = []
+uniques = []
+notes = []
 
 [area."Hole Level 2"]
 act = 1
@@ -214,6 +246,8 @@ confidence = "high"
 source = "maxroll"
 levels = [5, 39, 81]
 quests = []
+uniques = []
+notes = []
 
 [area."Black Marsh"]
 act = 1
@@ -225,6 +259,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [6, 38, 69]
 quests = []
+uniques = []
+notes = []
 
 [area."Forgotten Tower"]
 act = 1
@@ -236,6 +272,8 @@ confidence = "high"
 source = "maxroll"
 levels = [7, 38, 75]
 quests = []
+uniques = []
+notes = []
 
 [area."Tower Cellar Level 1"]
 act = 1
@@ -247,6 +285,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 38, 75]
 quests = []
+uniques = []
+notes = []
 
 [area."Tower Cellar Level 2"]
 act = 1
@@ -258,6 +298,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 39, 76]
 quests = []
+uniques = []
+notes = []
 
 [area."Tower Cellar Level 3"]
 act = 1
@@ -269,6 +311,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 40, 77]
 quests = []
+uniques = []
+notes = []
 
 [area."Tower Cellar Level 4"]
 act = 1
@@ -280,6 +324,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 41, 78]
 quests = []
+uniques = []
+notes = []
 
 [area."Tower Cellar Level 5"]
 act = 1
@@ -291,6 +337,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 42, 79]
 quests = ["Forgotten Tower: the Countess"]
+uniques = ["The Countess"]
+notes = ["Countess rune drops: up to Ral (Normal), Io (Nightmare), Lo (Hell)."]
 
 [area."Tamoe Highland"]
 act = 1
@@ -302,6 +350,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [8, 39, 69]
 quests = []
+uniques = []
+notes = []
 
 [area."Pit Level 1"]
 act = 1
@@ -313,6 +363,8 @@ confidence = "medium"
 source = "maxroll (not listed)"
 levels = [7, 39, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."Pit Level 2"]
 act = 1
@@ -324,6 +376,8 @@ confidence = "high"
 source = "maxroll"
 levels = [7, 40, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."Monastery Gate"]
 act = 1
@@ -335,6 +389,8 @@ confidence = "high"
 source = "cheatsheet"
 levels = [8, 40, 70]
 quests = []
+uniques = []
+notes = []
 
 [area."Outer Cloister"]
 act = 1
@@ -346,6 +402,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [9, 40, 70]
 quests = []
+uniques = []
+notes = []
 
 [area."Barracks"]
 act = 1
@@ -357,6 +415,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [9, 40, 70]
 quests = ["Tools of the Trade: Horadric Malus"]
+uniques = ["The Smith"]
+notes = []
 
 [area."Jail Level 1"]
 act = 1
@@ -368,6 +428,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [10, 41, 71]
 quests = []
+uniques = []
+notes = []
 
 [area."Jail Level 2"]
 act = 1
@@ -379,6 +441,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [10, 41, 71]
 quests = []
+uniques = ["Pitspawn Fouldog"]
+notes = []
 
 [area."Jail Level 3"]
 act = 1
@@ -390,6 +454,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [10, 41, 71]
 quests = []
+uniques = []
+notes = []
 
 [area."Inner Cloister"]
 act = 1
@@ -401,6 +467,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [10, 41, 72]
 quests = []
+uniques = []
+notes = []
 
 [area."Cathedral"]
 act = 1
@@ -412,6 +480,8 @@ confidence = "low"
 source = "inferred (not in sources)"
 levels = [11, 42, 72]
 quests = []
+uniques = []
+notes = []
 
 [area."Catacombs Level 1"]
 act = 1
@@ -423,6 +493,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [11, 42, 72]
 quests = []
+uniques = []
+notes = []
 
 [area."Catacombs Level 2"]
 act = 1
@@ -434,6 +506,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [11, 42, 73]
 quests = []
+uniques = []
+notes = []
 
 [area."Catacombs Level 3"]
 act = 1
@@ -445,6 +519,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [12, 43, 73]
 quests = []
+uniques = ["Bone Ash"]
+notes = []
 
 [area."Catacombs Level 4"]
 act = 1
@@ -456,6 +532,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [12, 43, 73]
 quests = ["Sisters to the Slaughter: Andariel"]
+uniques = ["Andariel"]
+notes = ["D2R: Andariel always uses her quest-drop table."]
 
 [area."Moo Moo Farm"]
 act = 1
@@ -467,6 +545,8 @@ confidence = "medium"
 source = "inferred"
 levels = [28, 64, 81]
 quests = ["Cow King: kill = no more cow portals"]
+uniques = ["The Cow King"]
+notes = ["Killing the Cow King stops that character opening more cow portals on this difficulty."]
 
 # ---------------------------------------------------------------------------
 # Act 2
@@ -482,6 +562,8 @@ confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
 quests = []
+uniques = []
+notes = []
 
 [area."Sewers Level 1"]
 act = 2
@@ -493,6 +575,8 @@ confidence = "medium"
 source = "maxroll (not listed)"
 levels = [13, 43, 74]
 quests = []
+uniques = []
+notes = []
 
 [area."Sewers Level 2"]
 act = 2
@@ -504,6 +588,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [13, 43, 74]
 quests = []
+uniques = []
+notes = []
 
 [area."Sewers Level 3"]
 act = 2
@@ -515,6 +601,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [14, 44, 75]
 quests = ["Radament's Lair: Radament"]
+uniques = ["Radament"]
+notes = []
 
 [area."Rocky Waste"]
 act = 2
@@ -526,6 +614,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 43, 75]
 quests = []
+uniques = []
+notes = []
 
 [area."Stony Tomb Level 1"]
 act = 2
@@ -537,6 +627,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [12, 44, 78]
 quests = []
+uniques = []
+notes = []
 
 [area."Stony Tomb Level 2"]
 act = 2
@@ -548,6 +640,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [12, 44, 79]
 quests = []
+uniques = ["Creeping Feature"]
+notes = []
 
 [area."Dry Hills"]
 act = 2
@@ -559,6 +653,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [15, 44, 76]
 quests = []
+uniques = []
+notes = []
 
 [area."Halls of the Dead Level 1"]
 act = 2
@@ -570,6 +666,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [12, 44, 75]
 quests = []
+uniques = []
+notes = []
 
 [area."Halls of the Dead Level 2"]
 act = 2
@@ -581,6 +679,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 45, 81]
 quests = []
+uniques = []
+notes = []
 
 [area."Halls of the Dead Level 3"]
 act = 2
@@ -592,6 +692,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 45, 82]
 quests = ["Horadric Staff: Horadric Cube"]
+uniques = ["Bloodwitch the Wild"]
+notes = ["Horadric Cube is in the golden chest."]
 
 [area."Far Oasis"]
 act = 2
@@ -603,6 +705,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [16, 45, 76]
 quests = []
+uniques = ["Beetleburst"]
+notes = []
 
 [area."Maggot Lair Level 1"]
 act = 2
@@ -614,6 +718,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 45, 84]
 quests = []
+uniques = []
+notes = []
 
 [area."Maggot Lair Level 2"]
 act = 2
@@ -625,6 +731,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 45, 84]
 quests = []
+uniques = []
+notes = []
 
 [area."Maggot Lair Level 3"]
 act = 2
@@ -636,6 +744,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 46, 85]
 quests = ["Horadric Staff: Staff of Kings"]
+uniques = ["Coldworm the Burrower"]
+notes = []
 
 [area."Lost City"]
 act = 2
@@ -647,6 +757,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 46, 77]
 quests = []
+uniques = ["Dark Elder"]
+notes = []
 
 [area."Ancient Tunnels"]
 act = 2
@@ -658,6 +770,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [17, 46, 85]
 quests = []
+uniques = []
+notes = ["Hell: no cold immunes — a Blizzard Sorc favourite."]
 
 [area."Valley of Snakes"]
 act = 2
@@ -669,6 +783,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [18, 46, 77]
 quests = []
+uniques = []
+notes = []
 
 [area."Claw Viper Temple Level 1"]
 act = 2
@@ -680,6 +796,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 47, 82]
 quests = []
+uniques = []
+notes = []
 
 [area."Claw Viper Temple Level 2"]
 act = 2
@@ -691,6 +809,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 47, 83]
 quests = ["Tainted Sun: altar", "Horadric Staff: Amulet of the Viper"]
+uniques = ["Fangskin"]
+notes = []
 
 [area."Harem Level 1"]
 act = 2
@@ -702,6 +822,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
 quests = []
+uniques = []
+notes = []
 
 [area."Harem Level 2"]
 act = 2
@@ -713,6 +835,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
 quests = []
+uniques = []
+notes = []
 
 [area."Palace Cellar Level 1"]
 act = 2
@@ -724,6 +848,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
 quests = []
+uniques = []
+notes = []
 
 [area."Palace Cellar Level 2"]
 act = 2
@@ -735,6 +861,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
 quests = []
+uniques = []
+notes = []
 
 [area."Palace Cellar Level 3"]
 act = 2
@@ -746,6 +874,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 48, 78]
 quests = ["Arcane Sanctuary: the portal"]
+uniques = ["Fire Eye"]
+notes = []
 
 [area."Arcane Sanctuary"]
 act = 2
@@ -757,6 +887,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 48, 79]
 quests = ["The Summoner"]
+uniques = ["The Summoner"]
+notes = []
 
 [area."Canyon of the Magi"]
 act = 2
@@ -768,6 +900,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [16, 48, 79]
 quests = ["Seven Tombs: find the true tomb"]
+uniques = []
+notes = ["Tomb symbols left to right: ○ ◡ ☐ ⊹ ≫ △ ⚇."]
 
 [area."Tal Rasha's Tomb"]
 act = 2
@@ -779,6 +913,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 49, 80]
 quests = ["Seven Tombs: Staff into the Orifice"]
+uniques = ["Ancient Kaa the Soulless (one tomb)"]
+notes = []
 
 [area."Tal Rasha's Chamber"]
 act = 2
@@ -790,6 +926,8 @@ confidence = "high"
 source = "maxroll"
 levels = [17, 49, 80]
 quests = ["Seven Tombs: Duriel"]
+uniques = ["Duriel"]
+notes = []
 
 # ---------------------------------------------------------------------------
 # Act 3
@@ -805,6 +943,8 @@ confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
 quests = []
+uniques = []
+notes = []
 
 [area."Spider Forest"]
 act = 3
@@ -816,6 +956,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [21, 49, 79]
 quests = []
+uniques = []
+notes = []
 
 [area."Spider Cavern"]
 act = 3
@@ -827,6 +969,8 @@ confidence = "high"
 source = "maxroll"
 levels = [21, 50, 79]
 quests = ["Khalim's Will: Khalim's Eye"]
+uniques = ["Sszark the Burning"]
+notes = []
 
 [area."Arachnid Lair"]
 act = 3
@@ -838,6 +982,8 @@ confidence = "medium"
 source = "maxroll (not listed)"
 levels = [21, 50, 79]
 quests = []
+uniques = []
+notes = []
 
 [area."Great Marsh"]
 act = 3
@@ -849,6 +995,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [21, 50, 80]
 quests = []
+uniques = []
+notes = []
 
 [area."Flayer Jungle"]
 act = 3
@@ -860,6 +1008,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [22, 50, 80]
 quests = ["Blade of the Old Religion: Gidbinn"]
+uniques = ["Stormtree"]
+notes = []
 
 [area."Swampy Pit Level 1"]
 act = 3
@@ -871,6 +1021,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [21, 51, 80]
 quests = []
+uniques = []
+notes = []
 
 [area."Swampy Pit Level 2"]
 act = 3
@@ -882,6 +1034,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [21, 51, 81]
 quests = []
+uniques = []
+notes = []
 
 [area."Swampy Pit Level 3"]
 act = 3
@@ -893,6 +1047,8 @@ confidence = "high"
 source = "maxroll"
 levels = [21, 51, 82]
 quests = []
+uniques = []
+notes = []
 
 [area."Flayer Dungeon Level 1"]
 act = 3
@@ -904,6 +1060,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [22, 51, 81]
 quests = []
+uniques = []
+notes = []
 
 [area."Flayer Dungeon Level 2"]
 act = 3
@@ -915,6 +1073,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [22, 51, 82]
 quests = []
+uniques = []
+notes = []
 
 [area."Flayer Dungeon Level 3"]
 act = 3
@@ -926,6 +1086,8 @@ confidence = "high"
 source = "maxroll"
 levels = [22, 51, 83]
 quests = ["Khalim's Will: Khalim's Brain"]
+uniques = ["Witch Doctor Endugu"]
+notes = []
 
 [area."Lower Kurast"]
 act = 3
@@ -937,6 +1099,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [22, 52, 80]
 quests = []
+uniques = []
+notes = ["Hell: the 'LK' campfire super chests are a classic rune farm."]
 
 [area."Kurast Bazaar"]
 act = 3
@@ -948,6 +1112,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [22, 52, 81]
 quests = []
+uniques = []
+notes = ["Two Sewers entrances are always in the same spots."]
 
 [area."Ruined Temple"]
 act = 3
@@ -959,6 +1125,8 @@ confidence = "high"
 source = "maxroll"
 levels = [23, 53, 84]
 quests = ["Lam Esen's Tome"]
+uniques = []
+notes = []
 
 [area."Disused Fane"]
 act = 3
@@ -970,6 +1138,8 @@ confidence = "high"
 source = "maxroll"
 levels = [23, 53, 84]
 quests = []
+uniques = []
+notes = []
 
 [area."Kurast Sewers Level 1"]
 ocr_name = "Sewers Level 1"
@@ -982,6 +1152,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [23, 52, 84]
 quests = []
+uniques = ["Icehawk Riftwing"]
+notes = []
 
 [area."Kurast Sewers Level 2"]
 ocr_name = "Sewers Level 2"
@@ -994,6 +1166,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 53, 85]
 quests = ["Khalim's Will: Khalim's Heart"]
+uniques = []
+notes = []
 
 [area."Upper Kurast"]
 act = 3
@@ -1005,6 +1179,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [23, 52, 81]
 quests = []
+uniques = []
+notes = []
 
 [area."Forgotten Temple"]
 act = 3
@@ -1016,6 +1192,8 @@ confidence = "high"
 source = "maxroll"
 levels = [24, 54, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."Forgotten Reliquary"]
 act = 3
@@ -1027,6 +1205,8 @@ confidence = "high"
 source = "maxroll"
 levels = [23, 53, 84]
 quests = []
+uniques = []
+notes = []
 
 [area."Kurast Causeway"]
 act = 3
@@ -1038,6 +1218,8 @@ confidence = "high"
 source = "maxroll"
 levels = [24, 53, 81]
 quests = []
+uniques = []
+notes = []
 
 [area."Ruined Fane"]
 act = 3
@@ -1049,6 +1231,8 @@ confidence = "high"
 source = "maxroll"
 levels = [24, 54, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."Disused Reliquary"]
 act = 3
@@ -1060,6 +1244,8 @@ confidence = "high"
 source = "maxroll"
 levels = [24, 54, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."Travincal"]
 act = 3
@@ -1071,6 +1257,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 54, 82]
 quests = ["Blackened Temple: Council + Orb", "Khalim's Will: Khalim's Flail"]
+uniques = ["Ismail Vilehand", "Geleb Flamefinger", "Toorc Icefist"]
+notes = []
 
 [area."Durance of Hate Level 1"]
 act = 3
@@ -1082,6 +1270,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
 quests = []
+uniques = []
+notes = []
 
 [area."Durance of Hate Level 2"]
 act = 3
@@ -1093,6 +1283,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
 quests = []
+uniques = []
+notes = []
 
 [area."Durance of Hate Level 3"]
 act = 3
@@ -1104,6 +1296,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
 quests = ["The Guardian: Mephisto"]
+uniques = ["Wyand Voidbringer", "Maffer Dragonhand", "Bremm Sparkfist", "Mephisto"]
+notes = []
 
 # ---------------------------------------------------------------------------
 # Act 4
@@ -1119,6 +1313,8 @@ confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
 quests = []
+uniques = []
+notes = []
 
 [area."Outer Steppes"]
 act = 4
@@ -1130,6 +1326,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [26, 56, 82]
 quests = []
+uniques = []
+notes = []
 
 [area."Plains of Despair"]
 act = 4
@@ -1141,6 +1339,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [26, 56, 83]
 quests = ["The Fallen Angel: Izual"]
+uniques = ["Izual"]
+notes = []
 
 [area."City of the Damned"]
 act = 4
@@ -1152,6 +1352,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [27, 57, 84]
 quests = []
+uniques = []
+notes = []
 
 [area."River of Flame"]
 act = 4
@@ -1163,6 +1365,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [27, 57, 85]
 quests = ["Hell's Forge: Hephasto, smash Soulstone"]
+uniques = ["Hephasto the Armorer"]
+notes = []
 
 [area."Chaos Sanctuary"]
 act = 4
@@ -1174,6 +1378,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [28, 58, 85]
 quests = ["Terror's End: Diablo"]
+uniques = ["Grand Vizier of Chaos", "Lord De Seis", "Infector of Souls", "Diablo"]
+notes = ["Seals: Vizier (left, 2 seals), De Seis (top), Infector (right, 2 seals)."]
 
 # ---------------------------------------------------------------------------
 # Act 5
@@ -1189,6 +1395,8 @@ confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
 quests = []
+uniques = []
+notes = []
 
 [area."Bloody Foothills"]
 act = 5
@@ -1200,6 +1408,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 58, 80]
 quests = ["Siege on Harrogath: Shenk"]
+uniques = ["Dac Farren", "Shenk the Overseer"]
+notes = ["Classic Shenk + Eldritch run with the Frigid Highlands waypoint."]
 
 [area."Frigid Highlands"]
 act = 5
@@ -1211,6 +1421,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 59, 81]
 quests = ["Rescue on Mount Arreat: 3 cages"]
+uniques = ["Eldritch the Rectifier", "Sharptooth Slayer", "Eyeback the Unleashed"]
+notes = []
 
 [area."Abaddon"]
 act = 5
@@ -1222,6 +1434,8 @@ confidence = "high"
 source = "maxroll"
 levels = [39, 60, 81]
 quests = []
+uniques = []
+notes = []
 
 [area."Arreat Plateau"]
 act = 5
@@ -1233,6 +1447,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [26, 60, 81]
 quests = []
+uniques = ["Thresh Socket"]
+notes = []
 
 [area."Pit of Acheron"]
 act = 5
@@ -1244,6 +1460,8 @@ confidence = "high"
 source = "maxroll"
 levels = [39, 61, 82]
 quests = []
+uniques = []
+notes = []
 
 [area."Crystalline Passage"]
 act = 5
@@ -1255,6 +1473,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [29, 61, 82]
 quests = []
+uniques = []
+notes = []
 
 [area."Frozen River"]
 act = 5
@@ -1266,6 +1486,8 @@ confidence = "high"
 source = "maxroll"
 levels = [29, 61, 83]
 quests = ["Prison of Ice: Anya"]
+uniques = ["Frozenstein"]
+notes = ["Anya rewards a personalised item and +10 all resists (after the Nihlathak quest)."]
 
 [area."Glacial Trail"]
 act = 5
@@ -1277,6 +1499,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [29, 61, 83]
 quests = []
+uniques = ["Bonesaw Breaker"]
+notes = []
 
 [area."Drifter Cavern"]
 act = 5
@@ -1288,6 +1512,8 @@ confidence = "high"
 source = "maxroll"
 levels = [29, 61, 84]
 quests = []
+uniques = []
+notes = []
 
 [area."Frozen Tundra"]
 act = 5
@@ -1299,6 +1525,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [27, 60, 81]
 quests = []
+uniques = []
+notes = []
 
 [area."Infernal Pit"]
 act = 5
@@ -1310,6 +1538,8 @@ confidence = "high"
 source = "maxroll"
 levels = [39, 62, 83]
 quests = []
+uniques = []
+notes = []
 
 [area."The Ancients' Way"]
 act = 5
@@ -1321,6 +1551,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [29, 62, 82]
 quests = []
+uniques = []
+notes = []
 
 [area."Icy Cellar"]
 act = 5
@@ -1332,6 +1564,8 @@ confidence = "high"
 source = "maxroll"
 levels = [29, 62, 83]
 quests = []
+uniques = ["Snapchip Shatter"]
+notes = []
 
 [area."Arreat Summit"]
 act = 5
@@ -1343,6 +1577,8 @@ confidence = "high"
 source = "maxroll"
 levels = [37, 68, 87]
 quests = ["Rite of Passage: the Ancients"]
+uniques = ["Korlic", "Madawc", "Talic"]
+notes = []
 
 [area."The Worldstone Keep Level 1"]
 act = 5
@@ -1354,6 +1590,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [39, 65, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."The Worldstone Keep Level 2"]
 act = 5
@@ -1365,6 +1603,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [40, 65, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."The Worldstone Keep Level 3"]
 act = 5
@@ -1376,6 +1616,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [42, 66, 85]
 quests = []
+uniques = []
+notes = []
 
 [area."Throne of Destruction"]
 act = 5
@@ -1387,6 +1629,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [43, 66, 85]
 quests = ["Eve of Destruction: Baal's waves"]
+uniques = ["Colenzo the Annihilator", "Achmel the Cursed", "Bartuc the Bloody", "Ventar the Unholy", "Lister the Tormentor"]
+notes = ["Wave order: Colenzo, Achmel, Bartuc, Ventar, Lister — then Baal walks off."]
 
 [area."The Worldstone Chamber"]
 act = 5
@@ -1398,6 +1642,8 @@ confidence = "high"
 source = "maxroll"
 levels = [43, 66, 85]
 quests = ["Eve of Destruction: Baal"]
+uniques = ["Baal"]
+notes = []
 
 [area."Nihlathak's Temple"]
 act = 5
@@ -1409,6 +1655,8 @@ confidence = "high"
 source = "maxroll"
 levels = [32, 63, 83]
 quests = []
+uniques = ["Pindleskin"]
+notes = ["Reached by Anya's red portal in Harrogath."]
 
 [area."Halls of Anguish"]
 act = 5
@@ -1420,6 +1668,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [33, 63, 83]
 quests = []
+uniques = []
+notes = []
 
 [area."Halls of Pain"]
 act = 5
@@ -1431,6 +1681,8 @@ confidence = "medium"
 source = "maxroll"
 levels = [34, 64, 84]
 quests = []
+uniques = []
+notes = []
 
 [area."Halls of Vaught"]
 act = 5
@@ -1442,3 +1694,5 @@ confidence = "medium"
 source = "maxroll"
 levels = [36, 64, 84]
 quests = ["Betrayal of Harrogath: Nihlathak"]
+uniques = ["Nihlathak"]
+notes = []

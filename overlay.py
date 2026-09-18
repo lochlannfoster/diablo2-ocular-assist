@@ -163,10 +163,12 @@ class Overlay:
         self.quest_labels = [self._label("hint", "quest"), self._label("hint", "quest")]
         self.exp_head_label = self._label("head", "exp", wrap=False)
         self.exp_label = self._label("hint", "exp")
+        self.notes_label = self._label("hint", "notes")
+        self.uniques_label = self._label("hint", "uniques")
         self.next_label = self.next_head_label
         # Gaps between sections.
-        for label in (self.wp_head_label, self.next_head_label,
-                      self.quest_labels[0], self.exp_head_label):
+        for label in (self.wp_head_label, self.next_head_label, self.quest_labels[0],
+                      self.exp_head_label, self.notes_label, self.uniques_label):
             label.set_margin_top(10)
 
         self._load_css()
@@ -273,7 +275,8 @@ class Overlay:
 
         for label in (self.title_label, self.wp_head_label, self.wp_label,
                       self.next_head_label, self.next_tip_label, *self.quest_labels,
-                      self.exp_head_label, self.exp_label):
+                      self.exp_head_label, self.exp_label, self.notes_label,
+                      self.uniques_label):
             for cls in ("stale", "frozen", "error"):
                 label.remove_css_class(cls)
             label.set_visible(True)
@@ -289,7 +292,8 @@ class Overlay:
                 self.title_label.add_css_class("stale")
                 self.wp_label.set_text("area name must be on screen")
             for label in (self.wp_head_label, self.next_label, self.next_tip_label,
-                          *self.quest_labels, self.exp_head_label, self.exp_label):
+                          *self.quest_labels, self.exp_head_label, self.exp_label,
+                          self.notes_label, self.uniques_label):
                 label.set_visible(False)
             return
 
@@ -349,6 +353,19 @@ class Overlay:
         else:
             self.exp_head_label.set_visible(False)
             self.exp_label.set_visible(False)
+
+        notes = list(area.notes)
+        if area.levels[2] >= 85:
+            notes.insert(0, f"Hell area level {area.levels[2]}: every item in the game can drop here.")
+        self.notes_label.set_visible(bool(notes))
+        if notes:
+            self.notes_label.set_markup("NOTE  " + esc("  ·  ".join(notes)))
+
+        self.uniques_label.set_visible(bool(area.uniques))
+        if area.uniques:
+            names = "  ·  ".join(esc(n) for n in area.uniques)
+            self.uniques_label.set_markup(
+                f"SUPERUNIQUE  <span foreground=\"#d4a24c\" weight=\"bold\">{names}</span>")
 
     # -- commands ----------------------------------------------------------
 

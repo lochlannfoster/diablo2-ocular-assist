@@ -70,6 +70,14 @@ label {
   color: #c9d6d1;
 }
 
+.hint.notes {
+  color: #8fd3d3;
+}
+
+.hint.uniques {
+  color: #c9d6d1;
+}
+
 /* "No accepted rule": the sources say so explicitly. Stands out so you know
    not to look for a pattern. */
 .hint.norule {

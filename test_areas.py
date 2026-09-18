@@ -101,3 +101,13 @@ def test_exp_bands():
     assert b["bad_low"] == (1, 41) and b["bad_high"] == (59, 99)
     assert areas.exp_bands(2)["good"] == (1, 7)
     assert areas.exp_bands(85)["bad_high"] == (94, 99)
+
+
+def test_uniques_and_notes_load():
+    rules = areas.load()
+    assert "The Countess" in rules["Tower Cellar Level 5"].uniques
+    assert len(rules["Throne of Destruction"].uniques) == 5
+    assert rules["Pit Level 2"].levels[2] == 85   # gets the derived alvl-85 note
+    for area in rules.values():
+        for text in area.uniques + area.notes:
+            assert text.strip() == text

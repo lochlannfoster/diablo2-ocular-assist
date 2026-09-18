@@ -72,6 +72,8 @@ class Area:
     ocr_name: str = ""   # on-screen name when it differs from the key
     levels: tuple[int, int, int] = (0, 0, 0)   # Normal, Nightmare, Hell; 0 = town
     quests: tuple[str, ...] = ()
+    uniques: tuple[str, ...] = ()
+    notes: tuple[str, ...] = ()
 
     def level(self, difficulty: str | None) -> int | None:
         """Area level for a difficulty name, or None if unknown / town."""
@@ -114,6 +116,8 @@ def parse(data: dict) -> dict[str, Area]:
             ocr_name = str(raw.get("ocr_name", ""))
             levels = tuple(int(x) for x in raw.get("levels", (0, 0, 0)))
             quests = tuple(str(q) for q in raw.get("quests", ()))
+            uniques = tuple(str(q) for q in raw.get("uniques", ()))
+            notes = tuple(str(q) for q in raw.get("notes", ()))
         except (KeyError, TypeError, ValueError) as exc:
             raise AreaError(f"{name}: {exc}")
         if len(levels) != 3:
@@ -134,6 +138,8 @@ def parse(data: dict) -> dict[str, Area]:
             ocr_name=ocr_name,
             levels=levels,
             quests=quests,
+            uniques=uniques,
+            notes=notes,
         )
     # Every `next` must be a real area, otherwise the overlay would happily
     # point at a place that does not exist.

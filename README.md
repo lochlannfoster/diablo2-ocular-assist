@@ -22,6 +22,8 @@ QUEST  Blade of the Old Religion: Gidbinn
 
 EXP RANGES  (your clvl vs monster lvl 50)
 100%  45–55     43–81%  42–44 · 56–58     ≤24%  ≤41 · ≥59
+
+SUPERUNIQUE  Stormtree
 ```
 
 - **Title** — area, difficulty (coloured green / amber / red) and the area
@@ -140,6 +142,8 @@ confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [2, 36, 68]          # Normal, Nightmare, Hell
 quests = []                   # e.g. ["Search for Cain: Tree of Inifuss"]
+uniques = ["Bishibosh"]
+notes = []
 ```
 
 `dir` vocabulary (labels in `areas.py`): `left straight right back` (character-
