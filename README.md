@@ -85,6 +85,23 @@ down** — nothing keeps running in the background.
 - Changes are written back to `config.toml` automatically (half a second after
   the last edit). "Reload config.toml" pulls in hand edits.
 
+## Windows
+
+A Windows build is produced by GitHub Actions on every push
+(`.github/workflows/build.yml`): download `diablo2-overlay-windows.zip` from the
+latest run's artifacts (or from a release for `v*` tags), unzip, run
+`overlay.exe`. It bundles Python, GTK and tesseract — nothing to install.
+
+Platform differences live in `native/windows.py` (Win32 through `ctypes`):
+topmost/click-through window styles, `PIL.ImageGrab` of the game window, and
+`RegisterHotKey` for Ctrl+F9–F12. Same settings window, same data, same rules.
+
+- **D2R must be in Windowed or Windowed (Fullscreen) mode.** Nothing can draw
+  over, or capture, an exclusive-fullscreen game on Windows.
+- The overlay draws on a solid dark background there (no per-pixel alpha).
+- `config.toml` is created next to `overlay.exe` on first run.
+- `--ctl` is Linux-only; use the settings window.
+
 ## Setup
 
 Arch packages only, no pip:
@@ -226,7 +243,10 @@ python -m venv --system-site-packages .venv && .venv/bin/pip install pytest
 ## Layout
 
 ```
-overlay.py        Session (owns everything), layer-shell overlay, reader thread, socket, CLI
+overlay.py        Session (owns everything), overlay window, reader thread, socket, CLI
+native/           OS layer: linux.py (layer-shell, Xlib, evdev) / windows.py (Win32 via ctypes)
+overlay.spec      PyInstaller spec for the Windows bundle
+.github/workflows/build.yml   tests on Linux + Windows, builds and uploads the zip
 settings.py       the settings window (main window; closing it shuts the session down)
 config.py         config.toml defaults, load, save
 capture.py        Xwayland window grab (Region as fractions)

@@ -10,6 +10,11 @@ window.overlay {
   background: transparent;
 }
 
+/* Windows: no per-pixel alpha on the layered window, so draw on solid dark. */
+window.overlay.win32 {
+  background: #070b0d;
+}
+
 .overlay .root {
   background: rgba(7, 11, 13, 0.82);
   border-left: 2px solid #b8862b;

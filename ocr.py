@@ -73,12 +73,15 @@ def run_tesseract(image: Image.Image, timeout: float = 5.0) -> str:
     """OCR one image via the tesseract CLI (stdin -> stdout)."""
     import io
 
+    import native
+
     buffer = io.BytesIO()
     image.save(buffer, format="PNG")
     try:
         result = subprocess.run(
-            ["tesseract", "stdin", "stdout", "--psm", "6", "-l", "eng"],
+            [*native.tesseract_command(), "stdin", "stdout", "--psm", "6", "-l", "eng"],
             input=buffer.getvalue(), capture_output=True, timeout=timeout,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         )
     except FileNotFoundError:
         raise RuntimeError("tesseract not installed (pacman -S tesseract tesseract-data-eng)")

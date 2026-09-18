@@ -27,24 +27,20 @@ import threading
 import time
 from pathlib import Path
 
-import preload
+import native
 
-preload.ensure()  # must run before gi pulls in libwayland
+native.init()  # Linux: LD_PRELOAD re-exec, must run before gi pulls in libwayland
 
-import cairo  # noqa: E402
 import gi  # noqa: E402
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
-gi.require_version("Gtk4LayerShell", "1.0")
-from gi.repository import (  # noqa: E402
-    Gdk,
-    Pango,
-    GLib,
-    GLibUnix,
-    Gtk,
-    Gtk4LayerShell as LayerShell,
-)
+from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
+
+try:
+    from gi.repository import GLibUnix  # noqa: E402
+except ImportError:  # Windows
+    GLibUnix = None
 
 import areas  # noqa: E402
 import capture  # noqa: E402
@@ -58,7 +54,9 @@ CSS_PATH = HERE / "overlay.css"
 CONFIG_PATH = configmod.CONFIG_PATH
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 SOCKET_PATH = RUNTIME / "d2-overlay.sock"
-FLAG_LOG = HERE / "debug" / "flagged.log"
+FLAG_LOG = native.config_dir() / "debug" / "flagged.log"
+
+list_monitors = native.impl.list_monitors
 
 COMMANDS = ("hide", "freeze", "quit", "flag", "edit")
 
@@ -102,8 +100,7 @@ class Reader(threading.Thread):
         # the loop runs; each iteration reads them once, which is enough.
         self.interval = float(cap.get("interval", 1.0))
         self.region = capture.Region(**cap["region"])
-        self.backend = capture.make(cap.get("backend", "xwayland"),
-                                    display_name=cap.get("display"))
+        self.backend = native.capture_backend(cap)
         self.names = names
         self.on_reading = on_reading
         self.on_error = on_error
@@ -147,8 +144,10 @@ class Overlay:
 
         self.win = Gtk.ApplicationWindow(application=app)
         self.win.add_css_class("overlay")  # scopes overlay.css to this window
-        self._init_layer_shell(ov["anchor"], int(ov["margin_x"]), int(ov["margin_y"]),
-                               ov["output"])
+        # Layer-shell / Win32 setup that has to precede realization.
+        native.prepare_window(self.win)
+        native.set_monitor(self.win, ov["output"])
+        native.set_placement(self.win, ov["anchor"], int(ov["margin_x"]), int(ov["margin_y"]))
 
         self.root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.root.add_css_class("root")
@@ -176,7 +175,7 @@ class Overlay:
             label.set_margin_top(10)
 
         self._load_css()
-        self.win.connect("realize", self._clear_input_region)
+        self.win.connect("realize", lambda w: native.on_realize(w, self))
         self.win.present()
         self.render()
 
@@ -204,38 +203,6 @@ class Overlay:
         self.root.append(label)
         self._labels.append(label)
         return label
-
-    def _init_layer_shell(self, anchor, margin_x, margin_y, output=""):
-        # init_for_window must happen before the window is realized; the rest
-        # can be changed at any time (see the set_* methods below).
-        LayerShell.init_for_window(self.win)
-        # OVERLAY is the topmost layer -- above normal and fullscreen windows.
-        LayerShell.set_layer(self.win, LayerShell.Layer.OVERLAY)
-        LayerShell.set_keyboard_mode(self.win, LayerShell.KeyboardMode.NONE)
-        self._apply_monitor(output)
-        self._apply_anchor(anchor, margin_x, margin_y)
-
-    def _apply_monitor(self, output):
-        if not output:
-            return
-        monitor, error = find_monitor(output)
-        if monitor is not None:
-            LayerShell.set_monitor(self.win, monitor)
-        else:
-            print(f"warning: {error}", file=sys.stderr)
-
-    def _apply_anchor(self, anchor, margin_x, margin_y):
-        anchor = str(anchor).lower()
-        top = not anchor.startswith("bottom")
-        right = anchor.endswith("right")
-        for edge, on, margin in (
-            (LayerShell.Edge.TOP, top, margin_y),
-            (LayerShell.Edge.BOTTOM, not top, margin_y),
-            (LayerShell.Edge.LEFT, not right, margin_x),
-            (LayerShell.Edge.RIGHT, right, margin_x),
-        ):
-            LayerShell.set_anchor(self.win, edge, on)
-            LayerShell.set_margin(self.win, edge, margin if on else 0)
 
     # -- edit mode: drag to move, corner handles to resize -----------------
 
@@ -277,26 +244,10 @@ class Overlay:
         self._apply_input_region()
 
     def _apply_input_region(self):
-        native = self.win.get_native()
-        surface = native.get_surface() if native else None
-        if surface is None:
-            return
-        if self.editing:
-            rect = cairo.RectangleInt(0, 0, self.win.get_width(), self.win.get_height())
-            surface.set_input_region(cairo.Region(rect))
-        else:
-            surface.set_input_region(cairo.Region())
+        native.set_click_through(self.win, not self.editing)
 
     def _monitor_size(self):
-        monitor = LayerShell.get_monitor(self.win)
-        if monitor is None:
-            display = self.win.get_display()
-            surface = self.win.get_native().get_surface()
-            monitor = display.get_monitor_at_surface(surface) if surface else None
-        if monitor is None:
-            return None
-        geometry = monitor.get_geometry()
-        return geometry.width, geometry.height
+        return native.monitor_size(self.win)
 
     def _box_rect(self):
         """Current box as (left, top, w, h) in monitor-logical pixels."""
@@ -357,7 +308,7 @@ class Overlay:
         margin_x = int(round(left if anchor.endswith("left") else mon_w - left - w))
         margin_y = int(round(top if anchor.startswith("top") else mon_h - top - h))
         margin_x, margin_y = max(0, margin_x), max(0, margin_y)
-        self._apply_anchor(anchor, margin_x, margin_y)
+        native.set_placement(self.win, anchor, margin_x, margin_y)
         ov = self.session.config["overlay"]
         ov["anchor"], ov["margin_x"], ov["margin_y"] = anchor, margin_x, margin_y
 
@@ -414,15 +365,10 @@ class Overlay:
     # -- live settings (called by the settings window) --------------------
 
     def set_placement(self, anchor, margin_x, margin_y):
-        self._apply_anchor(anchor, margin_x, margin_y)
+        native.set_placement(self.win, anchor, margin_x, margin_y)
 
     def set_monitor(self, output):
-        # A layer surface's output is fixed while mapped: unmap, move, remap.
-        visible = self.win.get_visible()
-        self.win.set_visible(False)
-        self._apply_monitor(output)
-        if visible:
-            self.win.present()
+        native.set_monitor(self.win, output)
 
     def set_font_size(self, size: int):
         self.font_size = int(size)
@@ -442,15 +388,6 @@ class Overlay:
         """Force a redraw (sections toggled, freeze, etc.)."""
         self._last_render = None
         self.render()
-
-    def _clear_input_region(self, widget):
-        """Empty input region = the compositor routes every pointer event to
-        whatever is underneath. This is the whole click-through mechanism.
-        In edit mode the region is the whole surface instead (see
-        set_edit_mode); it is re-applied whenever the surface changes size."""
-        surface = widget.get_native().get_surface()
-        surface.set_input_region(cairo.Region())
-        surface.connect("layout", lambda *_: self._apply_input_region())
 
     def _load_css(self):
         display = self.win.get_display()
@@ -620,15 +557,16 @@ class Session:
         self._closed = False
 
         self.overlay = Overlay(app, self)
-        self.server = ControlServer(SOCKET_PATH, self.handle)
+        self.server = ControlServer(SOCKET_PATH, self.handle) if native.HAS_CONTROL_SOCKET else None
         self.reader = Reader(config, areas.screen_names(rules),
                              self.on_reading, self.on_error, self.on_frame)
         self.reader.start()
-        self.bridge = HotkeyBridge(self.handle)
+        self.bridge = native.hotkey_bridge(self.handle)
         if config["overlay"].get("hotkeys", True):
             self.bridge.start()
         print(f"overlay running: {len(rules)} areas loaded", flush=True)
-        print(f"control socket: {SOCKET_PATH}", flush=True)
+        if self.server:
+            print(f"control socket: {SOCKET_PATH}", flush=True)
 
     # -- from the reader thread (delivered on the GTK thread) -------------
 
@@ -713,7 +651,8 @@ class Session:
         self._closed = True
         self.reader.stop()
         self.bridge.stop()
-        self.server.close()
+        if self.server:
+            self.server.close()
         self.overlay.win.destroy()
         print("overlay stopped", flush=True)
         self.app.quit()
@@ -752,85 +691,8 @@ class ControlServer:
         self.path.unlink(missing_ok=True)
 
 
-def list_monitors():
-    display = Gdk.Display.get_default()
-    if display is None:
-        return []
-    monitors = display.get_monitors()
-    found = []
-    for i in range(monitors.get_n_items()):
-        monitor = monitors.get_item(i)
-        geometry = monitor.get_geometry()
-        found.append((
-            monitor.get_connector() or f"output-{i}",
-            monitor.get_model() or "",
-            f"{geometry.width}x{geometry.height}+{geometry.x}+{geometry.y}",
-        ))
-    return found
-
-
-def find_monitor(name: str):
-    """Match an output by connector or model, case-insensitively."""
-    display = Gdk.Display.get_default()
-    if display is None:
-        return None, "no display"
-    monitors = display.get_monitors()
-    wanted = name.strip().lower()
-    for i in range(monitors.get_n_items()):
-        monitor = monitors.get_item(i)
-        connector = (monitor.get_connector() or "").lower()
-        model = (monitor.get_model() or "").lower()
-        if wanted in (connector, model) or (wanted and wanted in model):
-            return monitor, ""
-    available = ", ".join(c for c, _, _ in list_monitors()) or "(none)"
-    return None, f"no output matching {name!r}; available: {available}"
-
-
-class HotkeyBridge:
-    """Runs the evdev hotkey listener on the GLib main loop."""
-
-    POLL_SECONDS = 2
-
-    def __init__(self, on_command):
-        self.listener = hotkeys.Listener(
-            on_command=on_command, attach=self._attach, detach=self._detach
-        )
-        self._timer = None
-
-    def _attach(self, fd, callback):
-        channel = GLib.IOChannel.unix_new(fd)
-        return GLib.io_add_watch(
-            channel, GLib.PRIORITY_DEFAULT, GLib.IOCondition.IN,
-            lambda *_: callback(fd) or GLib.SOURCE_REMOVE,
-        )
-
-    def _detach(self, source):
-        GLib.source_remove(source)
-
-    def start(self):
-        ok, reason = hotkeys.available()
-        if not ok:
-            print(f"hotkeys disabled: {reason}", file=sys.stderr)
-            return False
-        self.listener.poll_game()
-        self._timer = GLib.timeout_add_seconds(self.POLL_SECONDS, self._poll)
-        print("hotkeys: armed — devices open only while D2R is running", flush=True)
-        return True
-
-    def _poll(self):
-        self.listener.poll_game()
-        return GLib.SOURCE_CONTINUE
-
-    def stop(self):
-        if self._timer is not None:
-            GLib.source_remove(self._timer)
-            self._timer = None
-        if self.listener.open:
-            self.listener.close_devices()
-
-
 def overlay_is_running() -> bool:
-    if not SOCKET_PATH.exists():
+    if not native.HAS_CONTROL_SOCKET or not SOCKET_PATH.exists():
         return False
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
     try:
@@ -847,6 +709,10 @@ def send_command(command: str) -> int:
         print(f"unknown command {command!r}; expected one of {', '.join(COMMANDS)}",
               file=sys.stderr)
         return 2
+    if not native.HAS_CONTROL_SOCKET:
+        print("--ctl is not available on this platform; use the settings window",
+              file=sys.stderr)
+        return 1
     if not SOCKET_PATH.exists():
         print("no overlay running", file=sys.stderr)
         return 1
@@ -911,8 +777,9 @@ def main(argv=None):
         window.present()
 
     app.connect("activate", on_activate)
-    GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, 2,
-                        lambda: (session.shutdown() if session else app.quit(), True)[1])
+    if GLibUnix is not None:
+        GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, 2,
+                            lambda: (session.shutdown() if session else app.quit(), True)[1])
     try:
         return app.run(None)
     finally:

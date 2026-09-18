@@ -1,0 +1,65 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow pytest
+      - run: python -m pytest -q
+
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-python
+            mingw-w64-x86_64-python-gobject
+            mingw-w64-x86_64-python-pillow
+            mingw-w64-x86_64-python-pytest
+            mingw-w64-x86_64-python-pyinstaller
+            mingw-w64-x86_64-gtk4
+            mingw-w64-x86_64-tesseract-ocr
+            mingw-w64-x86_64-tesseract-data-eng
+            zip
+      - name: Tests
+        run: python -m pytest -q
+      - name: Build
+        run: pyinstaller --noconfirm overlay.spec
+      - name: Smoke test (imports only)
+        run: |
+          ls dist/diablo2-overlay | head -50
+          test -f dist/diablo2-overlay/overlay.exe
+          test -f dist/diablo2-overlay/_internal/tesseract.exe
+          test -f dist/diablo2-overlay/_internal/tessdata/eng.traineddata
+      - name: Package
+        run: |
+          cp README.md dist/diablo2-overlay/
+          cd dist && zip -qr diablo2-overlay-windows.zip diablo2-overlay
+      - uses: actions/upload-artifact@v4
+        with:
+          name: diablo2-overlay-windows
+          path: dist/diablo2-overlay-windows.zip
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/diablo2-overlay-windows.zip
+          generate_release_notes: true

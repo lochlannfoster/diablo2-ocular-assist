@@ -12,7 +12,9 @@ import copy
 import tomllib
 from pathlib import Path
 
-CONFIG_PATH = Path(__file__).parent / "config.toml"
+from native import config_dir  # noqa: E402
+
+CONFIG_PATH = config_dir() / "config.toml"
 
 ANCHORS = ("top-left", "top-right", "bottom-left", "bottom-right")
 

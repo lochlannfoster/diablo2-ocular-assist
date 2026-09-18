@@ -18,8 +18,15 @@ import os
 from dataclasses import dataclass
 
 from PIL import Image
-from Xlib import X, display
-from Xlib.error import XError
+
+try:
+    from Xlib import X, display
+    from Xlib.error import XError
+except ImportError:  # not on Linux
+    X = display = None
+
+    class XError(Exception):
+        pass
 
 # The window title D2R sets. Matched exactly: a browser tab or editor buffer
 # showing a wiki page about the game would otherwise be a candidate.
@@ -61,6 +68,8 @@ class XwaylandCapture:
         self._window = None
 
     def _connect(self):
+        if display is None:
+            raise CaptureError("python-xlib is not installed")
         if self._display is None:
             try:
                 self._display = display.Display(self.display_name)
