@@ -44,6 +44,10 @@ class Reading:
     # What tesseract was actually shown (masked + upscaled), for the settings
     # window's OCR detail view. Not part of equality.
     processed: Image.Image | None = field(default=None, compare=False, repr=False)
+    # Terror zones read off the purple list. None = the purple pass did not
+    # run this frame (keep what we knew); () = it ran and found nothing.
+    terror_zones: tuple[str, ...] | None = None
+    tz_raw: str = ""
 
 
 LOWCONF_BELOW = 0.85   # matches under this are worth keeping a crop of
@@ -109,25 +113,44 @@ def gold_only(image: Image.Image) -> Image.Image:
     the purple lines (and their anti-aliased edges) before OCR ever sees them.
     """
     r, g, b = image.convert("RGB").split()
-    on = lambda v: 255 if v else 0
     # subtract() clamps at 0, so g-r == 0 <=> r >= g and g-b > 0 <=> g > b.
-    masks = [
-        r.point(lambda v: on(v >= 90)),
-        g.point(lambda v: on(v >= 60)),
-        ImageChops.subtract(g, r).point(lambda v: on(v == 0)),
-        ImageChops.subtract(g, b).point(lambda v: on(v > 0)),
-    ]
-    keep = masks[0]
-    for m in masks[1:]:
+    return _mask(image, [
+        r.point(lambda v: _on(v >= 90)),
+        g.point(lambda v: _on(v >= 60)),
+        ImageChops.subtract(g, r).point(lambda v: _on(v == 0)),
+        ImageChops.subtract(g, b).point(lambda v: _on(v > 0)),
+    ])
+
+
+def purple_only(image: Image.Image) -> Image.Image:
+    """Keep the purple terror-zone list, black out everything else -- the
+    complement of gold_only. Measured purple is (162,82,252) in the core and
+    (110,56,172) on anti-aliased edges; blue dominates both, and gold's blue
+    is always below its green."""
+    r, g, b = image.convert("RGB").split()
+    return _mask(image, [
+        r.point(lambda v: _on(v >= 90)),
+        b.point(lambda v: _on(v >= 120)),
+        ImageChops.subtract(b, g).point(lambda v: _on(v > 0)),   # b > g
+    ])
+
+
+def _on(cond) -> int:
+    return 255 if cond else 0
+
+
+def _mask(image: Image.Image, tests: list[Image.Image]) -> Image.Image:
+    keep = tests[0]
+    for m in tests[1:]:
         keep = ImageChops.darker(keep, m)
     # convert("L") is the same 299/587/114 luma; multiply zeroes masked pixels.
     return ImageChops.multiply(image.convert("L"), keep)
 
 
-def preprocess(image: Image.Image, scale: int = 2) -> Image.Image:
-    """Gold-mask, then upscale. No thresholding: it produced *more* errors on
+def preprocess(image: Image.Image, scale: int = 2, mask=gold_only) -> Image.Image:
+    """Colour-mask, then upscale. No thresholding: it produced *more* errors on
     a real frame than leaving the anti-aliasing alone."""
-    gray = gold_only(image)
+    gray = mask(image)
     if scale != 1:
         gray = gray.resize((gray.width * scale, gray.height * scale), Image.LANCZOS)
     return gray
@@ -211,3 +234,22 @@ def read_area(image: Image.Image, names: list[str]) -> Reading:
     """Capture crop in, Reading out."""
     processed = preprocess(image)
     return replace(recognise(run_tesseract(processed), names), processed=processed)
+
+
+def read_terror_zones(raw: str, names: list[str]) -> tuple[str, ...]:
+    """Area names in the purple list, top to bottom, deduplicated. A header
+    line or clock spill never reaches MIN_SCORE against a real name."""
+    found = []
+    for line in raw.splitlines():
+        if not line.strip() or _SKIP.search(line):
+            continue
+        candidate, score = match(line, names)
+        if candidate and score >= MIN_SCORE and candidate not in found:
+            found.append(candidate)
+    return tuple(found)
+
+
+def with_terror_zones(image: Image.Image, reading: Reading, names: list[str]) -> Reading:
+    """Second tesseract pass over the purple text; the gold pass is reused."""
+    raw = run_tesseract(preprocess(image, mask=purple_only))
+    return replace(reading, terror_zones=read_terror_zones(raw, names), tz_raw=raw)

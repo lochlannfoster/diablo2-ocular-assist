@@ -75,6 +75,7 @@ class Reader(threading.Thread):
     """
 
     FOCUS_POLL = 0.25   # seconds between game-focus checks (cheap X/Win32 call)
+    TZ_EVERY = 10       # frames between purple (terror-zone) passes when nothing changed
 
     def __init__(self, config, names, on_reading, on_error, on_frame=None, on_focus=None):
         super().__init__(daemon=True)
@@ -90,6 +91,8 @@ class Reader(threading.Thread):
         self.on_frame = on_frame
         self.on_focus = on_focus
         self._focused = None
+        self._frames = 0
+        self._tz_area = None      # area the last purple pass ran in
         self.stop_event = threading.Event()
 
     def _poll_focus(self):
@@ -123,6 +126,14 @@ class Reader(threading.Thread):
                 if self.on_frame is not None:
                     GLib.idle_add(self.on_frame, image)
                 reading = ocr.read_area(image, self.names)
+                # The purple list is a second tesseract call; run it when the
+                # area changed, then only every TZ_EVERY frames. Never when
+                # the gold pass saw nothing (menus, loading screens).
+                self._frames += 1
+                if reading.area is not None and (
+                        reading.area != self._tz_area or self._frames % self.TZ_EVERY == 0):
+                    reading = ocr.with_terror_zones(image, reading, self.names)
+                    self._tz_area = reading.area
                 GLib.idle_add(self.on_reading, reading)
             except capture.CaptureError as exc:
                 # The game is not up (yet); report and keep polling.
@@ -456,7 +467,7 @@ class Overlay:
         profile = str(ov.get("profile", "all"))
         error = self.session.error
         state = (rec.area, rec.difficulty, rec.visible, rec.frozen, error, compact, profile,
-                 tuple(sorted(sections.items())))
+                 rec.terror_zones, tuple(sorted(sections.items())))
         if state == self._last_render:
             return
         self._last_render = state
@@ -496,8 +507,10 @@ class Overlay:
         detail = f"alvl {level}" if level else ("town" if not area.levels[0] else "alvl ?")
         frozen = "  (frozen)" if rec.frozen else ""
         tag = f"  {dim(f'[{profile}]')}" if profile != "all" else ""
+        terrorised = area.screen_name in rec.terror_zones
+        tz = '  <span foreground="#c07cff" weight="bold">TERROR ZONE</span>' if terrorised else ""
         self.title_label.set_markup(
-            f"{dot} {esc(area.name)} - {diff} ({detail}){esc(frozen)}{tag}")
+            f"{dot} {esc(area.name)} - {diff} ({detail}){tz}{esc(frozen)}{tag}")
         for cls in ("conf-high", "conf-medium", "conf-low"):
             self.title_label.remove_css_class(cls)
         self.title_label.add_css_class(f"conf-{area.confidence}")
@@ -507,9 +520,9 @@ class Overlay:
             self.title_label.add_css_class("stale")
 
         if compact:
-            self._render_compact(area, rec, level)
+            self._render_compact(area, rec, level, terrorised)
         else:
-            self._render_full(area, rec, level)
+            self._render_full(area, rec, level, terrorised)
 
         # Sections the user switched off (settings window / profile).
         for key, labels in (
@@ -534,7 +547,7 @@ class Overlay:
             label.set_margin_top(gap)
         (self.root.add_css_class if compact else self.root.remove_css_class)("compact")
 
-    def _render_compact(self, area, rec, level):
+    def _render_compact(self, area, rec, level, terrorised=False):
         """One wrapping line per section: header, direction, first clause."""
         limit = max(48, self.width)   # lines may wrap; terse() keeps them to a clause
         for label in (self.wp_head_label, self.next_head_label, self.exp_head_label,
@@ -559,11 +572,14 @@ class Overlay:
             self.farm_label.set_markup(f"{head('FARM', 'farm')}  {esc(terse(area.farm[0], limit + 16))}")
 
         self.exp_label.set_visible(bool(level))
-        if level:
+        if terrorised and level:
+            self.exp_label.set_markup(f"{head('CLVL', 'exp')}  {esc(areas.terror_exp_note(rec.difficulty))}")
+        elif level:
             b = areas.exp_bands(level)
             self.exp_label.set_markup(f"{head('CLVL', 'exp')}  {band(rng(b['good']), 'recommended')}")
 
-        drops = areas.drop_note(area.act, rec.difficulty, level)
+        drops = areas.terror_drop_note(rec.difficulty) if terrorised and level \
+            else areas.drop_note(area.act, rec.difficulty, level)
         self.drops_label.set_visible(bool(drops))
         if drops:
             self.drops_label.set_markup(f"{head('DROPS', 'drops')}  {esc(terse(drops, limit + 16))}")
@@ -574,7 +590,7 @@ class Overlay:
             self.uniques_label.set_markup(
                 f"{head('SUPERUNIQUE', 'uniques')}  <span weight=\"bold\">{names}</span>")
 
-    def _render_full(self, area, rec, level):
+    def _render_full(self, area, rec, level, terrorised=False):
         wp = area.to_waypoint
         if area.has_waypoint:
             self.wp_head_label.set_markup(f"{head('WAYPOINT', 'wp')}  ·  {direction(wp)}")
@@ -606,7 +622,9 @@ class Overlay:
         # One line: the clvl band that gets full XP here, then the band that
         # still gets a worthwhile rate (43-81%).
         self.exp_head_label.set_visible(False)
-        if level:
+        if terrorised and level:
+            self.exp_label.set_markup(f"{head('CLVL', 'exp')}  {esc(areas.terror_exp_note(rec.difficulty))}")
+        elif level:
             b = areas.exp_bands(level)
             ok = rng((b["avg_low"][0], b["avg_high"][1]))
             self.exp_label.set_markup(
@@ -615,7 +633,8 @@ class Overlay:
         else:
             self.exp_label.set_visible(False)
 
-        drops = areas.drop_note(area.act, rec.difficulty, level)
+        drops = areas.terror_drop_note(rec.difficulty) if terrorised and level \
+            else areas.drop_note(area.act, rec.difficulty, level)
         self.drops_label.set_visible(bool(drops))
         if drops:
             self.drops_label.set_markup(f"{head('DROPS', 'drops')}  " + esc(drops))
@@ -679,7 +698,10 @@ class Session:
         self.last_reading = reading
         if self.config.get("debug", {}).get("save_lowconf", True) and ocr.should_save_lowconf(reading):
             self.save_lowconf(reading)
-        changed = self.recognizer.feed(reading.area, reading.difficulty)
+        before = self.recognizer.terror_zones
+        changed = self.recognizer.feed(reading.area, reading.difficulty, reading.terror_zones)
+        if self.recognizer.terror_zones != before:
+            print(f"terror zones: {', '.join(self.recognizer.terror_zones) or 'none'}", flush=True)
         if changed:
             raw = " / ".join(reading.raw.split("\n")).strip(" /")
             print(f"area: {self.recognizer.area}  (score {reading.score:.2f}, read {raw!r})",

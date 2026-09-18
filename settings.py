@@ -640,7 +640,8 @@ class RegionPicker(Gtk.Window):
         self.rect = None
         self.use_button.set_sensitive(False)
         self.hint.set_text(f"Game window {w}×{h}. Drag a box around the clock / area / "
-                           "difficulty text, then click Use this region.")
+                           "difficulty text -- include the purple terror-zone list below "
+                           "it -- then click Use this region.")
         self.canvas.queue_draw()
 
     def _begin(self, gesture, x, y):

@@ -44,7 +44,7 @@ DEFAULTS = {
         "backend": "xwayland",
         "display": ":1",
         "interval": 1.0,
-        "region": {"x": 0.84, "y": 0.02, "w": 0.155, "h": 0.09},
+        "region": {"x": 0.84, "y": 0.02, "w": 0.155, "h": 0.13},
     },
     "overlay": {
         "output": "",

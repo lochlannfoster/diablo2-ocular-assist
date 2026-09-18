@@ -97,3 +97,37 @@ def test_line_scores_marks_skipped_lines():
     by_line = {line: (cand, skipped) for line, cand, score, skipped in rows}
     assert by_line["Game: RASI"][1] and by_line["@7:14 P"][1]
     assert by_line["BLeeD [Meer"] == ("Blood Moor", False)
+
+
+def test_purple_mask_keeps_purple_drops_gold():
+    from PIL import Image
+    img = Image.new("RGB", (40, 20), (12, 14, 10))
+    img.paste((222, 190, 120), (2, 2, 18, 8))        # gold
+    img.paste((162, 82, 252), (2, 12, 18, 18))       # purple core
+    img.paste((110, 56, 172), (22, 12, 38, 18))      # purple anti-aliased edge
+    out = ocr.purple_only(img)
+    assert out.getpixel((8, 4)) == 0                 # gold dropped
+    assert out.getpixel((8, 14)) > 80                # purple kept
+    assert out.getpixel((30, 14)) > 0                # edge kept
+    assert out.getpixel((38, 1)) == 0                # background dropped
+    gold = ocr.gold_only(img)
+    assert gold.getpixel((8, 14)) == 0 and gold.getpixel((8, 4)) > 150
+
+
+def test_masks_are_disjoint_on_saved_crop():
+    from PIL import Image, ImageChops
+    img = Image.open("debug/crop.png")
+    both = ImageChops.multiply(ocr.gold_only(img).point(lambda v: 255 if v else 0),
+                               ocr.purple_only(img).point(lambda v: 255 if v else 0))
+    assert both.getbbox() is None
+
+
+def test_read_terror_zones_matches_lines():
+    raw = "TERROR ZONES\nBUTER STEPPES\nPLaiNs ©F DESPAIR\nPLaiNs ©F DESPAIR\nDIFFICULTY: HELL\n"
+    assert ocr.read_terror_zones(raw, NAMES) == ("Outer Steppes", "Plains of Despair")
+    assert ocr.read_terror_zones("", NAMES) == ()
+    assert ocr.read_terror_zones("@4:13 PM\nPRESS ESC\n", NAMES) == ()
+
+
+def test_reading_tz_defaults_to_none():
+    assert ocr.Reading("", None, 0.0).terror_zones is None

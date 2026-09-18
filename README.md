@@ -45,6 +45,10 @@ SUPERUNIQUE  Stormtree
 - **DROPS** — what can drop at this alvl in the current difficulty: item qlvl
   cap, the act's rune tier, and the Hell 78 / 81 / 85 thresholds for Zod and
   "everything".
+- **TERROR ZONE** — the purple terror-zone list under the difficulty line is
+  read too (every ~10 s, or when the area changes). If the area you are in is
+  on it, the title gets a purple badge and CLVL / DROPS switch to the terror
+  rules: mlvl = clvl+2 capped at 45 / 71 / 96, so in Hell everything drops.
 - **TURN LEFT / STRAIGHT / TURN RIGHT are relative to how your character
   faces on arriving** — the speedrunners' convention, never compass
   directions. Tips are full sentences and wrap inside the fixed-width box.
@@ -141,7 +145,7 @@ interval = 1.0       # seconds between reads
 x = 0.84
 y = 0.02
 w = 0.155
-h = 0.09
+h = 0.13             # tall enough to include the purple terror-zone list
 
 [overlay]
 output = "DP-1"      # monitor the game is on ("" = compositor default)

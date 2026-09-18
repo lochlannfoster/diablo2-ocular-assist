@@ -196,6 +196,23 @@ def drop_note(act: int, difficulty: str, alvl: int | None) -> str | None:
             f"(uniques {alvl + 3}); {runes} for act {act} {difficulty}.")
 
 
+# Terror zones: monster level follows the player (clvl + 2), capped per
+# difficulty; champions +2 and uniques +3 on top. The overlay does not know
+# your clvl, so it states the cap.
+TZ_CAPS = {"normal": 45, "nightmare": 71, "hell": 96}
+
+
+def terror_drop_note(difficulty: str) -> str:
+    cap = TZ_CAPS[difficulty]
+    tail = " - every item can drop" if cap + 2 >= 87 else ""
+    return (f"Terror zone: mlvl follows you (clvl+2), up to {cap} "
+            f"(champions {cap + 2}, uniques {cap + 3}){tail}.")
+
+
+def terror_exp_note(difficulty: str) -> str:
+    return f"any - TZ monsters track your clvl (+2, cap {TZ_CAPS[difficulty]})"
+
+
 def exp_bands(alvl: int) -> dict[str, tuple[int, int]]:
     """Recommended clvl bands for an alvl.
 

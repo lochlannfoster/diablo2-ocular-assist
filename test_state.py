@@ -54,3 +54,16 @@ def test_misses_count_consecutive_unreadable_frames():
     assert r.misses == 2 and r.area == "Cold Plains"
     r.feed("Cold Plains")
     assert r.misses == 0
+
+
+def test_terror_zones_kept_until_refreshed():
+    r = Recognizer(agree=1)
+    r.feed("Cold Plains", terror_zones=("Cold Plains", "Stony Field"))
+    assert r.terror_zones == ("Cold Plains", "Stony Field")
+    r.feed("Cold Plains")                       # purple pass skipped this frame
+    assert r.terror_zones == ("Cold Plains", "Stony Field")
+    r.feed("Cold Plains", terror_zones=())      # ran, nothing listed
+    assert r.terror_zones == ()
+    r.frozen = True
+    r.feed("Cold Plains", terror_zones=("Pit Level 1",))
+    assert r.terror_zones == ()                 # frozen means frozen

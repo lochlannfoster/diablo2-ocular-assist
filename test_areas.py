@@ -129,3 +129,9 @@ def test_drop_note_per_difficulty():
     assert "uniques/champions only" in areas.drop_note(1, "hell", 79)
     assert "incl. Zod" in areas.drop_note(2, "hell", 82)
     assert "every item" in areas.drop_note(1, "hell", 85)
+
+
+def test_terror_notes():
+    assert "96" in areas.terror_drop_note("hell") and "every item" in areas.terror_drop_note("hell")
+    assert "45" in areas.terror_drop_note("normal") and "every item" not in areas.terror_drop_note("normal")
+    assert "71" in areas.terror_exp_note("nightmare")
