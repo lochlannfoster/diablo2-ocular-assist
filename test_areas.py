@@ -91,7 +91,7 @@ def test_levels_and_quests():
     for area in rules.values():
         assert len(area.quests) <= 2, area.name
         for quest in area.quests:
-            assert len(quest) <= 42, quest
+            assert len(quest) <= 90, quest   # wraps to two lines at most
 
 
 def test_exp_bands():
