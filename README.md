@@ -20,16 +20,17 @@ follow it.
 
 QUEST  Blade of the Old Religion: Gidbinn
 
-CLVL   BAD ≤41   AVG 42–44   GOOD 45–55   AVG 56–58   BAD ≥59
+XP AT YOUR LEVEL  (monsters lvl 50)
+100%  45–55     43–81%  42–44 · 56–58     ≤24%  ≤41 · ≥59
 ```
 
 - **Title** — area, difficulty (coloured green / amber / red) and the area
   level for that difficulty; towns show "town".
-- **CLVL** — recommended character level bands for this area. D2 pays full
+- **XP AT YOUR LEVEL** — the experience rate you get here, by character level. D2 pays full
   experience while your level is within 5 of the monster level (= area level
   in Nightmare/Hell), then 81 / 62 / 43 / 24 % at 6 / 7 / 8 / 9 apart and 5 %
   from 10 on ([PureDiablo](https://www.purediablo.com/d2wiki/Experience)).
-  GOOD = ±5, AVG = 6–8 apart, BAD = 9+ apart. (From clvl 25, monsters *above*
+  So 100% = within ±5, 43–81% = 6–8 apart, ≤24% = 9+ apart. (From clvl 25, monsters *above*
   you are penalised more gently, by clvl ÷ mlvl — the bands stay symmetric
   because being 9+ levels under an area is a survival problem anyway.)
 - **Q** — quest objectives located in this area (up to two lines).

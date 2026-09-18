@@ -47,6 +47,7 @@ label {
 }
 .head.wp   { color: #7fc8ff; }
 .head.next { color: #9be59b; }
+.head.exp  { color: #c9d6d1; }
 
 /* The two hint lines. */
 .hint {

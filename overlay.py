@@ -75,8 +75,9 @@ def direction(hint) -> str:
     return f'<span foreground="{colour}" weight="bold">{esc(hint.label)}</span>'
 
 
-def band(name: str, levels: str, colour: str) -> str:
-    return f'<span foreground="{colour}">{name} {levels}</span>'
+def band(rate: str, levels: str, colour: str) -> str:
+    """'100%  45–55': the XP rate, then the character levels that get it."""
+    return f'<span foreground="{colour}" weight="bold">{rate}</span>  {levels}'
 
 
 def rng(pair) -> str:
@@ -160,11 +161,12 @@ class Overlay:
         self.next_head_label = self._label("head", "next")
         self.next_tip_label = self._label("hint", "next")
         self.quest_labels = [self._label("hint", "quest"), self._label("hint", "quest")]
+        self.exp_head_label = self._label("head", "exp")
         self.exp_label = self._label("hint", "exp")
         self.next_label = self.next_head_label
         # Gaps between sections.
         for label in (self.wp_head_label, self.next_head_label,
-                      self.quest_labels[0], self.exp_label):
+                      self.quest_labels[0], self.exp_head_label):
             label.set_margin_top(10)
 
         self._load_css()
@@ -268,7 +270,7 @@ class Overlay:
 
         for label in (self.title_label, self.wp_head_label, self.wp_label,
                       self.next_head_label, self.next_tip_label, *self.quest_labels,
-                      self.exp_label):
+                      self.exp_head_label, self.exp_label):
             for cls in ("stale", "frozen", "error"):
                 label.remove_css_class(cls)
             label.set_visible(True)
@@ -284,7 +286,7 @@ class Overlay:
                 self.title_label.add_css_class("stale")
                 self.wp_label.set_text("area name must be on screen")
             for label in (self.wp_head_label, self.next_label, self.next_tip_label,
-                          *self.quest_labels, self.exp_label):
+                          *self.quest_labels, self.exp_head_label, self.exp_label):
                 label.set_visible(False)
             return
 
@@ -335,14 +337,14 @@ class Overlay:
 
         if level:
             b = areas.exp_bands(level)
+            self.exp_head_label.set_markup(
+                f"XP AT YOUR LEVEL  <span foreground=\"#8a9a94\">(monsters lvl {level})</span>")
             self.exp_label.set_markup(
-                "CLVL   "
-                f"{band('BAD', f'≤{b['bad_low'][1]}', BAD)}   "
-                f"{band('AVG', rng(b['avg_low']), AVG)}   "
-                f"{band('GOOD', rng(b['good']), GOOD)}   "
-                f"{band('AVG', rng(b['avg_high']), AVG)}   "
-                f"{band('BAD', f'≥{b['bad_high'][0]}', BAD)}")
+                f"{band('100%', rng(b['good']), GOOD)}     "
+                f"{band('43–81%', rng(b['avg_low']) + ' · ' + rng(b['avg_high']), AVG)}     "
+                f"{band('≤24%', f'≤{b['bad_low'][1]} · ≥{b['bad_high'][0]}', BAD)}")
         else:
+            self.exp_head_label.set_visible(False)
             self.exp_label.set_visible(False)
 
     # -- commands ----------------------------------------------------------
