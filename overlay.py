@@ -60,7 +60,7 @@ RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 SOCKET_PATH = RUNTIME / "d2-overlay.sock"
 FLAG_LOG = HERE / "debug" / "flagged.log"
 
-COMMANDS = ("hide", "freeze", "quit", "flag")
+COMMANDS = ("hide", "freeze", "quit", "flag", "edit")
 
 DIFFICULTY_COLOURS = {"normal": "#9be59b", "nightmare": "#ffd166", "hell": "#ff5f5f"}
 GOOD, AVG, BAD = "#00ff9c", "#ffd166", "#ff5f5f"
@@ -152,7 +152,12 @@ class Overlay:
 
         self.root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.root.add_css_class("root")
-        self.win.set_child(self.root)
+        self.stack = Gtk.Overlay()
+        self.stack.set_child(self.root)
+        self.win.set_child(self.stack)
+        self.editing = False
+        self.on_placement_edited = None  # settings window hook
+        self._build_edit_handles()
 
         self.title_label = self._label("title", wrap=False)
         self.wp_head_label = self._label("head", "wp", wrap=False)
@@ -232,6 +237,180 @@ class Overlay:
             LayerShell.set_anchor(self.win, edge, on)
             LayerShell.set_margin(self.win, edge, margin if on else 0)
 
+    # -- edit mode: drag to move, corner handles to resize -----------------
+
+    HANDLE = 14
+
+    def _build_edit_handles(self):
+        self.handles = {}
+        for corner, (h, v) in {
+            "top-left": (Gtk.Align.START, Gtk.Align.START),
+            "top-right": (Gtk.Align.END, Gtk.Align.START),
+            "bottom-left": (Gtk.Align.START, Gtk.Align.END),
+            "bottom-right": (Gtk.Align.END, Gtk.Align.END),
+        }.items():
+            handle = Gtk.Box(halign=h, valign=v)
+            handle.set_size_request(self.HANDLE, self.HANDLE)
+            handle.add_css_class("handle")
+            handle.set_visible(False)
+            drag = Gtk.GestureDrag()
+            drag.connect("drag-begin", self._drag_begin)
+            drag.connect("drag-update", self._resize_update, corner)
+            drag.connect("drag-end", self._drag_end)
+            handle.add_controller(drag)
+            self.stack.add_overlay(handle)
+            self.handles[corner] = handle
+        move = Gtk.GestureDrag()
+        move.connect("drag-begin", self._drag_begin)
+        move.connect("drag-update", self._move_update)
+        move.connect("drag-end", self._drag_end)
+        self.root.add_controller(move)
+        self._drag = None
+
+    def set_edit_mode(self, editing: bool):
+        """Editable = the surface accepts input and shows its handles. Leaving
+        edit mode restores the empty input region (click-through)."""
+        self.editing = editing
+        for handle in self.handles.values():
+            handle.set_visible(editing)
+        (self.win.add_css_class if editing else self.win.remove_css_class)("editing")
+        self._apply_input_region()
+
+    def _apply_input_region(self):
+        native = self.win.get_native()
+        surface = native.get_surface() if native else None
+        if surface is None:
+            return
+        if self.editing:
+            rect = cairo.RectangleInt(0, 0, self.win.get_width(), self.win.get_height())
+            surface.set_input_region(cairo.Region(rect))
+        else:
+            surface.set_input_region(cairo.Region())
+
+    def _monitor_size(self):
+        monitor = LayerShell.get_monitor(self.win)
+        if monitor is None:
+            display = self.win.get_display()
+            surface = self.win.get_native().get_surface()
+            monitor = display.get_monitor_at_surface(surface) if surface else None
+        if monitor is None:
+            return None
+        geometry = monitor.get_geometry()
+        return geometry.width, geometry.height
+
+    def _box_rect(self):
+        """Current box as (left, top, w, h) in monitor-logical pixels."""
+        ov = self.session.config["overlay"]
+        size = self._monitor_size()
+        w, h = self.win.get_width(), self.win.get_height()
+        if size is None:
+            return None
+        mon_w, mon_h = size
+        anchor = ov["anchor"]
+        left = ov["margin_x"] if anchor.endswith("left") else mon_w - ov["margin_x"] - w
+        top = ov["margin_y"] if anchor.startswith("top") else mon_h - ov["margin_y"] - h
+        return left, top, w, h, mon_w, mon_h
+
+    def _drag_begin(self, gesture, x, y):
+        if not self.editing:
+            gesture.set_state(Gtk.EventSequenceState.DENIED)
+            return
+        rect = self._box_rect()
+        if rect is None:
+            gesture.set_state(Gtk.EventSequenceState.DENIED)
+            return
+        left, top, w, h, mon_w, mon_h = rect
+        self._drag = {
+            "left": left, "top": top, "w": w, "h": h, "mon_w": mon_w, "mon_h": mon_h,
+            "char_px": max(1.0, w / max(1, self.width)),
+            "width": self.width,
+            "anchor": self.session.config["overlay"]["anchor"],
+            "pending": False,
+        }
+        gesture.set_state(Gtk.EventSequenceState.CLAIMED)
+
+    # The drag offset GTK reports is relative to the overlay's own surface --
+    # and the drag moves that surface. Once a move is applied, the pointer's
+    # offset from its start point collapses back toward zero, so each update
+    # is treated as an increment. Between applying a move and the compositor
+    # actually moving the surface (about a frame), the offset would be applied
+    # twice, so updates are ignored until a short settle time passes.
+    SETTLE_MS = 40
+
+    def _take_increment(self, dx, dy):
+        d = self._drag
+        if d is None or d["pending"]:
+            return None
+        if abs(dx) < 1 and abs(dy) < 1:
+            return None
+        d["pending"] = True
+        GLib.timeout_add(self.SETTLE_MS, self._settled)
+        return dx, dy
+
+    def _settled(self):
+        if self._drag is not None:
+            self._drag["pending"] = False
+        return GLib.SOURCE_REMOVE
+
+    def _place(self, left, top, w, h, anchor, mon_w, mon_h):
+        """Express a box rectangle as margins for `anchor` and apply it."""
+        margin_x = int(round(left if anchor.endswith("left") else mon_w - left - w))
+        margin_y = int(round(top if anchor.startswith("top") else mon_h - top - h))
+        margin_x, margin_y = max(0, margin_x), max(0, margin_y)
+        self._apply_anchor(anchor, margin_x, margin_y)
+        ov = self.session.config["overlay"]
+        ov["anchor"], ov["margin_x"], ov["margin_y"] = anchor, margin_x, margin_y
+
+    def _move_update(self, gesture, dx, dy):
+        step = self._take_increment(dx, dy)
+        if step is None:
+            return
+        d = self._drag
+        d["left"] += step[0]
+        d["top"] += step[1]
+        self._place(d["left"], d["top"], d["w"], d["h"], d["anchor"], d["mon_w"], d["mon_h"])
+
+    def _resize_update(self, gesture, dx, dy, corner):
+        step = self._take_increment(dx, dy)
+        if step is None:
+            return
+        d = self._drag
+        # The dragged corner moves; the opposite one stays put. Only width is
+        # adjustable -- height follows the text.
+        if corner.endswith("left"):
+            d["left"] += step[0]
+            d["w"] -= step[0]
+        else:
+            d["w"] += step[0]
+        min_w = 30 * d["char_px"]
+        if d["w"] < min_w:
+            if corner.endswith("left"):
+                d["left"] -= min_w - d["w"]
+            d["w"] = min_w
+        chars = int(round(d["w"] / d["char_px"]))
+        if chars != self.width:
+            self.set_width(chars)
+            self.session.config["overlay"]["width"] = chars
+        self._place(d["left"], d["top"], d["w"], d["h"], d["anchor"], d["mon_w"], d["mon_h"])
+
+    def _drag_end(self, gesture, dx, dy):
+        d = self._drag
+        self._drag = None
+        if not d:
+            return
+        # Snap the anchor to the nearest screen corner so the margins stay
+        # small and the box keeps its place across resolution changes.
+        rect = self._box_rect()
+        if rect is not None:
+            left, top, w, h, mon_w, mon_h = rect
+            cx, cy = left + w / 2, top + h / 2
+            anchor = ("top" if cy < mon_h / 2 else "bottom") + "-" + \
+                     ("left" if cx < mon_w / 2 else "right")
+            self._place(left, top, w, h, anchor, mon_w, mon_h)
+        self._apply_input_region()
+        if self.on_placement_edited:
+            self.on_placement_edited()
+
     # -- live settings (called by the settings window) --------------------
 
     def set_placement(self, anchor, margin_x, margin_y):
@@ -266,9 +445,12 @@ class Overlay:
 
     def _clear_input_region(self, widget):
         """Empty input region = the compositor routes every pointer event to
-        whatever is underneath. This is the whole click-through mechanism."""
+        whatever is underneath. This is the whole click-through mechanism.
+        In edit mode the region is the whole surface instead (see
+        set_edit_mode); it is re-applied whenever the surface changes size."""
         surface = widget.get_native().get_surface()
         surface.set_input_region(cairo.Region())
+        surface.connect("layout", lambda *_: self._apply_input_region())
 
     def _load_css(self):
         display = self.win.get_display()
@@ -485,6 +667,8 @@ class Session:
             self.set_frozen(not self.recognizer.frozen)
         elif command == "flag":
             self.flag()
+        elif command == "edit":
+            self.overlay.set_edit_mode(not self.overlay.editing)
         elif command == "quit":
             self.shutdown()
             return

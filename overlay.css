@@ -95,3 +95,15 @@ window.overlay {
 .overlay .error {
   color: #ff5f5f;
 }
+
+/* Edit mode (settings window > Edit mode): the box becomes draggable and
+   shows a corner handle at each corner for resizing. */
+window.overlay.editing .root {
+  border: 2px dashed #ffd166;
+}
+
+.overlay .handle {
+  background: #ffd166;
+  border: 1px solid #7a5a00;
+  border-radius: 2px;
+}

@@ -35,6 +35,7 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.set_default_size(600, 860)
         self.connect("close-request", self._on_close)
         session.on_update = self._refresh_status
+        session.overlay.on_placement_edited = self._on_placement_edited
 
         outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14,
                         margin_top=14, margin_bottom=14, margin_start=16, margin_end=16)
@@ -98,6 +99,11 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.freeze_switch = self._switch(toggles, "Freeze recognition", self._on_freeze)
         self.hotkeys_switch = self._switch(toggles, "Hotkeys (Ctrl+F9–F12)", self._on_hotkeys)
         self._row(grid, row, "", toggles); row += 1
+
+        self.edit_check = Gtk.CheckButton(
+            label="Edit mode — drag the overlay to move it, drag a corner to resize")
+        self.edit_check.connect("toggled", self._on_edit_mode)
+        self._row(grid, row, "", self.edit_check); row += 1
 
         sections = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE, max_children_per_line=3,
                                column_spacing=12, row_spacing=4)
@@ -236,6 +242,26 @@ class SettingsWindow(Gtk.ApplicationWindow):
             self._schedule_save()
         return False
 
+    def _on_edit_mode(self, check):
+        editing = check.get_active()
+        self.session.overlay.set_edit_mode(editing)
+        if not editing:
+            # Unticking is the "done" action: persist whatever was dragged.
+            if self._save_timer is not None:
+                GLib.source_remove(self._save_timer)
+            self._save_now()
+
+    def _on_placement_edited(self):
+        """The overlay was dragged: mirror the new placement into the widgets."""
+        ov = self.config["overlay"]
+        self._loading = True
+        self.anchor_combo.set_selected(configmod.ANCHORS.index(ov["anchor"]))
+        self.margin_x.set_value(ov["margin_x"])
+        self.margin_y.set_value(ov["margin_y"])
+        self.width_spin.set_value(ov["width"])
+        self._loading = False
+        self._schedule_save()
+
     def _on_section(self, check, key):
         if self._loading:
             return
@@ -358,11 +384,15 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self._loading = True
         self.show_switch.set_active(not session.hidden)
         self.freeze_switch.set_active(rec.frozen)
+        if self.edit_check.get_active() != session.overlay.editing:
+            self.edit_check.set_active(session.overlay.editing)
         self._loading = False
 
     # -- lifecycle ---------------------------------------------------------
 
     def _on_close(self, *_):
+        if self.session.overlay.editing:
+            self.session.overlay.set_edit_mode(False)
         if self._save_timer is not None:
             GLib.source_remove(self._save_timer)
             self._save_now()

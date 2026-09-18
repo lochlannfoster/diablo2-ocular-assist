@@ -79,6 +79,9 @@ down** — nothing keeps running in the background.
 - **Capture** — the region as fractions of the game window, and the read interval.
   Nudge x/y/w/h while watching the capture picture until the three text lines sit
   cleanly inside it.
+- **Edit mode** (checkbox) — the overlay becomes draggable: drag its body to move
+  it (on release it snaps its anchor to the nearest screen corner), drag a yellow
+  corner handle to change the width. Unticking restores click-through and saves.
 - Changes are written back to `config.toml` automatically (half a second after
   the last edit). "Reload config.toml" pulls in hand edits.
 
@@ -151,6 +154,7 @@ docstring.
 | Ctrl+F10 | `freeze` | stop updating (keep the current hint) |
 | Ctrl+F11 | `quit`   | |
 | Ctrl+F12 | `flag`   | append the current area to `debug/flagged.log` — "this rule was wrong" |
+| —        | `edit`   | toggle edit mode (socket only: `./overlay.py --ctl edit`) |
 
 Every command also works over the control socket: `./overlay.py --ctl hide`, and from the settings window.
 `--no-hotkeys` starts with the hotkey switch off.

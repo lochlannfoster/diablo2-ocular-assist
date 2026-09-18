@@ -1,13 +1,13 @@
-# diablo2-overlay configuration.
+# diablo2-overlay configuration. Edited by the settings window; comments are
+# regenerated on every save.
 
 [capture]
 backend = "xwayland"          # only backend so far; D2R under Proton is an X client
-display = ":1"                # Xwayland display (check: echo $DISPLAY)
-interval = 1.0                # seconds between reads
+display = ":1"          # Xwayland display (check: echo $DISPLAY)
+interval = 1.0        # seconds between reads
 
-# Where the area name is, as fractions of the game window. D2R draws the
-# clock / area / difficulty block in the top-right corner. Tune with
-# tools/calibrate.py, which saves the crop it sees to debug/.
+# Where the area name is, as fractions of the game window (the clock / area /
+# difficulty block in the top-right corner).
 [capture.region]
 x = 0.84
 y = 0.02
@@ -15,15 +15,13 @@ w = 0.155
 h = 0.09
 
 [overlay]
-output = "DP-1"                # monitor the game is on, by connector (overlay.py --list-outputs)
-anchor = "top-right"          # top-left | top-right | bottom-left | bottom-right
-# Margins are in logical (scaled) pixels. The game's clock/area/difficulty
-# block ends ~200 physical px down at 1.7x scale, i.e. ~118 logical.
-margin_x = 12
-margin_y = 122
+output = "DP-1"            # monitor the game is on, by connector; "" = compositor default
+anchor = "bottom-left"            # top-left | top-right | bottom-left | bottom-right
+margin_x = 36        # logical (scaled) pixels from the side edge
+margin_y = 235        # logical pixels from the top/bottom edge
 font_size = 15
-width = 60
-hotkeys = true                    # minimum characters per line; tips in areas.toml are written to fit
+width = 30              # minimum characters per line; long tips wrap
+hotkeys = true          # read /dev/input for Ctrl+F9..F12 while D2R runs
 
 [overlay.sections]
 waypoint = true
