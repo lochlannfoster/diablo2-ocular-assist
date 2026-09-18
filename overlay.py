@@ -626,6 +626,7 @@ class Session:
             print(f"area: {self.recognizer.area}  (score {reading.score:.2f}, read {raw!r})",
                   flush=True)
         self.overlay.render()
+        self.apply_visibility()
         if self.on_update:
             self.on_update()
         return GLib.SOURCE_REMOVE
@@ -634,7 +635,9 @@ class Session:
         if message != self.error:
             print(f"capture: {message}", flush=True)
         self.error = message
+        self.recognizer.feed(None)
         self.overlay.render()
+        self.apply_visibility()
         if self.on_update:
             self.on_update()
         return GLib.SOURCE_REMOVE
@@ -671,12 +674,26 @@ class Session:
         self.config["overlay"]["follow_focus"] = enabled
         self.apply_visibility()
 
+    def set_hide_unread(self, enabled: bool):
+        self.config["overlay"]["hide_unread"] = enabled
+        self.apply_visibility()
+
+    UNREAD_GRACE = 2   # consecutive unreadable frames before hiding
+
     def apply_visibility(self):
-        """Ctrl+F9 hides outright; otherwise follow the game's focus unless
-        the user is dragging the overlay around in edit mode."""
+        """Ctrl+F9 hides outright. Otherwise, unless the user is dragging the
+        overlay around in edit mode: follow the game's focus, and hide while
+        the area name has been unreadable for a couple of frames (map off,
+        menus, loading) -- a frozen overlay is exempt, that is the point of
+        freezing it."""
+        ov = self.config["overlay"]
+        rec = self.recognizer
         visible = not self.hidden
-        if visible and self.config["overlay"].get("follow_focus", True) and not self.overlay.editing:
-            visible = self.game_focused
+        if visible and not self.overlay.editing:
+            if ov.get("follow_focus", True):
+                visible = self.game_focused
+            if visible and ov.get("hide_unread", True) and not rec.frozen:
+                visible = rec.visible or rec.misses < self.UNREAD_GRACE
         self.overlay.set_visible(visible)
 
     def set_frozen(self, frozen: bool):

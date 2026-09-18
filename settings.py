@@ -99,8 +99,12 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.show_switch = self._switch(toggles, "Show", self._on_show)
         self.freeze_switch = self._switch(toggles, "Freeze recognition", self._on_freeze)
         self.hotkeys_switch = self._switch(toggles, "Hotkeys (Ctrl+F9–F12)", self._on_hotkeys)
-        self.focus_switch = self._switch(toggles, "Only while the game is focused", self._on_follow_focus)
         self._row(grid, row, "", toggles); row += 1
+
+        auto_hide = Gtk.Box(spacing=18)
+        self.focus_switch = self._switch(auto_hide, "Only while the game is focused", self._on_follow_focus)
+        self.unread_switch = self._switch(auto_hide, "Hide when the area name isn't readable", self._on_hide_unread)
+        self._row(grid, row, "Auto-hide", auto_hide); row += 1
 
         self.edit_check = Gtk.CheckButton(
             label="Edit mode — drag the overlay to move it, drag a corner to resize")
@@ -201,6 +205,7 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.freeze_switch.set_active(self.session.recognizer.frozen)
         self.hotkeys_switch.set_active(bool(ov["hotkeys"]))
         self.focus_switch.set_active(bool(ov.get("follow_focus", True)))
+        self.unread_switch.set_active(bool(ov.get("hide_unread", True)))
         for key, check in self.section_checks.items():
             check.set_active(bool(ov["sections"].get(key, True)))
         output = ov["output"]
@@ -252,6 +257,12 @@ class SettingsWindow(Gtk.ApplicationWindow):
     def _on_follow_focus(self, switch, state):
         if not self._loading:
             self.session.set_follow_focus(state)
+            self._schedule_save()
+        return False
+
+    def _on_hide_unread(self, switch, state):
+        if not self._loading:
+            self.session.set_hide_unread(state)
             self._schedule_save()
         return False
 

@@ -46,6 +46,7 @@ DEFAULTS = {
         "width": 60,
         "hotkeys": True,
         "follow_focus": True,
+        "hide_unread": True,
         "sections": {key: True for key in SECTIONS},
     },
 }
@@ -76,6 +77,7 @@ font_size = {font_size}
 width = {width}              # minimum characters per line; long tips wrap
 hotkeys = {hotkeys}          # read /dev/input for Ctrl+F9..F12 while D2R runs
 follow_focus = {follow_focus}  # show the overlay only while the game window is focused
+hide_unread = {hide_unread}   # hide it while the area name cannot be read (map off, menus)
 
 [overlay.sections]
 {sections}
@@ -137,6 +139,7 @@ def dumps(config: dict) -> str:
         font_size=int(ov["font_size"]), width=int(ov["width"]),
         hotkeys=_toml_bool(bool(ov["hotkeys"])),
         follow_focus=_toml_bool(bool(ov.get("follow_focus", True))),
+        hide_unread=_toml_bool(bool(ov.get("hide_unread", True))),
         sections=sections,
     )
 

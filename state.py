@@ -22,6 +22,7 @@ class Recognizer:
     agree: int = 2
     area: str | None = None       # committed
     visible: bool = False         # was the last reading readable?
+    misses: int = 0               # consecutive unreadable readings
     frozen: bool = False          # Ctrl+F10: stop updating
     difficulty: str = "normal"    # last difficulty read; Normal until the
                                   # "Difficulty:" line has been seen
@@ -35,6 +36,7 @@ class Recognizer:
         if difficulty:
             self.difficulty = difficulty
         self.visible = reading is not None
+        self.misses = 0 if self.visible else self.misses + 1
         if reading is None:
             self._candidate, self._streak = None, 0
             return False

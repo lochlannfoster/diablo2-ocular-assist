@@ -44,3 +44,13 @@ def test_difficulty_is_remembered_across_blank_reads():
     assert r.difficulty == "hell"
     r.feed(None, None)
     assert r.difficulty == "hell"
+
+
+def test_misses_count_consecutive_unreadable_frames():
+    r = Recognizer(agree=1)
+    r.feed("Cold Plains")
+    assert r.misses == 0
+    r.feed(None); r.feed(None)
+    assert r.misses == 2 and r.area == "Cold Plains"
+    r.feed("Cold Plains")
+    assert r.misses == 0

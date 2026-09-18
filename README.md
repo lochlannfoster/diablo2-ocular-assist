@@ -153,6 +153,8 @@ margin_y = 122        # just under the clock/area/difficulty block
 font_size = 15
 width = 60           # minimum characters per line (never clips)
 hotkeys = true
+follow_focus = true  # show the overlay only while the game window is focused
+hide_unread = true   # hide it while the area name cannot be read (map off, menus)
 
 [overlay.sections]   # which blocks the overlay shows
 waypoint = true
