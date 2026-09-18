@@ -50,3 +50,24 @@ def test_difficulty_is_read_despite_ocr_noise():
 def test_leading_the_is_ignored():
     assert ocr.match("THE CAVE LEVEL 1", NAMES) == ("Cave Level 1", 1.0)
     assert ocr.match("PANDEMONIUM FORTRESS", NAMES) == ("The Pandemonium Fortress", 1.0)
+
+
+def test_gold_mask_drops_purple_terror_zone_text():
+    from PIL import Image
+    import numpy as np
+
+    img = Image.new("RGB", (40, 20), (12, 14, 10))          # dark terrain
+    img.paste((222, 190, 120), (2, 2, 18, 8))                # gold: current area
+    img.paste((150, 60, 220), (2, 12, 18, 18))               # purple: terror zone
+    img.paste((90, 90, 90), (22, 2, 38, 8))                  # grey: neither
+    out = np.asarray(ocr.gold_only(img))
+    assert out[4, 8] > 150                                    # gold kept
+    assert out[14, 8] == 0                                    # purple dropped
+    assert out[4, 30] == 0                                    # grey dropped
+    assert out[18, 38] == 0                                   # background dropped
+
+
+def test_game_name_line_is_skipped():
+    raw = "@4:13 PITI\nGAIME: HBT\nROeGUE ENCAMPMENT\n"
+    assert ocr.recognise(raw, NAMES).area == "Rogue Encampment"
+    assert ocr.recognise("GAME: CRYPT\n", NAMES).area is None

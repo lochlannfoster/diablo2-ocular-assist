@@ -23,7 +23,7 @@ MIN_SCORE = 0.75
 
 # Lines that can never be an area name; skipping them saves a fuzzy pass and
 # stops "Difficulty: Normal" from ever competing with a real name.
-_SKIP = re.compile(r"difficulty|^\s*\d{1,2}:\d{2}|^\s*$", re.IGNORECASE)
+_SKIP = re.compile(r"difficulty|^\s*game\b|^\s*\d{1,2}:\d{2}|^\s*$", re.IGNORECASE)
 _NOISE = re.compile(r"[^A-Za-z0-9' ]+")
 
 # Tesseract's usual misreads of a lone digit after "Level". Only applied in
@@ -59,11 +59,28 @@ def read_difficulty(raw: str) -> str | None:
     return best if best_score >= 0.6 else None
 
 
+def gold_only(image: Image.Image) -> Image.Image:
+    """Keep the game's gold text, black out everything else.
+
+    The current area is drawn in gold (roughly 220,190,120). Terror zones are
+    listed in the same block in purple (150,60,220), and the matcher would
+    happily pick one of those -- they are real area names. Gold has
+    red > green > blue; purple has blue > green. Masking on that alone drops
+    the purple lines (and their anti-aliased edges) before OCR ever sees them.
+    """
+    import numpy as np
+
+    rgb = np.asarray(image.convert("RGB")).astype(int)
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    keep = (r >= 90) & (g >= 60) & (r >= g) & (g > b)
+    gray = np.where(keep, (r * 299 + g * 587 + b * 114) // 1000, 0).astype("uint8")
+    return Image.fromarray(gray)
+
+
 def preprocess(image: Image.Image, scale: int = 2) -> Image.Image:
-    """Grayscale and upscale. Kept mild on purpose: thresholding the gold text
-    against dark terrain produced *more* errors on a real frame than leaving
-    the anti-aliasing alone."""
-    gray = ImageOps.grayscale(image)
+    """Gold-mask, then upscale. No thresholding: it produced *more* errors on
+    a real frame than leaving the anti-aliasing alone."""
+    gray = gold_only(image)
     if scale != 1:
         gray = gray.resize((gray.width * scale, gray.height * scale), Image.LANCZOS)
     return gray

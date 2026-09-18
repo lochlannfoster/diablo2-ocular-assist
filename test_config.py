@@ -39,4 +39,4 @@ def test_strings_are_escaped(tmp_path):
 
 def test_current_config_loads():
     cfg = config.load()
-    assert cfg["overlay"]["output"] == "DP-1"
+    assert cfg["overlay"]["anchor"] in config.ANCHORS
