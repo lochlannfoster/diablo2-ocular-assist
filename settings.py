@@ -15,7 +15,8 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
-from gi.repository import Gdk, GLib, Gtk  # noqa: E402
+gi.require_version("PangoCairo", "1.0")
+from gi.repository import Gdk, GLib, Gtk, PangoCairo  # noqa: E402
 
 import config as configmod  # noqa: E402
 import hotkeys  # noqa: E402
@@ -23,6 +24,14 @@ import native  # noqa: E402
 import overlay as overlaymod  # noqa: E402
 
 SAVE_DEBOUNCE_MS = 500
+
+
+def monospace_families() -> list[str]:
+    """Installed monospace font families, sorted; the overlay is fixed-width
+    so anything else would break the box."""
+    fontmap = PangoCairo.FontMap.get_default()
+    names = sorted(f.get_name() for f in fontmap.list_families() if f.is_monospace())
+    return names or ["monospace"]
 
 
 class SettingsWindow(Gtk.ApplicationWindow):
@@ -142,6 +151,15 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.font_spin = self._spin(text, "font px", 8, 40, 1, self._on_font)
         self.width_spin = self._spin(text, "width chars", 30, 120, 1, self._on_width)
         self._row(grid, row, "Text", text); row += 1
+
+        style = Gtk.Box(spacing=8)
+        self._fonts = monospace_families()
+        self.font_combo = Gtk.DropDown.new_from_strings(self._fonts)
+        self.font_combo.connect("notify::selected", self._on_font_family)
+        style.append(self.font_combo)
+        self.opacity_spin = self._spin(style, "opacity", 0.2, 1.0, 0.05, self._on_style, digits=2)
+        self.padding_spin = self._spin(style, "padding px", 0, 40, 1, self._on_style)
+        self._row(grid, row, "Style", style); row += 1
         return frame
 
     def _build_capture_section(self):
@@ -216,6 +234,13 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.margin_y.set_value(ov["margin_y"])
         self.font_spin.set_value(ov["font_size"])
         self.width_spin.set_value(ov["width"])
+        font = str(ov.get("font", "Hack"))
+        if font not in self._fonts:          # configured font not installed here
+            self._fonts.append(font)
+            self.font_combo.set_model(Gtk.StringList.new(self._fonts))
+        self.font_combo.set_selected(self._fonts.index(font))
+        self.opacity_spin.set_value(float(ov.get("opacity", 0.82)))
+        self.padding_spin.set_value(int(ov.get("padding", 12)))
         for key, spin in self.region_spins.items():
             spin.set_value(cap["region"][key])
         self.interval_spin.set_value(cap["interval"])
@@ -318,6 +343,19 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.session.overlay.set_font_size(int(spin.get_value()))
         self._schedule_save()
 
+    def _on_font_family(self, combo, *_):
+        if self._loading:
+            return
+        self.session.overlay.set_style(font=self._fonts[combo.get_selected()])
+        self._schedule_save()
+
+    def _on_style(self, spin):
+        if self._loading:
+            return
+        self.session.overlay.set_style(opacity=self.opacity_spin.get_value(),
+                                       padding=int(self.padding_spin.get_value()))
+        self._schedule_save()
+
     def _on_width(self, spin):
         if self._loading:
             return
@@ -365,6 +403,7 @@ class SettingsWindow(Gtk.ApplicationWindow):
         ov = self.config["overlay"]
         self.session.overlay.set_placement(ov["anchor"], ov["margin_x"], ov["margin_y"])
         self.session.overlay.set_font_size(ov["font_size"])
+        self.session.overlay.set_style()
         self.session.overlay.set_width(ov["width"])
         self.session.overlay.refresh()
         self.session.reader.region = overlaymod.capture.Region(**self.config["capture"]["region"])

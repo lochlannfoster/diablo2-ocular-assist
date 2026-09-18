@@ -12,6 +12,8 @@ package. The interface, implemented by both backends:
     monitor_size(win) -> (w, h)|None  size of the overlay's monitor, in the same
                                       units as the margins
     set_click_through(win, enabled)   True = every click goes to the game
+    set_opacity(win, alpha)           Windows: layered-window alpha (CSS alpha is
+                                      unavailable there); Linux: no-op, CSS does it
     capture_backend(capture_config)   object with .grab(region) / .window_size()
     hotkey_bridge(on_command)         object with .start() / .stop()
     game_is_running() -> bool
@@ -38,6 +40,7 @@ set_placement = impl.set_placement
 set_monitor = impl.set_monitor
 monitor_size = impl.monitor_size
 set_click_through = impl.set_click_through
+set_opacity = impl.set_opacity
 capture_backend = impl.capture_backend
 hotkey_bridge = impl.hotkey_bridge
 game_is_running = impl.game_is_running

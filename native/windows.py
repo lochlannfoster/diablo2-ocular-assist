@@ -118,11 +118,19 @@ def on_realize(win, overlay):
     style = user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
     style |= WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE | WS_EX_TOPMOST
     user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style)
-    user32.SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA)
+    set_opacity(win, float(overlay.session.config["overlay"].get("opacity", 0.82)))
     set_click_through(win, not overlay.editing)
     _apply_placement(win)
     surface = win.get_native().get_surface()
     surface.connect("layout", lambda *_: _apply_placement(win))
+
+
+def set_opacity(win, alpha: float):
+    """Whole-window alpha: the win32 backend has no per-pixel alpha, so the
+    scrim opacity from the settings is applied to the layered window."""
+    hwnd = _hwnd(win)
+    if hwnd:
+        user32.SetLayeredWindowAttributes(hwnd, 0, int(max(0.2, min(1.0, alpha)) * 255), LWA_ALPHA)
 
 
 def set_click_through(win, enabled: bool):

@@ -106,6 +106,10 @@ def set_click_through(win, enabled: bool):
         surface.set_input_region(cairo.Region(rect))
 
 
+def set_opacity(win, alpha: float):
+    """The scrim alpha is in the CSS on Wayland; nothing to do."""
+
+
 def list_monitors():
     """Every connected output, as (connector, model, geometry-string)."""
     from gi.repository import Gdk

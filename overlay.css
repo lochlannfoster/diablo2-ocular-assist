@@ -47,41 +47,16 @@ window.overlay.win32 {
   color: #5d726c;
 }
 
-/* Section headers: what and which way. */
+/* Section headers: what and which way. The header word itself is coloured
+   per section in the markup (markup.SECTION_COLOURS); the rest of the line
+   is neutral so every section reads the same way. */
 .overlay .head {
   font-weight: bold;
   padding-top: 4px;
 }
-.overlay .head.wp   { color: #7fc8ff; }
-.overlay .head.next { color: #9be59b; }
-.overlay .head.exp  { color: #c9d6d1; }
 
-/* The two hint lines. */
+/* Body text: one neutral shade for every section. */
 .overlay .hint {
-  color: #c9d6d1;
-}
-
-.overlay .hint.wp {
-  color: #7fc8ff;
-}
-
-.overlay .hint.next {
-  color: #9be59b;
-}
-
-.overlay .hint.quest {
-  color: #e8c46a;
-}
-
-.overlay .hint.exp {
-  color: #c9d6d1;
-}
-
-.overlay .hint.notes {
-  color: #8fd3d3;
-}
-
-.overlay .hint.uniques {
   color: #c9d6d1;
 }
 

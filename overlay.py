@@ -47,6 +47,7 @@ import capture  # noqa: E402
 import config as configmod  # noqa: E402
 import hotkeys  # noqa: E402
 import ocr  # noqa: E402
+from markup import band, dim, direction, esc, head, rng  # noqa: E402
 from state import Recognizer  # noqa: E402
 
 HERE = Path(__file__).parent
@@ -61,28 +62,6 @@ list_monitors = native.impl.list_monitors
 COMMANDS = ("hide", "freeze", "quit", "flag", "edit")
 
 DIFFICULTY_COLOURS = {"normal": "#9be59b", "nightmare": "#ffd166", "hell": "#ff5f5f"}
-GOOD = "#00ff9c"
-NORULE = "#ff9f5f"
-
-
-def esc(text: str) -> str:
-    return GLib.markup_escape_text(text)
-
-
-def direction(hint) -> str:
-    """The direction word, coloured: orange for 'no rule', white otherwise."""
-    colour = NORULE if hint.no_rule else "#ffffff"
-    return f'<span foreground="{colour}" weight="bold">{esc(hint.label)}</span>'
-
-
-def band(levels: str, label: str, colour: str) -> str:
-    """'45–55 recommended': a clvl range, coloured, then its label."""
-    return f'<span foreground="{colour}" weight="bold">{levels}</span> {label}'
-
-
-def rng(pair) -> str:
-    low, high = pair
-    return f"{low}" if low == high else f"{low}–{high}"
 
 
 class Reader(threading.Thread):
@@ -402,7 +381,20 @@ class Overlay:
 
     def set_font_size(self, size: int):
         self.font_size = int(size)
-        self._load_sizing_css()
+        self._load_style_css()
+
+    def set_style(self, font: str | None = None, opacity: float | None = None,
+                  padding: int | None = None):
+        """Font family, scrim alpha and box padding, applied live."""
+        ov = self.session.config["overlay"]
+        if font is not None:
+            ov["font"] = str(font)
+        if opacity is not None:
+            ov["opacity"] = max(0.0, min(1.0, float(opacity)))
+        if padding is not None:
+            ov["padding"] = max(0, int(padding))
+        self._load_style_css()
+        native.set_opacity(self.win, float(ov.get("opacity", 0.82)))
 
     def set_width(self, width: int):
         self.width = int(width)
@@ -430,18 +422,25 @@ class Overlay:
         Gtk.StyleContext.add_provider_for_display(
             display, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
-        self._load_sizing_css()
+        self._load_style_css()
 
-    def _load_sizing_css(self):
-        # The overlay's own CSS lives in overlay.css; only the size is code,
-        # so it is a separate provider that can be swapped at runtime. Scoped
-        # to .root so the settings window keeps the system theme's sizes.
+    def _load_style_css(self):
+        # The overlay's own CSS lives in overlay.css; the user-tunable parts
+        # (font, size, scrim alpha, padding) are a separate provider that can
+        # be swapped at runtime. Scoped to .root so the settings window keeps
+        # the system theme.
+        ov = self.session.config["overlay"]
+        font = str(ov.get("font", "Hack")).replace('"', "")
+        opacity = float(ov.get("opacity", 0.82))
+        pad = int(ov.get("padding", 12))
         display = self.win.get_display()
         if self._sizing_provider is not None:
             Gtk.StyleContext.remove_provider_for_display(display, self._sizing_provider)
         sizing = Gtk.CssProvider()
         sizing.load_from_data(
-            f".root label {{ font-size: {self.font_size}px; }}"
+            f'.root {{ background: rgba(7, 11, 13, {opacity:.2f});'
+            f' padding: {pad}px {pad + 10}px {pad + 2}px {pad + 4}px; }}'
+            f'.root label {{ font-family: "{font}", monospace; font-size: {self.font_size}px; }}'
             f".root .title {{ font-size: {self.font_size + 1}px; }}".encode()
         )
         Gtk.StyleContext.add_provider_for_display(
@@ -506,59 +505,59 @@ class Overlay:
 
         wp = area.to_waypoint
         if area.has_waypoint:
-            self.wp_head_label.set_markup(f"WAYPOINT  ·  {direction(wp)}")
-            self.wp_label.set_text(esc(wp.tip))
+            self.wp_head_label.set_markup(f"{head('WAYPOINT', 'wp')}  ·  {direction(wp)}")
+            self.wp_label.set_text(wp.tip)
         else:
-            self.wp_head_label.set_markup("WAYPOINT  ·  <span foreground=\"#8a9a94\">none</span>")
+            self.wp_head_label.set_markup(f"{head('WAYPOINT', 'wp')}  ·  {dim('none')}")
             self.wp_label.set_text("No waypoint in this area.")
         (self.wp_label.add_css_class if wp.no_rule else self.wp_label.remove_css_class)("norule")
 
         nx = area.to_next
         origin = "from waypoint" if area.has_waypoint else "from entrance"
         self.next_head_label.set_markup(
-            f"NEXT  {esc(area.next or 'end of the line')}  ·  {direction(nx)}"
-            f"  <span foreground=\"#8a9a94\">({origin})</span>")
-        self.next_tip_label.set_text(esc(nx.tip))
+            f"{head('NEXT', 'next')}  {esc(area.next or 'end of the line')}  ·  {direction(nx)}"
+            f"  {dim(f'({origin})')}")
+        self.next_tip_label.set_text(nx.tip)
         (self.next_tip_label.add_css_class if nx.no_rule
          else self.next_tip_label.remove_css_class)("norule")
 
         self.farm_label.set_visible(bool(area.farm))
         if area.farm:
-            self.farm_label.set_markup("FARM  " + esc("  ·  ".join(area.farm)))
+            self.farm_label.set_markup(f"{head('FARM', 'farm')}  " + esc("  ·  ".join(area.farm)))
 
         # One quest per line; unused lines are hidden so the box stays tight.
         for label, quest in zip(self.quest_labels, list(area.quests) + ["", ""]):
             label.set_visible(bool(quest))
             if quest:
-                label.set_markup(f"QUEST  {esc(quest)}")
+                label.set_markup(f"{head('QUEST', 'quest')}  {esc(quest)}")
 
         # One line: the clvl band that gets full XP here, then the band that
         # still gets a worthwhile rate (43-81%).
         self.exp_head_label.set_visible(False)
         if level:
             b = areas.exp_bands(level)
+            ok = rng((b["avg_low"][0], b["avg_high"][1]))
             self.exp_label.set_markup(
-                f"CLVL  {band(rng(b['good']), 'recommended', GOOD)}"
-                f"  <span foreground=\"#8a9a94\">"
-                f"({rng((b['avg_low'][0], b['avg_high'][1]))} still ok, mlvl {level})</span>")
+                f"{head('CLVL', 'exp')}  {band(rng(b['good']), 'recommended')}"
+                f"  {dim(f'({ok} still ok, mlvl {level})')}")
         else:
             self.exp_label.set_visible(False)
 
         drops = areas.drop_note(area.act, rec.difficulty, level)
         self.drops_label.set_visible(bool(drops))
         if drops:
-            self.drops_label.set_markup("DROPS  " + esc(drops))
+            self.drops_label.set_markup(f"{head('DROPS', 'drops')}  " + esc(drops))
 
         notes = list(area.notes)
         self.notes_label.set_visible(bool(notes))
         if notes:
-            self.notes_label.set_markup("NOTE  " + esc("  ·  ".join(notes)))
+            self.notes_label.set_markup(f"{head('NOTE', 'notes')}  " + esc("  ·  ".join(notes)))
 
         self.uniques_label.set_visible(bool(area.uniques))
         if area.uniques:
             names = "  ·  ".join(esc(n) for n in area.uniques)
             self.uniques_label.set_markup(
-                f"SUPERUNIQUE  <span foreground=\"#d4a24c\" weight=\"bold\">{names}</span>")
+                f"{head('SUPERUNIQUE', 'uniques')}  <span weight=\"bold\">{names}</span>")
 
         # Sections the user switched off in the settings window.
         for key, labels in (

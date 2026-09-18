@@ -40,3 +40,15 @@ def test_strings_are_escaped(tmp_path):
 def test_current_config_loads():
     cfg = config.load()
     assert cfg["overlay"]["anchor"] in config.ANCHORS
+
+
+def test_style_keys_round_trip_and_default(tmp_path):
+    path = tmp_path / "config.toml"
+    cfg = config.load(path)
+    assert cfg["overlay"]["font"] == "Hack"
+    assert cfg["overlay"]["opacity"] == 0.82 and cfg["overlay"]["padding"] == 12
+    cfg["overlay"].update(font="DejaVu Sans Mono", opacity=0.5, padding=4)
+    config.save(cfg, path)
+    again = config.load(path)
+    assert again["overlay"]["font"] == "DejaVu Sans Mono"
+    assert again["overlay"]["opacity"] == 0.5 and again["overlay"]["padding"] == 4

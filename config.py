@@ -43,6 +43,9 @@ DEFAULTS = {
         "margin_x": 12,
         "margin_y": 122,
         "font_size": 15,
+        "font": "Hack",
+        "opacity": 0.82,
+        "padding": 12,
         "width": 60,
         "hotkeys": True,
         "follow_focus": True,
@@ -74,6 +77,9 @@ anchor = {anchor}            # top-left | top-right | bottom-left | bottom-right
 margin_x = {margin_x}        # logical (scaled) pixels from the side edge
 margin_y = {margin_y}        # logical pixels from the top/bottom edge
 font_size = {font_size}
+font = {font}                # monospace family; falls back to any monospace
+opacity = {opacity}          # background scrim alpha, 0.2-1.0
+padding = {padding}          # px inside the box
 width = {width}              # minimum characters per line; long tips wrap
 hotkeys = {hotkeys}          # read /dev/input for Ctrl+F9..F12 while D2R runs
 follow_focus = {follow_focus}  # show the overlay only while the game window is focused
@@ -137,6 +143,9 @@ def dumps(config: dict) -> str:
         anchor=_toml_str(str(ov["anchor"])),
         margin_x=int(ov["margin_x"]), margin_y=int(ov["margin_y"]),
         font_size=int(ov["font_size"]), width=int(ov["width"]),
+        font=_toml_str(str(ov.get("font", "Hack"))),
+        opacity=round(float(ov.get("opacity", 0.82)), 2),
+        padding=int(ov.get("padding", 12)),
         hotkeys=_toml_bool(bool(ov["hotkeys"])),
         follow_focus=_toml_bool(bool(ov.get("follow_focus", True))),
         hide_unread=_toml_bool(bool(ov.get("hide_unread", True))),
