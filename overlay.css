@@ -11,7 +11,7 @@ window {
 .root {
   background: rgba(7, 11, 13, 0.82);
   border-left: 2px solid #b8862b;
-  padding: 10px 16px 12px 14px;
+  padding: 12px 22px 14px 16px;
 }
 
 label {
@@ -63,6 +63,10 @@ label {
 
 .hint.quest {
   color: #e8c46a;
+}
+
+.hint.exp {
+  color: #c9d6d1;
 }
 
 /* "No accepted rule": the sources say so explicitly. Stands out so you know

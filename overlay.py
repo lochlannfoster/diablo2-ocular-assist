@@ -60,6 +60,29 @@ FLAG_LOG = HERE / "debug" / "flagged.log"
 
 COMMANDS = ("hide", "freeze", "quit", "flag")
 
+DIFFICULTY_COLOURS = {"normal": "#9be59b", "nightmare": "#ffd166", "hell": "#ff5f5f"}
+GOOD, AVG, BAD = "#00ff9c", "#ffd166", "#ff5f5f"
+NORULE = "#ff9f5f"
+
+
+def esc(text: str) -> str:
+    return GLib.markup_escape_text(text)
+
+
+def direction(hint) -> str:
+    """The direction word, coloured: orange for 'no rule', white otherwise."""
+    colour = NORULE if hint.no_rule else "#ffffff"
+    return f'<span foreground="{colour}" weight="bold">{esc(hint.label)}</span>'
+
+
+def band(name: str, levels: str, colour: str) -> str:
+    return f'<span foreground="{colour}">{name} {levels}</span>'
+
+
+def rng(pair) -> str:
+    low, high = pair
+    return f"{low}" if low == high else f"{low}–{high}"
+
 
 def load_config(path: Path = CONFIG_PATH) -> dict:
     with open(path, "rb") as handle:
@@ -137,7 +160,12 @@ class Overlay:
         self.next_head_label = self._label("head", "next")
         self.next_tip_label = self._label("hint", "next")
         self.quest_labels = [self._label("hint", "quest"), self._label("hint", "quest")]
+        self.exp_label = self._label("hint", "exp")
         self.next_label = self.next_head_label
+        # Gaps between sections.
+        for label in (self.wp_head_label, self.next_head_label,
+                      self.quest_labels[0], self.exp_label):
+            label.set_margin_top(10)
 
         self._load_css()
         self.win.connect("realize", self._clear_input_region)
@@ -158,6 +186,8 @@ class Overlay:
         label.set_wrap(True)
         label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
         label.set_ellipsize(Pango.EllipsizeMode.NONE)
+        label.set_margin_end(10)
+        label.set_use_markup(True)
         for cls in classes:
             label.add_css_class(cls)
         self.root.append(label)
@@ -237,9 +267,11 @@ class Overlay:
         self._last_render = state
 
         for label in (self.title_label, self.wp_head_label, self.wp_label,
-                      self.next_head_label, self.next_tip_label, *self.quest_labels):
+                      self.next_head_label, self.next_tip_label, *self.quest_labels,
+                      self.exp_label):
             for cls in ("stale", "frozen", "error"):
                 label.remove_css_class(cls)
+            label.set_visible(True)
 
         if rec.area is None:
             if self.error:
@@ -251,24 +283,24 @@ class Overlay:
                 self.title_label.set_text("reading…")
                 self.title_label.add_css_class("stale")
                 self.wp_label.set_text("area name must be on screen")
-            self.wp_head_label.set_text("")
-            self.next_label.set_text("")
-            self.next_tip_label.set_text("")
-            for label in self.quest_labels:
-                label.set_text("")
+            for label in (self.wp_head_label, self.next_label, self.next_tip_label,
+                          *self.quest_labels, self.exp_label):
+                label.set_visible(False)
             return
 
         area = areas.resolve(self.rules, rec.area, self.last_act)
         self.last_act = area.act
         dot = {"high": "●", "medium": "●", "low": "○"}[area.confidence]
-        suffix = "  (frozen)" if rec.frozen else ""
         level = area.level(rec.difficulty)
-        if level:
-            tag = {"normal": "N", "nightmare": "NM", "hell": "H"}[rec.difficulty]
-            suffix += f"   alvl {level} ({tag})"
-        elif not area.levels[0]:
-            suffix += "   town"
-        self.title_label.set_text(f"{dot} {area.name}{suffix}")
+        if rec.difficulty:
+            diff = f'<span foreground="{DIFFICULTY_COLOURS[rec.difficulty]}">' \
+                   f'{rec.difficulty.upper()}</span>'
+        else:
+            diff = "difficulty ?"
+        detail = f"arealvl {level}" if level else ("town" if not area.levels[0] else "arealvl ?")
+        frozen = "  (frozen)" if rec.frozen else ""
+        self.title_label.set_markup(
+            f"{dot} {esc(area.name)} - {diff} ({detail}){esc(frozen)}")
         for cls in ("conf-high", "conf-medium", "conf-low"):
             self.title_label.remove_css_class(cls)
         self.title_label.add_css_class(f"conf-{area.confidence}")
@@ -279,24 +311,39 @@ class Overlay:
 
         wp = area.to_waypoint
         if area.has_waypoint:
-            self.wp_head_label.set_text(f"WAYPOINT  ·  {wp.label}")
-            self.wp_label.set_text(wp.tip)
+            self.wp_head_label.set_markup(f"WAYPOINT  ·  {direction(wp)}")
+            self.wp_label.set_text(esc(wp.tip))
         else:
-            self.wp_head_label.set_text("WAYPOINT  ·  none")
+            self.wp_head_label.set_markup("WAYPOINT  ·  <span foreground=\"#8a9a94\">none</span>")
             self.wp_label.set_text("No waypoint in this area.")
         (self.wp_label.add_css_class if wp.no_rule else self.wp_label.remove_css_class)("norule")
 
         nx = area.to_next
         origin = "from waypoint" if area.has_waypoint else "from entrance"
-        self.next_head_label.set_text(
-            f"NEXT  {area.next or 'end of the line'}  ·  {nx.label}  ({origin})")
-        self.next_tip_label.set_text(nx.tip)
+        self.next_head_label.set_markup(
+            f"NEXT  {esc(area.next or 'end of the line')}  ·  {direction(nx)}"
+            f"  <span foreground=\"#8a9a94\">({origin})</span>")
+        self.next_tip_label.set_text(esc(nx.tip))
         (self.next_tip_label.add_css_class if nx.no_rule
          else self.next_tip_label.remove_css_class)("norule")
 
-        # One quest per line; a blank line keeps the box the same height.
+        # One quest per line; unused lines are hidden so the box stays tight.
         for label, quest in zip(self.quest_labels, list(area.quests) + ["", ""]):
-            label.set_text(f"QUEST  {quest}" if quest else "")
+            label.set_visible(bool(quest))
+            if quest:
+                label.set_markup(f"QUEST  {esc(quest)}")
+
+        if level:
+            b = areas.exp_bands(level)
+            self.exp_label.set_markup(
+                "CLVL   "
+                f"{band('BAD', f'≤{b['bad_low'][1]}', BAD)}   "
+                f"{band('AVG', rng(b['avg_low']), AVG)}   "
+                f"{band('GOOD', rng(b['good']), GOOD)}   "
+                f"{band('AVG', rng(b['avg_high']), AVG)}   "
+                f"{band('BAD', f'≥{b['bad_high'][0]}', BAD)}")
+        else:
+            self.exp_label.set_visible(False)
 
     # -- commands ----------------------------------------------------------
 

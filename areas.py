@@ -154,6 +154,24 @@ def load(path: Path = DATA_PATH) -> dict[str, Area]:
     return parse(data)
 
 
+def exp_bands(alvl: int) -> dict[str, tuple[int, int]]:
+    """Recommended character-level bands for an area level.
+
+    Diablo II pays 100% experience while clvl is within 5 of the monster
+    level (alvl in Nightmare/Hell), then 81/62/43/24% at a difference of
+    6/7/8/9 and 5% from 10 on. From clvl 25 monsters *above* you scale by
+    clvl/mlvl instead, which is milder -- but that far below the area level
+    you have other problems, so the bands are kept symmetric.
+    """
+    return {
+        "good": (max(1, alvl - 5), min(99, alvl + 5)),
+        "avg_low": (max(1, alvl - 8), max(1, alvl - 6)),
+        "avg_high": (min(99, alvl + 6), min(99, alvl + 8)),
+        "bad_low": (1, max(1, alvl - 9)),
+        "bad_high": (min(99, alvl + 9), 99),
+    }
+
+
 def screen_names(areas: dict[str, Area]) -> list[str]:
     """Distinct names as they appear on screen -- the OCR vocabulary."""
     return sorted({area.screen_name for area in areas.values()})

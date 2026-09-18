@@ -6,20 +6,32 @@ It reads the area name the game draws in the top-right corner, looks it up in a
 hand-written table, and shows two hints on top of the game:
 
 ```
-● Flayer Jungle   alvl 50 (NM)
+● Flayer Jungle - NIGHTMARE (arealvl 50)
+
 WAYPOINT  ·  INSIDE
 Three camps are marked by pairs of poles. The waypoint is in the
 camp with the Swampy Pit entrance; the Gidbinn and Flayer Dungeon
 share another.
+
 NEXT  Lower Kurast  ·  STRAIGHT  (from waypoint)
 Keep heading up: the Lower Kurast exit is on the last grid tile
 (row 6), where Stormtree stands. A river connects every tile;
 follow it.
+
 QUEST  Blade of the Old Religion: Gidbinn
+
+CLVL   BAD ≤41   AVG 42–44   GOOD 45–55   AVG 56–58   BAD ≥59
 ```
 
-- **alvl** — the area level for the difficulty read off the screen
-  (N / NM / H); towns show "town".
+- **Title** — area, difficulty (coloured green / amber / red) and the area
+  level for that difficulty; towns show "town".
+- **CLVL** — recommended character level bands for this area. D2 pays full
+  experience while your level is within 5 of the monster level (= area level
+  in Nightmare/Hell), then 81 / 62 / 43 / 24 % at 6 / 7 / 8 / 9 apart and 5 %
+  from 10 on ([PureDiablo](https://www.purediablo.com/d2wiki/Experience)).
+  GOOD = ±5, AVG = 6–8 apart, BAD = 9+ apart. (From clvl 25, monsters *above*
+  you are penalised more gently, by clvl ÷ mlvl — the bands stay symmetric
+  because being 9+ levels under an area is a survival problem anyway.)
 - **Q** — quest objectives located in this area (up to two lines).
 - **WP** — where the waypoint is, from the entrance.
 - **NEXT** — the next area and where its exit is, from the waypoint (or the
@@ -29,7 +41,7 @@ QUEST  Blade of the Old Religion: Gidbinn
   directions. Tips are full sentences and wrap inside the fixed-width box.
 - `NO RULE  no accepted rule` (orange) means the sources say the map is random —
   don't look for a pattern.
-- The dot colour is source agreement: green = both sources, yellow = one,
+- Direction words are white; `NO RULE` is orange. The dot colour is source agreement: green = both sources, yellow = one,
   red = inferred. Dim title = the corner isn't readable right now (menu,
   loading); it's showing the last known area.
 

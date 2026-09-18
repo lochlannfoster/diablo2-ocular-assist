@@ -92,3 +92,12 @@ def test_levels_and_quests():
         assert len(area.quests) <= 2, area.name
         for quest in area.quests:
             assert len(quest) <= 42, quest
+
+
+def test_exp_bands():
+    b = areas.exp_bands(50)
+    assert b["good"] == (45, 55)
+    assert b["avg_low"] == (42, 44) and b["avg_high"] == (56, 58)
+    assert b["bad_low"] == (1, 41) and b["bad_high"] == (59, 99)
+    assert areas.exp_bands(2)["good"] == (1, 7)
+    assert areas.exp_bands(85)["bad_high"] == (94, 99)
