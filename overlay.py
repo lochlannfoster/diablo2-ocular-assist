@@ -7,10 +7,12 @@ in data/areas.toml, and shows two hints on top of the game: where the
 waypoint tends to be, and where the exit to the next area tends to be from
 the waypoint.
 
-The window sits on the compositor's overlay layer, never takes focus and has
-an empty input region, so every click goes straight to the game.
+The overlay sits on the compositor's overlay layer, never takes focus and has
+an empty input region, so every click goes straight to the game. It is driven
+from a normal settings window (settings.py): the window owns the OCR reader,
+the hotkeys and the control socket, and closing it shuts everything down.
 
-    ./overlay.py                  # run
+    ./overlay.py                  # run (opens the settings window + overlay)
     ./overlay.py --ctl hide       # toggle visibility of a running overlay
     ./overlay.py --list-outputs   # which monitor names exist
 """
@@ -23,7 +25,6 @@ import socket
 import sys
 import threading
 import time
-import tomllib
 from pathlib import Path
 
 import preload
@@ -47,13 +48,14 @@ from gi.repository import (  # noqa: E402
 
 import areas  # noqa: E402
 import capture  # noqa: E402
+import config as configmod  # noqa: E402
 import hotkeys  # noqa: E402
 import ocr  # noqa: E402
 from state import Recognizer  # noqa: E402
 
 HERE = Path(__file__).parent
 CSS_PATH = HERE / "overlay.css"
-CONFIG_PATH = HERE / "config.toml"
+CONFIG_PATH = configmod.CONFIG_PATH
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 SOCKET_PATH = RUNTIME / "d2-overlay.sock"
 FLAG_LOG = HERE / "debug" / "flagged.log"
@@ -85,11 +87,6 @@ def rng(pair) -> str:
     return f"{low}" if low == high else f"{low}–{high}"
 
 
-def load_config(path: Path = CONFIG_PATH) -> dict:
-    with open(path, "rb") as handle:
-        return tomllib.load(handle)
-
-
 class Reader(threading.Thread):
     """Capture + OCR loop, off the GTK thread.
 
@@ -98,9 +95,11 @@ class Reader(threading.Thread):
     Recognizer and the widgets are only ever touched from the GTK thread.
     """
 
-    def __init__(self, config, names, on_reading, on_error):
+    def __init__(self, config, names, on_reading, on_error, on_frame=None):
         super().__init__(daemon=True)
         cap = config["capture"]
+        # `interval` and `region` may be reassigned from the GTK thread while
+        # the loop runs; each iteration reads them once, which is enough.
         self.interval = float(cap.get("interval", 1.0))
         self.region = capture.Region(**cap["region"])
         self.backend = capture.make(cap.get("backend", "xwayland"),
@@ -108,6 +107,7 @@ class Reader(threading.Thread):
         self.names = names
         self.on_reading = on_reading
         self.on_error = on_error
+        self.on_frame = on_frame
         self.stop_event = threading.Event()
 
     def run(self):
@@ -115,6 +115,8 @@ class Reader(threading.Thread):
             started = time.monotonic()
             try:
                 image = self.backend.grab(self.region)
+                if self.on_frame is not None:
+                    GLib.idle_add(self.on_frame, image)
                 reading = ocr.read_area(image, self.names)
                 GLib.idle_add(self.on_reading, reading)
             except capture.CaptureError as exc:
@@ -130,26 +132,22 @@ class Reader(threading.Thread):
 
 
 class Overlay:
-    def __init__(self, app, config, rules):
-        ov = config.get("overlay", {})
-        anchor = str(ov.get("anchor", "top-left")).lower()
-        anchor_top = not anchor.startswith("bottom")
-        anchor_right = anchor.endswith("right")
-        self.rules = rules
-        self.recognizer = Recognizer()
-        self.font_size = int(ov.get("font_size", 15))
-        self.width = int(ov.get("width", 60))
-        self.hidden = False
+    """The click-through window. Pure display: state lives in the Session."""
+
+    def __init__(self, app, session):
+        self.session = session
+        ov = session.config["overlay"]
+        self.rules = session.rules
+        self.font_size = int(ov["font_size"])
+        self.width = int(ov["width"])
         self.last_act = None  # disambiguates names shared between acts
-        self.error = None
-        self.last_reading = None
         self._last_render = None
+        self._sizing_provider = None
+        self._labels = []
 
         self.win = Gtk.ApplicationWindow(application=app)
-        self._init_layer_shell(anchor_top, anchor_right,
-                               int(ov.get("margin_x", 40)),
-                               int(ov.get("margin_y", 200)),
-                               ov.get("output", ""))
+        self._init_layer_shell(ov["anchor"], int(ov["margin_x"]), int(ov["margin_y"]),
+                               ov["output"])
 
         self.root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.root.add_css_class("root")
@@ -198,25 +196,72 @@ class Overlay:
         for cls in classes:
             label.add_css_class(cls)
         self.root.append(label)
+        self._labels.append(label)
         return label
 
-    def _init_layer_shell(self, anchor_top, anchor_right, margin_x, margin_y, output=""):
-        # All of this must happen before the window is realized.
+    def _init_layer_shell(self, anchor, margin_x, margin_y, output=""):
+        # init_for_window must happen before the window is realized; the rest
+        # can be changed at any time (see the set_* methods below).
         LayerShell.init_for_window(self.win)
-        if output:
-            monitor, error = find_monitor(output)
-            if monitor is not None:
-                LayerShell.set_monitor(self.win, monitor)
-            else:
-                print(f"warning: {error}", file=sys.stderr)
         # OVERLAY is the topmost layer -- above normal and fullscreen windows.
         LayerShell.set_layer(self.win, LayerShell.Layer.OVERLAY)
         LayerShell.set_keyboard_mode(self.win, LayerShell.KeyboardMode.NONE)
-        top = LayerShell.Edge.TOP if anchor_top else LayerShell.Edge.BOTTOM
-        side = LayerShell.Edge.RIGHT if anchor_right else LayerShell.Edge.LEFT
-        for edge, margin in ((top, margin_y), (side, margin_x)):
-            LayerShell.set_anchor(self.win, edge, True)
-            LayerShell.set_margin(self.win, edge, margin)
+        self._apply_monitor(output)
+        self._apply_anchor(anchor, margin_x, margin_y)
+
+    def _apply_monitor(self, output):
+        if not output:
+            return
+        monitor, error = find_monitor(output)
+        if monitor is not None:
+            LayerShell.set_monitor(self.win, monitor)
+        else:
+            print(f"warning: {error}", file=sys.stderr)
+
+    def _apply_anchor(self, anchor, margin_x, margin_y):
+        anchor = str(anchor).lower()
+        top = not anchor.startswith("bottom")
+        right = anchor.endswith("right")
+        for edge, on, margin in (
+            (LayerShell.Edge.TOP, top, margin_y),
+            (LayerShell.Edge.BOTTOM, not top, margin_y),
+            (LayerShell.Edge.LEFT, not right, margin_x),
+            (LayerShell.Edge.RIGHT, right, margin_x),
+        ):
+            LayerShell.set_anchor(self.win, edge, on)
+            LayerShell.set_margin(self.win, edge, margin if on else 0)
+
+    # -- live settings (called by the settings window) --------------------
+
+    def set_placement(self, anchor, margin_x, margin_y):
+        self._apply_anchor(anchor, margin_x, margin_y)
+
+    def set_monitor(self, output):
+        # A layer surface's output is fixed while mapped: unmap, move, remap.
+        visible = self.win.get_visible()
+        self.win.set_visible(False)
+        self._apply_monitor(output)
+        if visible:
+            self.win.present()
+
+    def set_font_size(self, size: int):
+        self.font_size = int(size)
+        self._load_sizing_css()
+
+    def set_width(self, width: int):
+        self.width = int(width)
+        for label in self._labels:
+            label.set_width_chars(self.width)
+            if label.get_wrap():
+                label.set_max_width_chars(self.width)
+
+    def set_visible(self, visible: bool):
+        self.win.set_visible(visible)
+
+    def refresh(self):
+        """Force a redraw (sections toggled, freeze, etc.)."""
+        self._last_render = None
+        self.render()
 
     def _clear_input_region(self, widget):
         """Empty input region = the compositor routes every pointer event to
@@ -235,40 +280,33 @@ class Overlay:
         Gtk.StyleContext.add_provider_for_display(
             display, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
+        self._load_sizing_css()
+
+    def _load_sizing_css(self):
+        # The overlay's own CSS lives in overlay.css; only the size is code,
+        # so it is a separate provider that can be swapped at runtime. Scoped
+        # to .root so the settings window keeps the system theme's sizes.
+        display = self.win.get_display()
+        if self._sizing_provider is not None:
+            Gtk.StyleContext.remove_provider_for_display(display, self._sizing_provider)
         sizing = Gtk.CssProvider()
         sizing.load_from_data(
-            f"label {{ font-size: {self.font_size}px; }}"
-            f".title {{ font-size: {self.font_size + 1}px; }}".encode()
+            f".root label {{ font-size: {self.font_size}px; }}"
+            f".root .title {{ font-size: {self.font_size + 1}px; }}".encode()
         )
         Gtk.StyleContext.add_provider_for_display(
             display, sizing, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1
         )
-
-    # -- input from the reader thread (runs on the GTK thread via idle_add) --
-
-    def on_reading(self, reading: ocr.Reading):
-        self.error = None
-        self.last_reading = reading
-        changed = self.recognizer.feed(reading.area, reading.difficulty)
-        if changed:
-            raw = " / ".join(reading.raw.split("\n")).strip(" /")
-            print(f"area: {self.recognizer.area}  (score {reading.score:.2f}, read {raw!r})",
-                  flush=True)
-        self.render()
-        return GLib.SOURCE_REMOVE
-
-    def on_error(self, message: str):
-        if message != self.error:
-            print(f"capture: {message}", flush=True)
-        self.error = message
-        self.render()
-        return GLib.SOURCE_REMOVE
+        self._sizing_provider = sizing
 
     # -- rendering ---------------------------------------------------------
 
     def render(self):
-        rec = self.recognizer
-        state = (rec.area, rec.difficulty, rec.visible, rec.frozen, self.error, self.hidden)
+        rec = self.session.recognizer
+        sections = self.session.config["overlay"]["sections"]
+        error = self.session.error
+        state = (rec.area, rec.difficulty, rec.visible, rec.frozen, error,
+                 tuple(sorted(sections.items())))
         if state == self._last_render:
             return
         self._last_render = state
@@ -282,10 +320,10 @@ class Overlay:
             label.set_visible(True)
 
         if rec.area is None:
-            if self.error:
+            if error:
                 self.title_label.set_text("waiting for game")
                 self.title_label.add_css_class("stale")
-                self.wp_label.set_text(self.error)
+                self.wp_label.set_text(error)
                 self.wp_label.add_css_class("error")
             else:
                 self.title_label.set_text("reading…")
@@ -367,27 +405,111 @@ class Overlay:
             self.uniques_label.set_markup(
                 f"SUPERUNIQUE  <span foreground=\"#d4a24c\" weight=\"bold\">{names}</span>")
 
-    # -- commands ----------------------------------------------------------
+        # Sections the user switched off in the settings window.
+        for key, labels in (
+            ("waypoint", (self.wp_head_label, self.wp_label)),
+            ("next", (self.next_head_label, self.next_tip_label)),
+            ("quests", self.quest_labels),
+            ("exp", (self.exp_head_label, self.exp_label)),
+            ("notes", (self.notes_label,)),
+            ("uniques", (self.uniques_label,)),
+        ):
+            if not sections.get(key, True):
+                for label in labels:
+                    label.set_visible(False)
+
+class Session:
+    """Everything that runs: config, rules, recogniser, overlay window, OCR
+    reader, control socket, hotkeys. Created by the settings window and torn
+    down by `shutdown()` when it closes -- nothing outlives the window.
+    """
+
+    def __init__(self, app, config, rules):
+        self.app = app
+        self.config = config
+        self.rules = rules
+        self.recognizer = Recognizer()
+        self.error = None
+        self.last_reading = None
+        self.last_frame = None
+        self.hidden = False
+        self.on_update = None   # settings window hook: called after each reading
+        self._closed = False
+
+        self.overlay = Overlay(app, self)
+        self.server = ControlServer(SOCKET_PATH, self.handle)
+        self.reader = Reader(config, areas.screen_names(rules),
+                             self.on_reading, self.on_error, self.on_frame)
+        self.reader.start()
+        self.bridge = HotkeyBridge(self.handle)
+        if config["overlay"].get("hotkeys", True):
+            self.bridge.start()
+        print(f"overlay running: {len(rules)} areas loaded", flush=True)
+        print(f"control socket: {SOCKET_PATH}", flush=True)
+
+    # -- from the reader thread (delivered on the GTK thread) -------------
+
+    def on_frame(self, image):
+        self.last_frame = image
+        return GLib.SOURCE_REMOVE
+
+    def on_reading(self, reading: ocr.Reading):
+        self.error = None
+        self.last_reading = reading
+        changed = self.recognizer.feed(reading.area, reading.difficulty)
+        if changed:
+            raw = " / ".join(reading.raw.split("\n")).strip(" /")
+            print(f"area: {self.recognizer.area}  (score {reading.score:.2f}, read {raw!r})",
+                  flush=True)
+        self.overlay.render()
+        if self.on_update:
+            self.on_update()
+        return GLib.SOURCE_REMOVE
+
+    def on_error(self, message: str):
+        if message != self.error:
+            print(f"capture: {message}", flush=True)
+        self.error = message
+        self.overlay.render()
+        if self.on_update:
+            self.on_update()
+        return GLib.SOURCE_REMOVE
+
+    # -- commands (hotkeys, --ctl, settings window) ------------------------
 
     def handle(self, command: str):
         if command == "hide":
-            self.hidden = not self.hidden
-            self.win.set_visible(not self.hidden)
+            self.set_hidden(not self.hidden)
         elif command == "freeze":
-            frozen = self.recognizer.toggle_frozen()
-            print(f"recognition {'frozen' if frozen else 'resumed'}", flush=True)
+            self.set_frozen(not self.recognizer.frozen)
         elif command == "flag":
-            self._flag()
+            self.flag()
         elif command == "quit":
-            self.win.get_application().quit()
+            self.shutdown()
             return
         else:
             print(f"ignoring unknown command: {command!r}", file=sys.stderr)
             return
-        self._last_render = None
-        self.render()
+        if self.on_update:
+            self.on_update()
 
-    def _flag(self):
+    def set_hidden(self, hidden: bool):
+        self.hidden = hidden
+        self.overlay.set_visible(not hidden)
+
+    def set_frozen(self, frozen: bool):
+        self.recognizer.frozen = frozen
+        print(f"recognition {'frozen' if frozen else 'resumed'}", flush=True)
+        self.overlay.refresh()
+
+    def set_hotkeys(self, enabled: bool):
+        self.config["overlay"]["hotkeys"] = enabled
+        if enabled:
+            self.bridge.start()
+        else:
+            self.bridge.stop()
+
+    def flag(self):
         """Append the current area to debug/flagged.log for later correction."""
         area = self.recognizer.area
         if area is None:
@@ -396,6 +518,20 @@ class Overlay:
         with open(FLAG_LOG, "a") as handle:
             handle.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')}  {area}\n")
         print(f"flagged: {area}", flush=True)
+
+    # -- teardown ---------------------------------------------------------
+
+    def shutdown(self):
+        """Stop every subsystem, then quit. Safe to call more than once."""
+        if self._closed:
+            return
+        self._closed = True
+        self.reader.stop()
+        self.bridge.stop()
+        self.server.close()
+        self.overlay.win.destroy()
+        print("overlay stopped", flush=True)
+        self.app.quit()
 
 
 class ControlServer:
@@ -546,7 +682,7 @@ def main(argv=None):
                         help=f"send a command to a running overlay ({', '.join(COMMANDS)})")
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     parser.add_argument("--no-hotkeys", action="store_true",
-                        help="do not read input devices; use --ctl only")
+                        help="start with hotkeys off (can be enabled in the window)")
     parser.add_argument("--list-outputs", action="store_true",
                         help="list connected monitors and exit")
     args = parser.parse_args(argv)
@@ -570,40 +706,33 @@ def main(argv=None):
         return 1
 
     try:
-        config = load_config(args.config)
+        config = configmod.load(args.config)
         rules = areas.load()
-    except (OSError, tomllib.TOMLDecodeError, areas.AreaError) as exc:
+    except (OSError, configmod.ConfigError, areas.AreaError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
+    if args.no_hotkeys:
+        config["overlay"]["hotkeys"] = False
+
+    import settings  # noqa: E402  (after preload; imports Gtk)
 
     app = Gtk.Application(application_id="dev.wagmi.d2overlay")
-    server = None
-    bridge = None
-    reader = None
+    session = None
 
     def on_activate(application):
-        nonlocal server, bridge, reader
-        overlay = Overlay(application, config, rules)
-        server = ControlServer(SOCKET_PATH, overlay.handle)
-        reader = Reader(config, areas.screen_names(rules), overlay.on_reading, overlay.on_error)
-        reader.start()
-        print(f"overlay running: {len(rules)} areas loaded", flush=True)
-        print(f"control socket: {SOCKET_PATH}", flush=True)
-        if not args.no_hotkeys:
-            bridge = HotkeyBridge(overlay.handle)
-            bridge.start()
+        nonlocal session
+        session = Session(application, config, rules)
+        window = settings.SettingsWindow(application, session, args.config)
+        window.present()
 
     app.connect("activate", on_activate)
-    GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, 2, lambda: (app.quit(), True)[1])
+    GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, 2,
+                        lambda: (session.shutdown() if session else app.quit(), True)[1])
     try:
         return app.run(None)
     finally:
-        if reader:
-            reader.stop()
-        if bridge:
-            bridge.stop()
-        if server:
-            server.close()
+        if session:
+            session.shutdown()
 
 
 if __name__ == "__main__":

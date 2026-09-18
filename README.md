@@ -63,6 +63,25 @@ No memory reading, no injection, no hooks. The pipeline is:
    overlay layer: always on top (including over exclusive fullscreen on KWin),
    never focused, empty input region so every click goes to the game.
 
+## The settings window
+
+`./overlay.py` (or `d2_on`) opens a normal, clickable **settings window** on the
+desktop alongside the overlay. It is the application: the OCR thread, hotkeys,
+control socket and overlay all belong to it, and **closing it shuts everything
+down** — nothing keeps running in the background.
+
+- **Status** — whether D2R is detected, the recognised area/difficulty, the raw
+  OCR text with its match score, and a live picture of the captured region
+  (the calibration feedback loop).
+- **Overlay** — show / freeze / hotkeys switches; which sections to display;
+  monitor, corner, margins, font size, width. Every change applies to the
+  overlay immediately.
+- **Capture** — the region as fractions of the game window, and the read interval.
+  Nudge x/y/w/h while watching the capture picture until the three text lines sit
+  cleanly inside it.
+- Changes are written back to `config.toml` automatically (half a second after
+  the last edit). "Reload config.toml" pulls in hand edits.
+
 ## Setup
 
 Arch packages only, no pip:
@@ -97,12 +116,21 @@ w = 0.155
 h = 0.09
 
 [overlay]
-output = "DP-1"      # monitor the game is on
+output = "DP-1"      # monitor the game is on ("" = compositor default)
 anchor = "top-right" # top-left | top-right | bottom-left | bottom-right
 margin_x = 12
 margin_y = 122        # just under the clock/area/difficulty block
 font_size = 15
 width = 60           # minimum characters per line (never clips)
+hotkeys = true
+
+[overlay.sections]   # which blocks the overlay shows
+waypoint = true
+next = true
+quests = true
+exp = true
+notes = true
+uniques = true
 ```
 
 If the area name isn't being read, run `tools/calibrate.py`: it saves
@@ -124,8 +152,8 @@ docstring.
 | Ctrl+F11 | `quit`   | |
 | Ctrl+F12 | `flag`   | append the current area to `debug/flagged.log` — "this rule was wrong" |
 
-Every command also works over the control socket: `./overlay.py --ctl hide`.
-Run with `--no-hotkeys` to use the socket only.
+Every command also works over the control socket: `./overlay.py --ctl hide`, and from the settings window.
+`--no-hotkeys` starts with the hotkey switch off.
 
 ## The data — `data/areas.toml`
 
@@ -194,7 +222,9 @@ python -m venv --system-site-packages .venv && .venv/bin/pip install pytest
 ## Layout
 
 ```
-overlay.py        GTK layer-shell window, reader thread, control socket, CLI
+overlay.py        Session (owns everything), layer-shell overlay, reader thread, socket, CLI
+settings.py       the settings window (main window; closing it shuts the session down)
+config.py         config.toml defaults, load, save
 capture.py        Xwayland window grab (Region as fractions)
 ocr.py            tesseract + fuzzy match to the area list
 areas.py          load/validate data/areas.toml

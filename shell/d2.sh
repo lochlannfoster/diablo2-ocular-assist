@@ -37,7 +37,7 @@ d2_on() {
     for i in 1 2 3 4 5 6 7 8 9 10; do
         sleep 0.2
         if d2_status >/dev/null 2>&1; then
-            echo "overlay on — Ctrl+F9 hide, Ctrl+F10 freeze, Ctrl+F11 quit, Ctrl+F12 flag"
+            echo "overlay on — settings window is open; closing it stops everything"
             return 0
         fi
     done
