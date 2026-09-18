@@ -12,19 +12,28 @@ from pathlib import Path
 
 DATA_PATH = Path(__file__).parent / "data" / "areas.toml"
 
-# dir value -> glyph shown in the overlay.
+# dir value -> glyph shown in the overlay. See the header of data/areas.toml
+# for what each value means.
 GLYPHS = {
-    "cw": "↻",
-    "ccw": "↺",
+    # character-relative, from the entrance (or the waypoint)
+    "left": "↰",
+    "straight": "⇧",
+    "right": "↱",
+    "back": "⇩",
+    # compass on the automap
+    "n": "↑", "ne": "↗", "e": "→", "se": "↘",
+    "s": "↓", "sw": "↙", "w": "←", "nw": "↖",
+    # outdoor shape rules
+    "corner": "◇",
+    "edge": "▭",
     "opposite": "↔",
-    "up": "↑",
-    "down": "↓",
-    "left": "←",
-    "right": "→",
-    "outer-wall": "⟳",
-    "linear": "→→",
-    "dead-end": "⊗",
-    "none": "?",
+    "near": "◎",
+    "inside": "◌",
+    "path": "⤳",
+    # layout classes
+    "fixed": "▣",
+    "random": "??",
+    "none": "-",
 }
 
 CONFIDENCE = ("high", "medium", "low")
@@ -43,6 +52,11 @@ class Hint:
     def glyph(self) -> str:
         return GLYPHS[self.dir]
 
+    @property
+    def no_rule(self) -> bool:
+        """The sources explicitly say there is no rule here."""
+        return self.dir == "random"
+
 
 @dataclass(frozen=True)
 class Area:
@@ -53,6 +67,12 @@ class Area:
     to_waypoint: Hint
     to_next: Hint
     confidence: str
+    source: str = ""
+    ocr_name: str = ""   # on-screen name when it differs from the key
+
+    @property
+    def screen_name(self) -> str:
+        return self.ocr_name or self.name
 
 
 def _hint(name: str, field: str, raw) -> Hint:
@@ -80,6 +100,8 @@ def parse(data: dict) -> dict[str, Area]:
             next_name = str(raw.get("next", ""))
             has_waypoint = bool(raw.get("has_waypoint", False))
             confidence = str(raw.get("confidence", "low"))
+            source = str(raw.get("source", ""))
+            ocr_name = str(raw.get("ocr_name", ""))
         except (KeyError, TypeError, ValueError) as exc:
             raise AreaError(f"{name}: {exc}")
         if not 1 <= act <= 5:
@@ -94,6 +116,8 @@ def parse(data: dict) -> dict[str, Area]:
             to_waypoint=_hint(name, "to_waypoint", raw.get("to_waypoint")),
             to_next=_hint(name, "to_next", raw.get("to_next")),
             confidence=confidence,
+            source=source,
+            ocr_name=ocr_name,
         )
     # Every `next` must be a real area, otherwise the overlay would happily
     # point at a place that does not exist.
@@ -112,3 +136,24 @@ def load(path: Path = DATA_PATH) -> dict[str, Area]:
     except tomllib.TOMLDecodeError as exc:
         raise AreaError(f"{path.name}: {exc}")
     return parse(data)
+
+
+def screen_names(areas: dict[str, Area]) -> list[str]:
+    """Distinct names as they appear on screen -- the OCR vocabulary."""
+    return sorted({area.screen_name for area in areas.values()})
+
+
+def resolve(areas: dict[str, Area], screen_name: str, last_act: int | None) -> Area:
+    """The area behind an on-screen name.
+
+    Act 2 and Act 3 both have "Sewers Level 1/2". When a name is ambiguous,
+    prefer the entry in the act the player was last seen in; failing that the
+    lowest act.
+    """
+    candidates = [a for a in areas.values() if a.screen_name == screen_name]
+    if not candidates:
+        raise KeyError(screen_name)
+    for area in candidates:
+        if area.act == last_act:
+            return area
+    return min(candidates, key=lambda a: a.act)

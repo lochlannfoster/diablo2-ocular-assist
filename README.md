@@ -6,16 +6,22 @@ It reads the area name the game draws in the top-right corner, looks it up in a
 hand-written table, and shows two hints on top of the game:
 
 ```
-● Cold Plains
-WP    ↔  far edge from Blood Moor
-NEXT  Stony Field
-      ↺  ¼ turn CCW from WP; Cave/Burial sides
+● Jail Level 1
+WP    ↰  left from entrance
+NEXT  Jail Level 2  (from WP)
+      ↰  left from WP (straight from entrance)
 ```
 
-- **WP** — where the waypoint tends to be, from the entrance.
-- **NEXT** — the next area, and where its exit tends to be, from the waypoint.
-- The dot colour is how much to trust the entry: green high, yellow medium, red low.
-  Dim title = the corner isn't readable right now (menu, loading), showing the last known area.
+- **WP** — where the waypoint is, from the entrance.
+- **NEXT** — the next area and where its exit is, from the waypoint (or the
+  entrance if the area has no waypoint).
+- **Left / straight / right are relative to how your character faces on
+  arriving** — the speedrunners' convention, never compass directions.
+- `??  no accepted rule` (orange) means the sources say the map is random —
+  don't look for a pattern.
+- The dot colour is source agreement: green = both sources, yellow = one,
+  red = inferred. Dim title = the corner isn't readable right now (menu,
+  loading); it's showing the last known area.
 
 ## It never touches the game
 
@@ -105,20 +111,39 @@ One table per area, keyed by the exact name the game shows:
 act = 1
 next = "Stony Field"
 has_waypoint = true
-to_waypoint = { dir = "opposite", tip = "far edge from Blood Moor" }
-to_next     = { dir = "ccw",      tip = "¼ turn CCW from WP; Cave/Burial sides" }
-confidence = "medium"
+to_waypoint = { dir = "near", tip = "next to the entrance, in the corner" }
+to_next     = { dir = "edge", tip = "mid-edge; corner path = Burial Grounds" }
+confidence = "high"
+source = "maxroll, cheatsheet"
 ```
 
-`dir` is one of `cw ccw opposite up down left right outer-wall linear dead-end none`
-(glyph map in `areas.py`). Tips must fit the fixed-width box — `test_areas.py`
+`dir` vocabulary (glyphs in `areas.py`): `left straight right back` (character-
+relative), `n ne e se s sw w nw` (compass), `corner edge opposite near inside
+path` (outdoor shape rules), `fixed`, `random` (no accepted rule), `none`. Tips must fit the fixed-width box — `test_areas.py`
 enforces the limit. The file is validated on load; a bad entry is one clear
 error at startup rather than a hint that silently never appears.
 
-**These are tendencies, not laws.** D2's map generator is random within
-constraints; the entries come from commonly repeated community rules and the
-`confidence` field is honest about which ones are solid. Expect to correct
-some as you play — Ctrl+F12 logs the current area so you can batch the fixes.
+### Where the rules come from
+
+Every entry has a `source` field. Two independent write-ups of the speedrun
+community's map-reading knowledge, which agree closely:
+
+- [Maxroll — D2R Map Reading](https://maxroll.gg/d2/resources/map-reading)
+- [d2r-speedrun-cheatsheet](https://github.com/minimapletinytools/d2r-speedrun-cheatsheet)
+  (derived from Teo-'s general map reading guide on speedrun.com)
+
+Their taxonomy: **static** maps (fixed layouts), **semi-static** maps (fixed
+border, rule-bound placement — most outdoor areas), **left/straight/right**
+rules for caves and dungeons, and **random** maps with no rule (Catacombs 1 &
+3, Arcane Sanctuary, Worldstone Keep 1 & 3, …). A few areas neither source
+covers (Cathedral, Pit 1) are marked `low` / `random` rather than guessed.
+
+Act 2 and Act 3 both have areas literally named "Sewers Level 1/2". The TOML
+keys are `Kurast Sewers Level 1/2` with `ocr_name = "Sewers Level 1"`, and the
+overlay picks the entry matching the act you were last seen in.
+
+Ctrl+F12 logs the current area to `debug/flagged.log` when a rule is wrong in
+practice, so fixes can be batched.
 
 ## Tests
 

@@ -1,7 +1,7 @@
 import areas
 import ocr
 
-NAMES = list(areas.load())
+NAMES = areas.screen_names(areas.load())
 
 
 def test_exact_and_garbled_names_match():

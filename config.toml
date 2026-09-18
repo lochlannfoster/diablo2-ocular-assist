@@ -16,8 +16,10 @@ h = 0.09
 
 [overlay]
 output = "DP-1"                # monitor the game is on, by connector (overlay.py --list-outputs)
-anchor = "top-left"           # top-left | top-right | bottom-left | bottom-right
-margin_x = 20
-margin_y = 130                # top-left: clears the character portrait
+anchor = "top-right"          # top-left | top-right | bottom-left | bottom-right
+# Margins are in logical (scaled) pixels. The game's clock/area/difficulty
+# block ends ~200 physical px down at 1.7x scale, i.e. ~118 logical.
+margin_x = 12
+margin_y = 122
 font_size = 15
 width = 48                    # fixed characters per line; tips in areas.toml are written to fit

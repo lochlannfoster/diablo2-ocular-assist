@@ -51,7 +51,7 @@ def main(argv):
     print("tesseract:")
     for line in raw.splitlines():
         print(f"    {line!r}")
-    reading = ocr.recognise(raw, list(areas.load()))
+    reading = ocr.recognise(raw, areas.screen_names(areas.load()))
     print(f"match: {reading.area!r} (score {reading.score:.2f})")
     return 0
 

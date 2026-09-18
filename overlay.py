@@ -116,6 +116,7 @@ class Overlay:
         self.font_size = int(ov.get("font_size", 15))
         self.width = int(ov.get("width", 60))
         self.hidden = False
+        self.last_act = None  # disambiguates names shared between acts
         self.error = None
         self.last_reading = None
         self._last_render = None
@@ -244,7 +245,8 @@ class Overlay:
             self.next_tip_label.set_text("")
             return
 
-        area = self.rules[rec.area]
+        area = areas.resolve(self.rules, rec.area, self.last_act)
+        self.last_act = area.act
         dot = {"high": "●", "medium": "●", "low": "○"}[area.confidence]
         suffix = "  (frozen)" if rec.frozen else ""
         self.title_label.set_text(f"{dot} {area.name}{suffix}")
@@ -261,10 +263,14 @@ class Overlay:
             self.wp_label.set_text(f"WP    {wp.glyph:<2} {wp.tip}")
         else:
             self.wp_label.set_text("WP    -  none here")
+        (self.wp_label.add_css_class if wp.no_rule else self.wp_label.remove_css_class)("norule")
 
         nx = area.to_next
-        self.next_label.set_text(f"NEXT  {area.next or 'end of the line'}")
+        origin = "from WP" if area.has_waypoint else "from entry"
+        self.next_label.set_text(f"NEXT  {area.next or 'end of the line'}  ({origin})")
         self.next_tip_label.set_text(f"      {nx.glyph:<2} {nx.tip}")
+        (self.next_tip_label.add_css_class if nx.no_rule
+         else self.next_tip_label.remove_css_class)("norule")
 
     # -- commands ----------------------------------------------------------
 
@@ -484,7 +490,7 @@ def main(argv=None):
         nonlocal server, bridge, reader
         overlay = Overlay(application, config, rules)
         server = ControlServer(SOCKET_PATH, overlay.handle)
-        reader = Reader(config, list(rules), overlay.on_reading, overlay.on_error)
+        reader = Reader(config, areas.screen_names(rules), overlay.on_reading, overlay.on_error)
         reader.start()
         print(f"overlay running: {len(rules)} areas loaded", flush=True)
         print(f"control socket: {SOCKET_PATH}", flush=True)
