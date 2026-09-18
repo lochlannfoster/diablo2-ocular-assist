@@ -227,7 +227,11 @@ def recognise(raw: str, names: list[str]) -> Reading:
     difficulty = read_difficulty(raw)
     if best_score < MIN_SCORE:
         return Reading(raw, None, best_score, difficulty)
-    return Reading(raw, best, best_score, difficulty)
+    # The game only prints a "Difficulty:" line in Nightmare and Hell. It sits
+    # between the clock and the area name, so a readable area name with no
+    # such line means Normal -- otherwise the last difficulty would stick
+    # after starting a new game on Normal.
+    return Reading(raw, best, best_score, difficulty or "normal")
 
 
 def read_area(image: Image.Image, names: list[str]) -> Reading:

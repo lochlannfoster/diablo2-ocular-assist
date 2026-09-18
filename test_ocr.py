@@ -45,6 +45,10 @@ def test_difficulty_is_read_despite_ocr_noise():
     assert ocr.read_difficulty("DIFFICULTY: N®RMAL") == "normal"
     assert ocr.read_difficulty("DIFFICULTY: HELL") == "hell"
     assert ocr.read_difficulty("SPIDER FOREST") is None
+    # Normal has no difficulty line at all: a clean area name alone means Normal.
+    reading = ocr.recognise("@7:34 AM\nROGUE ENCAMPMENT", ["Rogue Encampment"])
+    assert (reading.area, reading.difficulty) == ("Rogue Encampment", "normal")
+    assert ocr.recognise("@7:34 AM\nGARBLE", ["Rogue Encampment"]).difficulty is None
     reading = ocr.recognise("[1:25 AT\nSPIDER F®REST\nDIFFICULTY: HELL\n", NAMES)
     assert (reading.area, reading.difficulty) == ("Spider Forest", "hell")
 
