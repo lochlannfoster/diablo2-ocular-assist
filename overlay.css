@@ -1,0 +1,63 @@
+/* ==========================================================================
+   diablo2-overlay — GTK CSS
+   Same skeleton as aoe2-overlay: transparent window, dark scrim, monospace.
+   GTK supports a CSS subset (no flexbox/grid); layout is GtkBox in overlay.py.
+   ========================================================================== */
+
+window {
+  background: transparent;
+}
+
+.root {
+  background: rgba(7, 11, 13, 0.82);
+  border-left: 2px solid #b8862b;
+  padding: 10px 16px 12px 14px;
+}
+
+label {
+  font-family: "Hack", "InputMono Nerd Font", monospace;
+  font-size: 15px;
+  color: #c9d6d1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+/* Recognised area name. Gold, like the game's own text. */
+.title {
+  color: #e8c46a;
+  font-weight: bold;
+  font-size: 16px;
+  padding-bottom: 4px;
+}
+
+/* The corner is not readable right now (menu, panel over it); the hint is
+   what we last knew, not what we currently see. */
+.title.stale {
+  color: #8a7a4e;
+  font-weight: normal;
+}
+
+.title.frozen {
+  color: #5d726c;
+}
+
+/* The two hint lines. */
+.hint {
+  color: #c9d6d1;
+}
+
+.hint.wp {
+  color: #7fc8ff;
+}
+
+.hint.next {
+  color: #9be59b;
+}
+
+/* Confidence dot. */
+.conf-high   { color: #00ff9c; }
+.conf-medium { color: #ffd166; }
+.conf-low    { color: #ff5f5f; }
+
+.error {
+  color: #ff5f5f;
+}

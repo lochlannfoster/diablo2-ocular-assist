@@ -1,0 +1,1050 @@
+# Diablo II area rules. One table per area, keyed by the exact name D2R shows
+# in the top-right corner of the screen.
+#
+#   act            1-5
+#   next           the area you progress to (empty string for dead ends)
+#   has_waypoint   whether this area has one
+#   to_waypoint    hint from the *entrance* to the waypoint
+#   to_next        hint from the *waypoint* (or entrance if no waypoint) to the exit
+#   confidence     high | medium | low  -- how much to trust the two hints
+#
+# dir values and what they mean on screen:
+#   cw / ccw     circle the map clockwise / counter-clockwise from where you entered
+#   opposite     far side of the map from the entrance
+#   up/down/left/right   compass-ish on the isometric map (up = north-east on the automap)
+#   outer-wall   hug the outer edge of the map
+#   linear       corridor level, just keep going
+#   dead-end     the thing you want is at a dead end
+#   none         no reliable rule, explore
+#
+# These are *tendencies* of D2's map generator collected from community
+# guides, not guarantees. Fix entries as you play: Ctrl+F12 logs the current
+# area as wrong so they can be revisited in a batch.
+
+# ---------------------------------------------------------------------------
+# Act 1
+# ---------------------------------------------------------------------------
+
+[area."Rogue Encampment"]
+act = 1
+next = "Blood Moor"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "town; by Akara" }
+to_next = { dir = "right", tip = "bottom-right palisade gap" }
+confidence = "high"
+
+[area."Blood Moor"]
+act = 1
+next = "Cold Plains"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "far side from town; Den on a side" }
+confidence = "high"
+
+[area."Den of Evil"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "clear all, portal back" }
+confidence = "high"
+
+[area."Cold Plains"]
+act = 1
+next = "Stony Field"
+has_waypoint = true
+to_waypoint = { dir = "opposite", tip = "far edge from Blood Moor" }
+to_next = { dir = "ccw", tip = "¼ turn CCW from WP; Cave/Burial sides" }
+confidence = "medium"
+
+[area."Burial Grounds"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "Blood Raven in graveyard" }
+confidence = "high"
+
+[area."Crypt"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Mausoleum"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Cave Level 1"]
+act = 1
+next = "Cave Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Cave Level 2"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional; gold chest" }
+confidence = "high"
+
+[area."Stony Field"]
+act = 1
+next = "Underground Passage Level 1"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "near the middle" }
+to_next = { dir = "opposite", tip = "far side from Cold Plains" }
+confidence = "medium"
+
+[area."Tristram"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "fixed; Cain caged near centre" }
+confidence = "high"
+
+[area."Underground Passage Level 1"]
+act = 1
+next = "Dark Wood"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "far side from entrance" }
+confidence = "medium"
+
+[area."Underground Passage Level 2"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional; gold chest" }
+confidence = "high"
+
+[area."Dark Wood"]
+act = 1
+next = "Black Marsh"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "near Tree of Inifuss, mid" }
+to_next = { dir = "opposite", tip = "far side from Passage; Hole aside" }
+confidence = "medium"
+
+[area."Hole Level 1"]
+act = 1
+next = "Hole Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Hole Level 2"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional; gold chest" }
+confidence = "high"
+
+[area."Black Marsh"]
+act = 1
+next = "Tamoe Highland"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "roughly central" }
+to_next = { dir = "opposite", tip = "far side from Dark Wood" }
+confidence = "medium"
+
+[area."Forgotten Tower"]
+act = 1
+next = "Tower Cellar Level 1"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "stairs in the tower" }
+confidence = "high"
+
+[area."Tower Cellar Level 1"]
+act = 1
+next = "Tower Cellar Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "small; stairs close" }
+confidence = "medium"
+
+[area."Tower Cellar Level 2"]
+act = 1
+next = "Tower Cellar Level 3"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "small; stairs close" }
+confidence = "medium"
+
+[area."Tower Cellar Level 3"]
+act = 1
+next = "Tower Cellar Level 4"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "small; stairs close" }
+confidence = "medium"
+
+[area."Tower Cellar Level 4"]
+act = 1
+next = "Tower Cellar Level 5"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "small; stairs close" }
+confidence = "medium"
+
+[area."Tower Cellar Level 5"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Countess in end room" }
+confidence = "high"
+
+[area."Tamoe Highland"]
+act = 1
+next = "Monastery Gate"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "up", tip = "Monastery always at top" }
+confidence = "high"
+
+[area."Pit Level 1"]
+act = 1
+next = "Pit Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Pit Level 2"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional; gold chest" }
+confidence = "high"
+
+[area."Monastery Gate"]
+act = 1
+next = "Outer Cloister"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "straight through" }
+confidence = "high"
+
+[area."Outer Cloister"]
+act = 1
+next = "Barracks"
+has_waypoint = true
+to_waypoint = { dir = "linear", tip = "centre of courtyard" }
+to_next = { dir = "up", tip = "door at the top" }
+confidence = "high"
+
+[area."Barracks"]
+act = 1
+next = "Jail Level 1"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "far side; Smith in side room" }
+confidence = "medium"
+
+[area."Jail Level 1"]
+act = 1
+next = "Jail Level 2"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "usually near entrance" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Jail Level 2"]
+act = 1
+next = "Jail Level 3"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Jail Level 3"]
+act = 1
+next = "Inner Cloister"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Inner Cloister"]
+act = 1
+next = "Cathedral"
+has_waypoint = true
+to_waypoint = { dir = "linear", tip = "centre of courtyard" }
+to_next = { dir = "up", tip = "door at the top" }
+confidence = "high"
+
+[area."Cathedral"]
+act = 1
+next = "Catacombs Level 1"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "far end of the nave" }
+confidence = "high"
+
+[area."Catacombs Level 1"]
+act = 1
+next = "Catacombs Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "small; explore" }
+confidence = "low"
+
+[area."Catacombs Level 2"]
+act = 1
+next = "Catacombs Level 3"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "short way from entrance" }
+to_next = { dir = "dead-end", tip = "dead end, far from WP" }
+confidence = "medium"
+
+[area."Catacombs Level 3"]
+act = 1
+next = "Catacombs Level 4"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "far side from entrance" }
+confidence = "medium"
+
+[area."Catacombs Level 4"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "fixed; Andariel at far end" }
+confidence = "high"
+
+[area."Moo Moo Farm"]
+act = 1
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "Cow King in a fenced pen" }
+confidence = "high"
+
+# ---------------------------------------------------------------------------
+# Act 2
+# ---------------------------------------------------------------------------
+
+[area."Lut Gholein"]
+act = 2
+next = "Rocky Waste"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "town; near Atma" }
+to_next = { dir = "up", tip = "top gate; Sewers by docks" }
+confidence = "high"
+
+[area."Sewers Level 1"]
+act = 2
+next = "Sewers Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Sewers Level 2"]
+act = 2
+next = "Sewers Level 3"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "explore" }
+to_next = { dir = "dead-end", tip = "behind door at dead end" }
+confidence = "medium"
+
+[area."Sewers Level 3"]
+act = 2
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "Radament at the end" }
+confidence = "high"
+
+[area."Rocky Waste"]
+act = 2
+next = "Dry Hills"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "far side from town" }
+confidence = "medium"
+
+[area."Stony Tomb Level 1"]
+act = 2
+next = "Stony Tomb Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Stony Tomb Level 2"]
+act = 2
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional; gold chest" }
+confidence = "high"
+
+[area."Dry Hills"]
+act = 2
+next = "Far Oasis"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "roughly central" }
+to_next = { dir = "opposite", tip = "far side from Rocky Waste" }
+confidence = "medium"
+
+[area."Halls of the Dead Level 1"]
+act = 2
+next = "Halls of the Dead Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Halls of the Dead Level 2"]
+act = 2
+next = "Halls of the Dead Level 3"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "explore" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Halls of the Dead Level 3"]
+act = 2
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Cube chest in end room" }
+confidence = "high"
+
+[area."Far Oasis"]
+act = 2
+next = "Lost City"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "roughly central" }
+to_next = { dir = "opposite", tip = "far side from Dry Hills" }
+confidence = "medium"
+
+[area."Maggot Lair Level 1"]
+act = 2
+next = "Maggot Lair Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "follow main tunnel" }
+confidence = "medium"
+
+[area."Maggot Lair Level 2"]
+act = 2
+next = "Maggot Lair Level 3"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "follow main tunnel" }
+confidence = "medium"
+
+[area."Maggot Lair Level 3"]
+act = 2
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Coldworm + Staff at the end" }
+confidence = "high"
+
+[area."Lost City"]
+act = 2
+next = "Valley of Snakes"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "roughly central" }
+to_next = { dir = "opposite", tip = "far side from Far Oasis" }
+confidence = "medium"
+
+[area."Ancient Tunnels"]
+act = 2
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional; gold chest" }
+confidence = "high"
+
+[area."Valley of Snakes"]
+act = 2
+next = "Claw Viper Temple Level 1"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "small; temple at the end" }
+confidence = "high"
+
+[area."Claw Viper Temple Level 1"]
+act = 2
+next = "Claw Viper Temple Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Claw Viper Temple Level 2"]
+act = 2
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "fixed; altar at far end" }
+confidence = "high"
+
+[area."Harem Level 1"]
+act = 2
+next = "Harem Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "fixed, tiny" }
+confidence = "high"
+
+[area."Harem Level 2"]
+act = 2
+next = "Palace Cellar Level 1"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "small; stairs close" }
+confidence = "medium"
+
+[area."Palace Cellar Level 1"]
+act = 2
+next = "Palace Cellar Level 2"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "close to entrance" }
+to_next = { dir = "none", tip = "small; stairs close" }
+confidence = "medium"
+
+[area."Palace Cellar Level 2"]
+act = 2
+next = "Palace Cellar Level 3"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "small; stairs close" }
+confidence = "medium"
+
+[area."Palace Cellar Level 3"]
+act = 2
+next = "Arcane Sanctuary"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "portal at the end" }
+confidence = "high"
+
+[area."Arcane Sanctuary"]
+act = 2
+next = "Canyon of the Magi"
+has_waypoint = true
+to_waypoint = { dir = "linear", tip = "central hub" }
+to_next = { dir = "none", tip = "Summoner at end of one arm" }
+confidence = "high"
+
+[area."Canyon of the Magi"]
+act = 2
+next = "Tal Rasha's Tomb"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "near arrival portal" }
+to_next = { dir = "none", tip = "tomb with your Staff's symbol" }
+confidence = "high"
+
+[area."Tal Rasha's Tomb"]
+act = 2
+next = "Tal Rasha's Chamber"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Orifice in dead-end chamber" }
+confidence = "medium"
+
+[area."Tal Rasha's Chamber"]
+act = 2
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "Duriel is right there" }
+confidence = "high"
+
+# ---------------------------------------------------------------------------
+# Act 3
+# ---------------------------------------------------------------------------
+
+[area."Kurast Docks"]
+act = 3
+next = "Spider Forest"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "town; on the pier" }
+to_next = { dir = "up", tip = "top of the docks" }
+confidence = "high"
+
+[area."Spider Forest"]
+act = 3
+next = "Flayer Jungle"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "modest walk from docks" }
+to_next = { dir = "up", tip = "up; Marsh/Jungle both up" }
+confidence = "medium"
+
+[area."Spider Cavern"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Eye chest at the end" }
+confidence = "high"
+
+[area."Arachnid Lair"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Great Marsh"]
+act = 3
+next = "Flayer Jungle"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "explore; marsh is optional" }
+to_next = { dir = "up", tip = "upward" }
+confidence = "medium"
+
+[area."Flayer Jungle"]
+act = 3
+next = "Lower Kurast"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "near Gidbinn village" }
+to_next = { dir = "up", tip = "upward; caves are sides" }
+confidence = "medium"
+
+[area."Swampy Pit Level 1"]
+act = 3
+next = "Swampy Pit Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Swampy Pit Level 2"]
+act = 3
+next = "Swampy Pit Level 3"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Swampy Pit Level 3"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional; gold chest" }
+confidence = "high"
+
+[area."Flayer Dungeon Level 1"]
+act = 3
+next = "Flayer Dungeon Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Flayer Dungeon Level 2"]
+act = 3
+next = "Flayer Dungeon Level 3"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Flayer Dungeon Level 3"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Brain chest at the end" }
+confidence = "high"
+
+[area."Lower Kurast"]
+act = 3
+next = "Kurast Bazaar"
+has_waypoint = true
+to_waypoint = { dir = "up", tip = "short way up from entrance" }
+to_next = { dir = "up", tip = "always up" }
+confidence = "high"
+
+[area."Kurast Bazaar"]
+act = 3
+next = "Upper Kurast"
+has_waypoint = true
+to_waypoint = { dir = "up", tip = "short way up from entrance" }
+to_next = { dir = "up", tip = "up; Temple/Fane/Sewers on way" }
+confidence = "high"
+
+[area."Ruined Temple"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Tome chest at the end" }
+confidence = "high"
+
+[area."Disused Fane"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Kurast Sewers Level 1"]
+act = 3
+next = "Kurast Sewers Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "lever opens stairs; explore" }
+confidence = "low"
+
+[area."Kurast Sewers Level 2"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Heart chest at the end" }
+confidence = "high"
+
+[area."Upper Kurast"]
+act = 3
+next = "Kurast Causeway"
+has_waypoint = true
+to_waypoint = { dir = "up", tip = "short way up from entrance" }
+to_next = { dir = "up", tip = "up; temples are sides" }
+confidence = "high"
+
+[area."Forgotten Temple"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Forgotten Reliquary"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Kurast Causeway"]
+act = 3
+next = "Travincal"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "up", tip = "straight up the causeway" }
+confidence = "high"
+
+[area."Ruined Fane"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Disused Reliquary"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Travincal"]
+act = 3
+next = "Durance of Hate Level 1"
+has_waypoint = true
+to_waypoint = { dir = "up", tip = "fixed; up-left of entrance" }
+to_next = { dir = "up", tip = "Council + Orb at top" }
+confidence = "high"
+
+[area."Durance of Hate Level 1"]
+act = 3
+next = "Durance of Hate Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Durance of Hate Level 2"]
+act = 3
+next = "Durance of Hate Level 3"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "explore" }
+to_next = { dir = "dead-end", tip = "dead end, far from WP" }
+confidence = "medium"
+
+[area."Durance of Hate Level 3"]
+act = 3
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "fixed; Meph across bridge" }
+confidence = "high"
+
+# ---------------------------------------------------------------------------
+# Act 4
+# ---------------------------------------------------------------------------
+
+[area."The Pandemonium Fortress"]
+act = 4
+next = "Outer Steppes"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "town; fixed" }
+to_next = { dir = "down", tip = "bottom of the fortress" }
+confidence = "high"
+
+[area."Outer Steppes"]
+act = 4
+next = "Plains of Despair"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "far side from fortress" }
+confidence = "medium"
+
+[area."Plains of Despair"]
+act = 4
+next = "City of the Damned"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "far side; Izual wanders" }
+confidence = "medium"
+
+[area."City of the Damned"]
+act = 4
+next = "River of Flame"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "usually near entrance" }
+to_next = { dir = "opposite", tip = "far side from entrance" }
+confidence = "medium"
+
+[area."River of Flame"]
+act = 4
+next = "Chaos Sanctuary"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "short walk from stairs" }
+to_next = { dir = "up", tip = "forge near WP; CS at top" }
+confidence = "medium"
+
+[area."Chaos Sanctuary"]
+act = 4
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "fixed; 5 seals, star centre" }
+confidence = "high"
+
+# ---------------------------------------------------------------------------
+# Act 5
+# ---------------------------------------------------------------------------
+
+[area."Harrogath"]
+act = 5
+next = "Bloody Foothills"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "town; fixed" }
+to_next = { dir = "up", tip = "top gate of town" }
+confidence = "high"
+
+[area."Bloody Foothills"]
+act = 5
+next = "Frigid Highlands"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "up", tip = "linear up; Shenk at exit" }
+confidence = "high"
+
+[area."Frigid Highlands"]
+act = 5
+next = "Arreat Plateau"
+has_waypoint = true
+to_waypoint = { dir = "up", tip = "up the path; Eldritch beside" }
+to_next = { dir = "up", tip = "at the top; Abaddon aside" }
+confidence = "high"
+
+[area."Abaddon"]
+act = 5
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Arreat Plateau"]
+act = 5
+next = "Crystalline Passage"
+has_waypoint = true
+to_waypoint = { dir = "up", tip = "up the path from entrance" }
+to_next = { dir = "up", tip = "at the top; Acheron aside" }
+confidence = "high"
+
+[area."Pit of Acheron"]
+act = 5
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Crystalline Passage"]
+act = 5
+next = "Glacial Trail"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "explore; not far in" }
+to_next = { dir = "opposite", tip = "far side; Frozen River aside" }
+confidence = "medium"
+
+[area."Frozen River"]
+act = 5
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "dead-end", tip = "Anya at far end" }
+confidence = "high"
+
+[area."Glacial Trail"]
+act = 5
+next = "Frozen Tundra"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "explore" }
+to_next = { dir = "opposite", tip = "far side; Drifter aside" }
+confidence = "medium"
+
+[area."Drifter Cavern"]
+act = 5
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Frozen Tundra"]
+act = 5
+next = "The Ancients' Way"
+has_waypoint = true
+to_waypoint = { dir = "up", tip = "up the path from entrance" }
+to_next = { dir = "up", tip = "at the top; Infernal Pit aside" }
+confidence = "medium"
+
+[area."Infernal Pit"]
+act = 5
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."The Ancients' Way"]
+act = 5
+next = "Arreat Summit"
+has_waypoint = true
+to_waypoint = { dir = "up", tip = "up the path from entrance" }
+to_next = { dir = "up", tip = "at the top; Icy Cellar aside" }
+confidence = "medium"
+
+[area."Icy Cellar"]
+act = 5
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "optional" }
+confidence = "high"
+
+[area."Arreat Summit"]
+act = 5
+next = "The Worldstone Keep Level 1"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "fixed; altar, Ancients, door up" }
+confidence = "high"
+
+[area."The Worldstone Keep Level 1"]
+act = 5
+next = "The Worldstone Keep Level 2"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "opposite corner from entrance" }
+confidence = "medium"
+
+[area."The Worldstone Keep Level 2"]
+act = 5
+next = "The Worldstone Keep Level 3"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "close to entrance stairs" }
+to_next = { dir = "opposite", tip = "opposite corner from WP" }
+confidence = "medium"
+
+[area."The Worldstone Keep Level 3"]
+act = 5
+next = "Throne of Destruction"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "opposite", tip = "opposite corner from entrance" }
+confidence = "medium"
+
+[area."Throne of Destruction"]
+act = 5
+next = "The Worldstone Chamber"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "up", tip = "fixed; throne at top" }
+confidence = "high"
+
+[area."The Worldstone Chamber"]
+act = 5
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "Baal is right there" }
+confidence = "high"
+
+[area."Nihlathak's Temple"]
+act = 5
+next = "Halls of Anguish"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "linear", tip = "fixed; stairs ahead" }
+confidence = "high"
+
+[area."Halls of Anguish"]
+act = 5
+next = "Halls of Pain"
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Halls of Pain"]
+act = 5
+next = "Halls of Vaught"
+has_waypoint = true
+to_waypoint = { dir = "none", tip = "explore" }
+to_next = { dir = "none", tip = "stairs: explore" }
+confidence = "low"
+
+[area."Halls of Vaught"]
+act = 5
+next = ""
+has_waypoint = false
+to_waypoint = { dir = "none", tip = "no WP" }
+to_next = { dir = "none", tip = "corner the entrance fan points" }
+confidence = "medium"
