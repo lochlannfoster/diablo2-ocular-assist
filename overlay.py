@@ -174,22 +174,25 @@ class Overlay:
         self.win.present()
         self.render()
 
-    def _label(self, *classes):
-        # Fixed width, never ellipsised: the box must not resize or truncate
-        # as the area changes, so every tip in areas.toml is written to fit.
+    def _label(self, *classes, wrap=True):
         # width_chars is a *minimum*: GTK estimates it from the font's
         # approximate character width, which undershoots Hack's real advance
         # and clipped the ends of lines when it was also the maximum.
         label = Gtk.Label(xalign=0)
         label.set_width_chars(self.width)
-        label.set_max_width_chars(self.width)
-        # Long tips wrap onto further lines inside the fixed width rather than
-        # being cut; the box grows in height only.
-        label.set_wrap(True)
-        label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
         label.set_ellipsize(Pango.EllipsizeMode.NONE)
-        label.set_margin_end(10)
+        label.set_margin_end(12)
         label.set_use_markup(True)
+        if wrap:
+            # Long tips wrap onto further lines inside the fixed width rather
+            # than being cut; the box grows in height only.
+            label.set_max_width_chars(self.width)
+            label.set_wrap(True)
+            label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
+        else:
+            # Single-line headers take their natural width: the bigger, bold
+            # title was being squeezed into a width estimated for body text.
+            label.set_wrap(False)
         for cls in classes:
             label.add_css_class(cls)
         self.root.append(label)
