@@ -11,10 +11,11 @@
 4. Run `overlay.exe`. Two things appear: a **settings window** on your desktop
    and the **overlay box** in the top-right of the game monitor.
 5. Look at the settings window's *Status → Capture* picture. It should show the
-   game's clock / area name / difficulty block. If it doesn't, nudge the
-   *Capture → Region* numbers until it does (x/y move the box, w/h size it).
-   Once the picture shows the three lines, the *OCR read* line will show the
-   area name and the overlay fills in.
+   game's clock / area name / difficulty block. If it doesn't (different
+   resolution or aspect ratio), click *Capture → Select on screen…*, drag a box
+   around that text on the frame it shows, and click *Use this region*. Once
+   the picture shows the three lines, the *OCR read* line will show the area
+   name and the overlay fills in.
 6. Tick **Edit mode** to drag the overlay where you want it; untick to lock it.
 7. Closing the settings window quits everything.
 

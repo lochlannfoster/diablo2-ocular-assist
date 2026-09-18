@@ -81,8 +81,9 @@ down** — nothing keeps running in the background.
   monitor, corner, margins, font size, width. Every change applies to the
   overlay immediately.
 - **Capture** — the region as fractions of the game window, and the read interval.
-  Nudge x/y/w/h while watching the capture picture until the three text lines sit
-  cleanly inside it.
+  **Select on screen…** grabs a frame of the game and lets you drag a box around
+  the clock / area / difficulty text; or nudge x/y/w/h while watching the
+  capture picture.
 - **Edit mode** (checkbox) — the overlay becomes draggable: drag its body to move
   it (on release it snaps its anchor to the nearest screen corner), drag a yellow
   corner handle to change the width. Unticking restores click-through and saves.

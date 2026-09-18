@@ -19,6 +19,7 @@ from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
 import config as configmod  # noqa: E402
 import hotkeys  # noqa: E402
+import native  # noqa: E402
 import overlay as overlaymod  # noqa: E402
 
 SAVE_DEBOUNCE_MS = 500
@@ -145,6 +146,10 @@ class SettingsWindow(Gtk.ApplicationWindow):
         for key in ("x", "y", "w", "h"):
             self.region_spins[key] = self._spin(region, key, 0.0, 1.0, 0.005,
                                                 self._on_region, digits=3)
+        pick = Gtk.Button(label="Select on screen…")
+        pick.set_tooltip_text("Grab a frame of the game and drag a box around the area name")
+        pick.connect("clicked", self._on_pick_region)
+        region.append(pick)
         self._row(grid, 0, "Region", region)
         misc = Gtk.Box(spacing=8)
         self.interval_spin = self._spin(misc, "interval s", 0.2, 10.0, 0.1,
@@ -310,6 +315,17 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.session.reader.region = overlaymod.capture.Region(**region)
         self._schedule_save()
 
+    def _on_pick_region(self, *_):
+        picker = RegionPicker(self, self.config["capture"], self._region_picked)
+        picker.present()
+
+    def _region_picked(self, x, y, w, h):
+        self._loading = True
+        for key, value in (("x", x), ("y", y), ("w", w), ("h", h)):
+            self.region_spins[key].set_value(value)
+        self._loading = False
+        self._on_region()
+
     def _on_interval(self, spin):
         if self._loading:
             return
@@ -400,3 +416,127 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.session.on_update = None
         self.session.shutdown()
         return False  # let the window close
+
+
+class RegionPicker(Gtk.Window):
+    """Drag a rectangle on a frame of the game to set the capture region.
+
+    Works in image coordinates, so the fractions come straight from the
+    picture and nothing depends on monitor scale, layout or platform.
+    """
+
+    MAX_W, MAX_H = 1500, 850
+
+    def __init__(self, parent, capture_config, on_done):
+        super().__init__(title="Select the capture region", transient_for=parent, modal=True)
+        self.on_done = on_done
+        self.backend = native.capture_backend(capture_config)
+        self.frame = None
+        self.scale = 1.0
+        self.start = None
+        self.rect = None  # (x, y, w, h) in picture pixels
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8,
+                      margin_top=10, margin_bottom=10, margin_start=10, margin_end=10)
+        self.set_child(box)
+        self.hint = Gtk.Label(xalign=0, wrap=True)
+        box.append(self.hint)
+
+        self.stack = Gtk.Overlay()
+        self.picture = Gtk.Picture(content_fit=Gtk.ContentFit.FILL, can_shrink=False)
+        self.stack.set_child(self.picture)
+        self.canvas = Gtk.DrawingArea()
+        self.canvas.set_draw_func(self._draw)
+        drag = Gtk.GestureDrag()
+        drag.connect("drag-begin", self._begin)
+        drag.connect("drag-update", self._update)
+        drag.connect("drag-end", self._end)
+        self.canvas.add_controller(drag)
+        self.stack.add_overlay(self.canvas)
+        box.append(self.stack)
+
+        buttons = Gtk.Box(spacing=8, halign=Gtk.Align.END)
+        retake = Gtk.Button(label="Grab a new frame")
+        retake.connect("clicked", lambda *_: self._grab())
+        cancel = Gtk.Button(label="Cancel")
+        cancel.connect("clicked", lambda *_: self.close())
+        self.use_button = Gtk.Button(label="Use this region")
+        self.use_button.add_css_class("suggested-action")
+        self.use_button.set_sensitive(False)
+        self.use_button.connect("clicked", self._use)
+        for button in (retake, cancel, self.use_button):
+            buttons.append(button)
+        box.append(buttons)
+        self._grab()
+
+    def _grab(self):
+        import io
+
+        try:
+            self.frame = self.backend.grab(None)
+        except Exception as exc:  # noqa: BLE001 - shown to the user
+            self.hint.set_text(f"Could not grab the game window: {exc}")
+            return
+        w, h = self.frame.size
+        self.scale = min(self.MAX_W / w, self.MAX_H / h, 1.0)
+        pw, ph = int(w * self.scale), int(h * self.scale)
+        buffer = io.BytesIO()
+        self.frame.resize((pw, ph)).save(buffer, format="PNG")
+        self.picture.set_paintable(Gdk.Texture.new_from_bytes(GLib.Bytes.new(buffer.getvalue())))
+        self.picture.set_size_request(pw, ph)
+        self.canvas.set_size_request(pw, ph)
+        self.rect = None
+        self.use_button.set_sensitive(False)
+        self.hint.set_text(f"Game window {w}×{h}. Drag a box around the clock / area / "
+                           "difficulty text, then click Use this region.")
+        self.canvas.queue_draw()
+
+    def _begin(self, gesture, x, y):
+        self.start = (x, y)
+        self.rect = (x, y, 0, 0)
+        self.canvas.queue_draw()
+
+    def _update(self, gesture, dx, dy):
+        if self.start is None:
+            return
+        x0, y0 = self.start
+        x1, y1 = x0 + dx, y0 + dy
+        self.rect = (min(x0, x1), min(y0, y1), abs(dx), abs(dy))
+        self.canvas.queue_draw()
+
+    def _end(self, gesture, dx, dy):
+        self._update(gesture, dx, dy)
+        self.start = None
+        self.use_button.set_sensitive(bool(self.rect and self.rect[2] > 4 and self.rect[3] > 4))
+
+    def _draw(self, area, cr, width, height):
+        if not self.rect:
+            return
+        x, y, w, h = self.rect
+        # Dim everything outside the selection, outline the selection.
+        cr.set_source_rgba(0, 0, 0, 0.45)
+        cr.rectangle(0, 0, width, height)
+        cr.rectangle(x, y, w, h)
+        cr.set_fill_rule(1)  # even-odd: punch the selection out of the dim
+        cr.fill()
+        cr.set_source_rgb(1.0, 0.82, 0.4)
+        cr.set_line_width(2)
+        cr.rectangle(x, y, w, h)
+        cr.stroke()
+
+    def _use(self, *_):
+        if not self.rect or self.frame is None:
+            return
+        fw, fh = self.frame.size
+        x, y, w, h = self.rect
+        # Picture pixels -> frame pixels -> fractions of the game window.
+        fx, fy, fw2, fh2 = (v / self.scale for v in (x, y, w, h))
+        self.on_done(round(fx / fw, 4), round(fy / fh, 4), round(fw2 / fw, 4), round(fh2 / fh, 4))
+        self.close()
+
+    def close(self):
+        try:
+            self.backend.close()
+        except Exception:  # noqa: BLE001
+            pass
+        super().close()

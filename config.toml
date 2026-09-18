@@ -9,18 +9,18 @@ interval = 1.0        # seconds between reads
 # Where the area name is, as fractions of the game window (the clock / area /
 # difficulty block in the top-right corner).
 [capture.region]
-x = 0.84
-y = 0.02
-w = 0.155
-h = 0.09
+x = 0.7233
+y = 0.0164
+w = 0.0793
+h = 0.1892
 
 [overlay]
-output = "DP-1"            # monitor the game is on, by connector; "" = compositor default
-anchor = "top-right"            # top-left | top-right | bottom-left | bottom-right
-margin_x = 38        # logical (scaled) pixels from the side edge
-margin_y = 188        # logical pixels from the top/bottom edge
+output = "DP-3"            # monitor the game is on, by connector; "" = compositor default
+anchor = "top-left"            # top-left | top-right | bottom-left | bottom-right
+margin_x = 43        # logical (scaled) pixels from the side edge
+margin_y = 39        # logical pixels from the top/bottom edge
 font_size = 13
-width = 30              # minimum characters per line; long tips wrap
+width = 45              # minimum characters per line; long tips wrap
 hotkeys = true          # read /dev/input for Ctrl+F9..F12 while D2R runs
 
 [overlay.sections]
