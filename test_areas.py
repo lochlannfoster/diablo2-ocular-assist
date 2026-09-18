@@ -111,3 +111,14 @@ def test_uniques_and_notes_load():
     for area in rules.values():
         for text in area.uniques + area.notes:
             assert text.strip() == text
+
+
+def test_drop_note_per_difficulty():
+    assert areas.drop_note(1, "normal", 0) is None                       # town
+    assert "no runes" in areas.drop_note(1, "normal", 2)
+    assert "up to Dol" in areas.drop_note(5, "normal", 33)
+    assert "up to Ist" in areas.drop_note(5, "nightmare", 60)
+    assert "up to Vex" in areas.drop_note(1, "hell", 67)
+    assert "uniques/champions only" in areas.drop_note(1, "hell", 79)
+    assert "incl. Zod" in areas.drop_note(2, "hell", 82)
+    assert "every item" in areas.drop_note(1, "hell", 85)

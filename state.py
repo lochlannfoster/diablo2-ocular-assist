@@ -23,7 +23,8 @@ class Recognizer:
     area: str | None = None       # committed
     visible: bool = False         # was the last reading readable?
     frozen: bool = False          # Ctrl+F10: stop updating
-    difficulty: str | None = None # last difficulty read off the screen
+    difficulty: str = "normal"    # last difficulty read; Normal until the
+                                  # "Difficulty:" line has been seen
     _candidate: str | None = field(default=None, repr=False)
     _streak: int = field(default=0, repr=False)
 

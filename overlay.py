@@ -459,11 +459,8 @@ class Overlay:
         self.last_act = area.act
         dot = {"high": "●", "medium": "●", "low": "○"}[area.confidence]
         level = area.level(rec.difficulty)
-        if rec.difficulty:
-            diff = f'<span foreground="{DIFFICULTY_COLOURS[rec.difficulty]}">' \
-                   f'{rec.difficulty.upper()}</span>'
-        else:
-            diff = "difficulty ?"
+        diff = f'<span foreground="{DIFFICULTY_COLOURS[rec.difficulty]}">' \
+               f'{rec.difficulty.upper()}</span>'
         detail = f"arealvl {level}" if level else ("town" if not area.levels[0] else "arealvl ?")
         frozen = "  (frozen)" if rec.frozen else ""
         self.title_label.set_markup(
@@ -513,8 +510,9 @@ class Overlay:
             self.exp_label.set_visible(False)
 
         notes = list(area.notes)
-        if area.levels[2] >= 85:
-            notes.insert(0, f"Hell area level {area.levels[2]}: every item in the game can drop here.")
+        drops = areas.drop_note(area.act, rec.difficulty, level)
+        if drops:
+            notes.insert(0, drops)
         self.notes_label.set_visible(bool(notes))
         if notes:
             self.notes_label.set_markup("NOTE  " + esc("  ·  ".join(notes)))

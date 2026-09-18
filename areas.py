@@ -160,6 +160,39 @@ def load(path: Path = DATA_PATH) -> dict[str, Area]:
     return parse(data)
 
 
+# Highest rune tier each act's "Good" treasure class reaches, per difficulty
+# (purediablo rune-farming table). Monsters whose level is high enough get
+# upgraded to later acts' tables, which is why Hell alvl 78+ can drop Zod
+# anywhere; those thresholds are handled in drop_note().
+_RUNE_TIERS = {
+    "normal":    (None, "Nef", "Ral", "Sol", "Dol"),
+    "nightmare": ("Io", "Ko", "Lem", "Um", "Ist"),
+    "hell":      ("Vex", "Lo", "Ber", "Cham", "Zod"),
+}
+
+
+def drop_note(act: int, difficulty: str, alvl: int | None) -> str | None:
+    """One line on what can drop here in this difficulty, or None for towns.
+
+    Hell thresholds: TC 87 (every item) needs mlvl 87 = a champion in an
+    alvl 85 area; Zod needs unique mlvl 81 (alvl 78), champion (79) or a
+    regular monster (81+).
+    """
+    if not alvl:
+        return None
+    if difficulty == "hell":
+        if alvl >= 85:
+            return f"Hell alvl {alvl}: every item and rune in the game can drop here."
+        if alvl >= 81:
+            return f"Hell alvl {alvl}: any rune incl. Zod; TC87 items need alvl 85."
+        if alvl >= 78:
+            return f"Hell alvl {alvl}: Zod from uniques/champions only; TC87 items need alvl 85."
+    top = _RUNE_TIERS[difficulty][act - 1]
+    runes = f"runes up to {top}" if top else "no runes from regular monsters"
+    return (f"{difficulty.capitalize()} alvl {alvl}: items up to qlvl {alvl} "
+            f"(uniques {alvl + 3}); {runes} for act {act} {difficulty}.")
+
+
 def exp_bands(alvl: int) -> dict[str, tuple[int, int]]:
     """Recommended character-level bands for an area level.
 
