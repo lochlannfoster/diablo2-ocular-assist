@@ -146,6 +146,7 @@ class Overlay:
         self._labels = []
 
         self.win = Gtk.ApplicationWindow(application=app)
+        self.win.add_css_class("overlay")  # scopes overlay.css to this window
         self._init_layer_shell(ov["anchor"], int(ov["margin_x"]), int(ov["margin_y"]),
                                ov["output"])
 

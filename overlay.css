@@ -4,17 +4,19 @@
    GTK supports a CSS subset (no flexbox/grid); layout is GtkBox in overlay.py.
    ========================================================================== */
 
-window {
+/* Every rule is scoped to window.overlay: the settings window (a normal
+   toplevel of the same application) must keep the system theme. */
+window.overlay {
   background: transparent;
 }
 
-.root {
+.overlay .root {
   background: rgba(7, 11, 13, 0.82);
   border-left: 2px solid #b8862b;
   padding: 12px 22px 14px 16px;
 }
 
-label {
+.overlay label {
   font-family: "Hack", "InputMono Nerd Font", monospace;
   font-size: 15px;
   color: #c9d6d1;
@@ -22,7 +24,7 @@ label {
 }
 
 /* Recognised area name. Gold, like the game's own text. */
-.title {
+.overlay .title {
   color: #e8c46a;
   font-weight: bold;
   font-size: 16px;
@@ -31,65 +33,65 @@ label {
 
 /* The corner is not readable right now (menu, panel over it); the hint is
    what we last knew, not what we currently see. */
-.title.stale {
+.overlay .title.stale {
   color: #8a7a4e;
   font-weight: normal;
 }
 
-.title.frozen {
+.overlay .title.frozen {
   color: #5d726c;
 }
 
 /* Section headers: what and which way. */
-.head {
+.overlay .head {
   font-weight: bold;
   padding-top: 4px;
 }
-.head.wp   { color: #7fc8ff; }
-.head.next { color: #9be59b; }
-.head.exp  { color: #c9d6d1; }
+.overlay .head.wp   { color: #7fc8ff; }
+.overlay .head.next { color: #9be59b; }
+.overlay .head.exp  { color: #c9d6d1; }
 
 /* The two hint lines. */
-.hint {
+.overlay .hint {
   color: #c9d6d1;
 }
 
-.hint.wp {
+.overlay .hint.wp {
   color: #7fc8ff;
 }
 
-.hint.next {
+.overlay .hint.next {
   color: #9be59b;
 }
 
-.hint.quest {
+.overlay .hint.quest {
   color: #e8c46a;
 }
 
-.hint.exp {
+.overlay .hint.exp {
   color: #c9d6d1;
 }
 
-.hint.notes {
+.overlay .hint.notes {
   color: #8fd3d3;
 }
 
-.hint.uniques {
+.overlay .hint.uniques {
   color: #c9d6d1;
 }
 
 /* "No accepted rule": the sources say so explicitly. Stands out so you know
    not to look for a pattern. */
-.hint.norule {
+.overlay .hint.norule {
   color: #ff9f5f;
   font-style: italic;
 }
 
 /* Confidence dot. */
-.conf-high   { color: #00ff9c; }
-.conf-medium { color: #ffd166; }
-.conf-low    { color: #ff5f5f; }
+.overlay .conf-high   { color: #00ff9c; }
+.overlay .conf-medium { color: #ffd166; }
+.overlay .conf-low    { color: #ff5f5f; }
 
-.error {
+.overlay .error {
   color: #ff5f5f;
 }
