@@ -79,7 +79,7 @@ to_next = { dir = "fixed", tip = "Static map. Clear every monster for the quest.
 confidence = "high"
 source = "maxroll"
 levels = [1, 36, 79]
-quests = ["Den of Evil: clear every monster"]
+quests = ["Den of Evil: clear every monster - +1 skill point and one free respec (Akara)"]
 uniques = ["Corpsefire"]
 notes = []
 
@@ -106,7 +106,7 @@ to_next = { dir = "fixed", tip = "Semi-static. Blood Raven is in the graveyard; 
 confidence = "high"
 source = "maxroll"
 levels = [3, 36, 80]
-quests = ["Sisters' Burial Grounds: Blood Raven"]
+quests = ["Sisters' Burial Grounds: Blood Raven - Rogue mercenary (Kashya)"]
 uniques = ["Blood Raven"]
 notes = []
 farm = ["Blood Raven roams the graveyard. Two one-level tombs open off its edges: Mausoleum (Hell alvl 85, gold chest) and Crypt (Hell 83, Bonebreaker, gold chest)."]
@@ -174,7 +174,7 @@ to_next = { dir = "path", tip = "Follow the path from the entrance; it leads to 
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [4, 37, 68]
-quests = ["Search for Cain: Cairn Stones + Scroll"]
+quests = ["Search for Cain: Cairn Stones + Scroll - free Cain yourself for a ring (Akara)"]
 uniques = ["Rakanishu"]
 notes = ["Tristram portal opens at the Cairn Stones once you have the Scroll of Inifuss."]
 farm = ["Tristram: the 5 Cairn Stones stand in a clearing guarded by Rakanishu; touch them in the order Cain's scroll shows (the Tree of Inifuss sequence). Stones and WP are both random in the field."]
@@ -188,7 +188,7 @@ to_next = { dir = "fixed", tip = "Static map. Cain is in the cage near the centr
 confidence = "high"
 source = "maxroll"
 levels = [6, 39, 76]
-quests = ["Search for Cain: free Cain"]
+quests = ["Search for Cain: free Cain - free identify + a ring (Akara)"]
 uniques = ["Griswold"]
 notes = ["Wirt's corpse drops Wirt's Leg for the cow level."]
 farm = ["Wirt's Leg (for cows) is on Wirt's body at the bottom-right of town. Griswold is by the well, Cain in the cage in the centre. Good early NM/Hell XP zone."]
@@ -228,7 +228,7 @@ to_next = { dir = "path", tip = "A path directly connects the entrance to the Bl
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [5, 38, 68]
-quests = ["Search for Cain: Tree of Inifuss"]
+quests = ["Search for Cain: Tree of Inifuss - scroll with the stone order"]
 uniques = ["Treehead Woodfist"]
 notes = []
 farm = ["Treehead Woodfist stands near the Tree of Inifuss on the path. Fast Countess: skip the Tree, follow the path to Black Marsh."]
@@ -352,7 +352,7 @@ to_next = { dir = "fixed", tip = "Static map. The Countess is in the room at the
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 42, 79]
-quests = ["Forgotten Tower: the Countess"]
+quests = ["Forgotten Tower: the Countess - guaranteed rune drops (up to Ral / Io / Lo)"]
 uniques = ["The Countess"]
 notes = ["Countess rune drops: up to Ral (Normal), Io (Nightmare), Lo (Hell)."]
 farm = ["Countess: small room behind the fire wall at the end. Save+exit and re-run."]
@@ -434,7 +434,7 @@ to_next = { dir = "left", tip = "Turn left or go straight from the entrance for 
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [9, 40, 70]
-quests = ["Tools of the Trade: Horadric Malus"]
+quests = ["Tools of the Trade: Horadric Malus - Charsi imbues one item"]
 uniques = ["The Smith"]
 notes = []
 
@@ -554,7 +554,7 @@ to_next = { dir = "fixed", tip = "Static map. Andariel is in the far chamber; fo
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [12, 43, 73]
-quests = ["Sisters to the Slaughter: Andariel"]
+quests = ["Sisters to the Slaughter: Andariel - Act 2"]
 uniques = ["Andariel"]
 notes = ["D2R: Andariel always uses her quest-drop table."]
 farm = ["Andariel: fixed map - the corridor leads to her chamber. After the first kill D2R keeps her improved quest drop rate (patch 2.4). TP back and re-run from the Cat 2 WP."]
@@ -568,7 +568,7 @@ to_next = { dir = "random", tip = "No accepted rule. The Cow King is in a fenced
 confidence = "medium"
 source = "inferred"
 levels = [28, 64, 81]
-quests = ["Cow King: kill = no more cow portals"]
+quests = ["Cow King: killing him no longer closes the portal (D2R)"]
 uniques = ["The Cow King"]
 notes = ["Killing the Cow King stops that character opening more cow portals on this difficulty."]
 farm = ["Cows: the whole level is alvl 28/64/81 with huge packs. The Cow King stands in a fenced pen; his death no longer blocks the portal (D2R)."]
@@ -626,7 +626,7 @@ to_next = { dir = "left", tip = "Turn left from the entrance; Radament is that w
 confidence = "medium"
 source = "maxroll"
 levels = [14, 44, 75]
-quests = ["Radament's Lair: Radament"]
+quests = ["Radament's Lair: Radament - Book of Skill (+1 skill point)"]
 uniques = ["Radament"]
 notes = []
 farm = ["Radament: go left from the stairs; his Book of Skill is the quest reward."]
@@ -722,7 +722,7 @@ to_next = { dir = "left", tip = "Turn left from the entrance: Bloodwitch and the
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 45, 82]
-quests = ["Horadric Staff: Horadric Cube"]
+quests = ["Horadric Staff: Horadric Cube - the cube itself"]
 uniques = ["Bloodwitch the Wild"]
 notes = ["Horadric Cube is in the golden chest."]
 
@@ -775,7 +775,7 @@ to_next = { dir = "straight", tip = "Go straight from the entrance: Coldworm and
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 46, 85]
-quests = ["Horadric Staff: Staff of Kings"]
+quests = ["Horadric Staff: Staff of Kings - cube with the Amulet"]
 uniques = ["Coldworm the Burrower"]
 notes = []
 farm = ["Hell alvl 85 but tunnels are one monster wide. Coldworm and the Staff chest are straight from the entrance."]
@@ -843,7 +843,7 @@ to_next = { dir = "fixed", tip = "Static map. The altar with the Amulet of the V
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 47, 83]
-quests = ["Tainted Sun: altar", "Horadric Staff: Amulet of the Viper"]
+quests = ["Tainted Sun: altar - restores daylight (no item reward)", "Horadric Staff: Amulet of the Viper - cube with the Staff"]
 uniques = ["Fangskin"]
 notes = []
 
@@ -908,7 +908,7 @@ to_next = { dir = "fixed", tip = "Static map. The Arcane Sanctuary portal is in 
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 48, 78]
-quests = ["Arcane Sanctuary: the portal"]
+quests = ["Arcane Sanctuary: the portal - opened by Jerhyn after Tainted Sun"]
 uniques = ["Fire Eye"]
 notes = []
 farm = ["Fire Eye guards the Arcane portal. The cellars are quick NM/Hell XP with lots of champions."]
@@ -922,8 +922,8 @@ to_next = { dir = "random", tip = "No accepted rule: the Summoner is at the end 
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 48, 79]
-quests = ["The Summoner"]
-uniques = ["The Summoner"]
+quests = ["The Summoner - read his journal for the Canyon portal"]
+uniques = ["The Summoner - read his journal for the Canyon portal"]
 notes = []
 farm = ["Summoner: WP in the centre, four arms; he is on the platform at the end of one (random). Read his journal to open the Canyon portal. Ghosts drop no gold but normal items."]
 
@@ -936,7 +936,7 @@ to_next = { dir = "fixed", tip = "Seven tombs ring the canyon; left to right the
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [16, 48, 79]
-quests = ["Seven Tombs: find the true tomb"]
+quests = ["Seven Tombs: find the true tomb - symbol shown in your quest log"]
 uniques = []
 notes = ["Tomb symbols left to right: ○ ◡ ☐ ⊹ ≫ △ ⚇."]
 farm = ["Duriel: fixed map, tombs run left to right o u [] + >> ^ oo; the real one matches the symbol in your quest log. Ancient Kaa is in a false tomb."]
@@ -950,7 +950,7 @@ to_next = { dir = "left", tip = "Turn left from the entrance. In the true tomb t
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 49, 80]
-quests = ["Seven Tombs: Staff into the Orifice"]
+quests = ["Seven Tombs: Staff into the Orifice - opens Duriel's chamber"]
 uniques = ["Ancient Kaa the Soulless (one tomb)"]
 notes = []
 farm = ["Duriel: exit is left. Place the staff in the orifice to open his chamber. Ancient Kaa's tomb is a decent Hell XP run."]
@@ -964,7 +964,7 @@ to_next = { dir = "fixed", tip = "Static map. Duriel is right there." }
 confidence = "high"
 source = "maxroll"
 levels = [17, 49, 80]
-quests = ["Seven Tombs: Duriel"]
+quests = ["Seven Tombs: Duriel - Act 3"]
 uniques = ["Duriel"]
 notes = []
 
@@ -1008,7 +1008,7 @@ to_next = { dir = "fixed", tip = "Static map. Khalim's Eye is in the chest at th
 confidence = "high"
 source = "maxroll"
 levels = [21, 50, 79]
-quests = ["Khalim's Will: Khalim's Eye"]
+quests = ["Khalim's Will: Khalim's Eye - cube with Brain, Heart, Flail"]
 uniques = ["Sszark the Burning"]
 notes = []
 farm = ["Fixed map: Khalim's Eye chest is SW of the entrance; Sszark drops the Jade Figurine if you still need it."]
@@ -1048,7 +1048,7 @@ to_next = { dir = "straight", tip = "Keep heading up: the Lower Kurast exit is o
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [22, 50, 80]
-quests = ["Blade of the Old Religion: Gidbinn"]
+quests = ["Blade of the Old Religion: Gidbinn - rare ring (Ormus) + Iron Wolf mercenary"]
 uniques = ["Stormtree"]
 notes = []
 farm = ["Flayer Dungeon is on the same tile as the Gidbinn altar; Stormtree is on the path. Dungeon 1-2 exit left, the Brain is on 3 (Witch Doctor Endugu). Swampy Pit is the decoy."]
@@ -1127,7 +1127,7 @@ to_next = { dir = "fixed", tip = "Static map. Witch Doctor Endugu guards Khalim'
 confidence = "high"
 source = "maxroll"
 levels = [22, 51, 83]
-quests = ["Khalim's Will: Khalim's Brain"]
+quests = ["Khalim's Will: Khalim's Brain - cube with Eye, Heart, Flail"]
 uniques = ["Witch Doctor Endugu"]
 notes = []
 farm = ["Khalim's Brain: one of a few fixed layouts, guarded by Witch Doctor Endugu. Dungeon 1-2 exit left on the way in."]
@@ -1169,7 +1169,7 @@ to_next = { dir = "fixed", tip = "Static map. Lam Esen's Tome is in the chest at
 confidence = "high"
 source = "maxroll"
 levels = [23, 53, 84]
-quests = ["Lam Esen's Tome"]
+quests = ["Lam Esen's Tome - +5 stat points (Alkor)"]
 uniques = []
 notes = []
 farm = ["Tiny Hell alvl 85 temple: clear it, grab Lam Esen's Tome (chest at the back), out. Battlemaid Sarina."]
@@ -1212,7 +1212,7 @@ to_next = { dir = "fixed", tip = "Static map. Khalim's Heart is in the chest at 
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 53, 85]
-quests = ["Khalim's Will: Khalim's Heart"]
+quests = ["Khalim's Will: Khalim's Heart - cube with Eye, Brain, Flail"]
 uniques = []
 notes = []
 farm = ["Khalim's Heart chest; Hell alvl 85 and short. Return to Sewers 1 and take the straight exit up to Upper Kurast."]
@@ -1310,7 +1310,7 @@ to_next = { dir = "straight", tip = "Static map. Go straight up to the Council a
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 54, 82]
-quests = ["Blackened Temple: Council + Orb", "Khalim's Will: Khalim's Flail"]
+quests = ["Blackened Temple: Council + Orb - smash the Orb with Khalim's Will to open the Durance", "Khalim's Will: Khalim's Flail - from the council"]
 uniques = ["Ismail Vilehand", "Geleb Flamefinger", "Toorc Icefist"]
 notes = []
 farm = ["Council: fixed map. From the WP go up the stairs to the central platform; the council stands around the Compelling Orb. Hell alvl 82, dense drops - the classic gold/rune run. Smash the Orb with Khalim's Will to open the Durance."]
@@ -1352,7 +1352,7 @@ to_next = { dir = "fixed", tip = "Static map. Mephisto is up and to the left of 
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
-quests = ["The Guardian: Mephisto"]
+quests = ["The Guardian: Mephisto - Act 4"]
 uniques = ["Wyand Voidbringer", "Maffer Dragonhand", "Bremm Sparkfist", "Mephisto"]
 notes = []
 farm = ["Mephisto: fixed map - NW from the stairs to his platform past Bremm, Wyand and Maffer. Moat trick: stand across the blood moat and he cannot reach you. Red portal to Act 4 behind him."]
@@ -1397,7 +1397,7 @@ to_next = { dir = "edge", tip = "The City of the Damned exit is on any edge exce
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [26, 56, 83]
-quests = ["The Fallen Angel: Izual"]
+quests = ["The Fallen Angel: Izual - +2 skill points (Tyrael)"]
 uniques = ["Izual"]
 notes = []
 farm = ["Izual wanders somewhere in here - +2 skill points. Exit is on an edge other than the one you entered."]
@@ -1425,7 +1425,7 @@ to_next = { dir = "straight", tip = "Keep going straight from the waypoint to re
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [27, 57, 85]
-quests = ["Hell's Forge: Hephasto, smash Soulstone"]
+quests = ["Hell's Forge: Hephasto, smash Soulstone - a rune (El-Amn / Sol-Um / Hel-Gul) + gems"]
 uniques = ["Hephasto the Armorer"]
 notes = []
 farm = ["Diablo: from the WP the Chaos Sanctuary entrance is straight ahead; Hephasto and the Hellforge are off to the side. Hell alvl 85. The Hellforge quest drops a rune up to Um (NM) / Gul (Hell)."]
@@ -1439,7 +1439,7 @@ to_next = { dir = "fixed", tip = "Static map. Open the five seals around the sta
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [28, 58, 85]
-quests = ["Terror's End: Diablo"]
+quests = ["Terror's End: Diablo - Act 5"]
 uniques = ["Grand Vizier of Chaos", "Lord De Seis", "Infector of Souls", "Diablo"]
 notes = ["Seals: Vizier (left, 2 seals), De Seis (top), Infector (right, 2 seals)."]
 farm = ["Diablo: fixed star map. Seals: Vizier bottom-left, De Seis top, Infector right - open all five (each pair spawns its boss) and Diablo appears at the centre pentagram. Hell alvl 85 throughout."]
@@ -1471,7 +1471,7 @@ to_next = { dir = "straight", tip = "Static map. Keep going forward past the cat
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 58, 80]
-quests = ["Siege on Harrogath: Shenk"]
+quests = ["Siege on Harrogath: Shenk - Larzuk sockets one item"]
 uniques = ["Dac Farren", "Shenk the Overseer"]
 notes = ["Classic Shenk + Eldritch run with the Frigid Highlands waypoint."]
 farm = ["Shenk the Overseer stands at the far end by the Frigid Highlands passage; Dac Farren on the way. Faster: take the Frigid WP and walk back down."]
@@ -1485,7 +1485,7 @@ to_next = { dir = "straight", tip = "Long rectangle: keep going forward past the
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 59, 81]
-quests = ["Rescue on Mount Arreat: 3 cages"]
+quests = ["Rescue on Mount Arreat: 3 cages - Barbarian mercenary + Tal, Ral, Ort (Qual-Kehk)"]
 uniques = ["Eldritch the Rectifier", "Sharptooth Slayer", "Eyeback the Unleashed"]
 notes = []
 farm = ["Eldritch the Rectifier is a few steps north of the WP; Shenk is south, just inside Bloody Foothills - the Eldritch+Shenk run. Sharptooth Slayer and the Abaddon red portal (Hell alvl 85) are here too."]
@@ -1555,7 +1555,7 @@ to_next = { dir = "fixed", tip = "Static map. Anya is frozen at the far end, pas
 confidence = "high"
 source = "maxroll"
 levels = [29, 61, 83]
-quests = ["Prison of Ice: Anya"]
+quests = ["Prison of Ice: Anya - +10 all resistances scroll (Malah) + Nihlathak's portal"]
 uniques = ["Frozenstein"]
 notes = ["Anya rewards a personalised item and +10 all resists (after the Nihlathak quest)."]
 farm = ["Anya is at the end of the fixed layout; Frozenstein guards her. Rescuing her opens the red portal to Nihlathak's Temple (Pindleskin)."]
@@ -1653,7 +1653,7 @@ to_next = { dir = "fixed", tip = "Static map. Touch the altar, defeat the Ancien
 confidence = "high"
 source = "maxroll"
 levels = [37, 68, 87]
-quests = ["Rite of Passage: the Ancients"]
+quests = ["Rite of Passage: the Ancients - 1.4M / 20M / 40M XP"]
 uniques = ["Korlic", "Madawc", "Talic"]
 notes = []
 
@@ -1708,7 +1708,7 @@ to_next = { dir = "fixed", tip = "Static map. The throne room is at the top; Baa
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [43, 66, 85]
-quests = ["Eve of Destruction: Baal's waves"]
+quests = ["Eve of Destruction: Baal's waves - Lister's pack is the big drop"]
 uniques = ["Colenzo the Annihilator", "Achmel the Cursed", "Bartuc the Bloody", "Ventar the Unholy", "Lister the Tormentor"]
 notes = ["Wave order: Colenzo, Achmel, Bartuc, Ventar, Lister — then Baal walks off."]
 farm = ["Baal: fixed map - the throne room is at the top. Five waves: Colenzo, Achmel, Bartuc, Ventar, Lister (the big drop), then Baal opens the portal to his Chamber. Hell alvl 85."]
@@ -1722,7 +1722,7 @@ to_next = { dir = "fixed", tip = "Static map. Baal is right there." }
 confidence = "high"
 source = "maxroll"
 levels = [43, 66, 85]
-quests = ["Eve of Destruction: Baal"]
+quests = ["Eve of Destruction: Baal - difficulty complete; next difficulty + cow portal"]
 uniques = ["Baal"]
 notes = []
 farm = ["Baal alone, fixed map. Kill, loot, TP out, save+exit."]
@@ -1778,7 +1778,7 @@ to_next = { dir = "fixed", tip = "Static map. Nihlathak is on one of the four co
 confidence = "medium"
 source = "maxroll"
 levels = [36, 64, 84]
-quests = ["Betrayal of Harrogath: Nihlathak"]
+quests = ["Betrayal of Harrogath: Nihlathak - Anya personalises one item"]
 uniques = ["Nihlathak"]
 notes = []
 farm = ["Nihlathak: four arms from the centre, he is on the platform at the end of one (random) - reveal each arm's end on the map. Beware Corpse Explosion: kill him fast or clear corpses. Hell alvl 84."]
