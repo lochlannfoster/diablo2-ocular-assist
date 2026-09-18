@@ -16,7 +16,7 @@ import re
 import subprocess
 from dataclasses import dataclass
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageChops
 
 # Below this similarity the best candidate is just the closest wrong answer.
 MIN_SCORE = 0.75
@@ -68,13 +68,20 @@ def gold_only(image: Image.Image) -> Image.Image:
     red > green > blue; purple has blue > green. Masking on that alone drops
     the purple lines (and their anti-aliased edges) before OCR ever sees them.
     """
-    import numpy as np
-
-    rgb = np.asarray(image.convert("RGB")).astype(int)
-    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
-    keep = (r >= 90) & (g >= 60) & (r >= g) & (g > b)
-    gray = np.where(keep, (r * 299 + g * 587 + b * 114) // 1000, 0).astype("uint8")
-    return Image.fromarray(gray)
+    r, g, b = image.convert("RGB").split()
+    on = lambda v: 255 if v else 0
+    # subtract() clamps at 0, so g-r == 0 <=> r >= g and g-b > 0 <=> g > b.
+    masks = [
+        r.point(lambda v: on(v >= 90)),
+        g.point(lambda v: on(v >= 60)),
+        ImageChops.subtract(g, r).point(lambda v: on(v == 0)),
+        ImageChops.subtract(g, b).point(lambda v: on(v > 0)),
+    ]
+    keep = masks[0]
+    for m in masks[1:]:
+        keep = ImageChops.darker(keep, m)
+    # convert("L") is the same 299/587/114 luma; multiply zeroes masked pixels.
+    return ImageChops.multiply(image.convert("L"), keep)
 
 
 def preprocess(image: Image.Image, scale: int = 2) -> Image.Image:
