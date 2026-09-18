@@ -24,21 +24,18 @@ follow it.
 
 QUEST  Blade of the Old Religion: Gidbinn
 
-EXP RANGES  (your clvl vs mlvl 50)
-100%  45–55     43–81%  42–44 · 56–58     ≤24%  ≤41 · ≥59
+CLVL  45–55 recommended  (42–58 still ok, mlvl 50)
 
 SUPERUNIQUE  Stormtree
 ```
 
 - **Title** — area, difficulty (coloured green / amber / red) and the area
   level for that difficulty; towns show "town".
-- **EXP RANGES** — the experience rate you get here, by clvl. D2 pays full
-  experience while your level is within 5 of the mlvl (= alvl
-  in Nightmare/Hell), then 81 / 62 / 43 / 24 % at 6 / 7 / 8 / 9 apart and 5 %
-  from 10 on ([PureDiablo](https://www.purediablo.com/d2wiki/Experience)).
-  So 100% = within ±5, 43–81% = 6–8 apart, ≤24% = 9+ apart. (From clvl 25, monsters *above*
-  you are penalised more gently, by clvl ÷ mlvl — the bands stay symmetric
-  because being 9+ levels under an area is a survival problem anyway.)
+- **CLVL** — the recommended clvl band for this area: D2 pays full
+  experience while your level is within 5 of the mlvl (= alvl in
+  Nightmare/Hell); 6–8 apart still pays 43–81 %, 9+ apart ≤24 %
+  ([PureDiablo](https://www.purediablo.com/d2wiki/Experience)). The grey
+  range is the "still ok" 6–8 band.
 - **Q** — quest objectives located in this area (up to two lines).
 - **WP** — where the waypoint is, from the entrance.
 - **NEXT** — the next area and where its exit is, from the waypoint (or the

@@ -42,7 +42,7 @@ every entry cites a source).
   (from Teo-'s guide on speedrun.com)
 - [PureDiablo — Area Levels](https://www.purediablo.com/diablo-2/diablo-2-area-levels)
 - [PureDiablo — Experience](https://www.purediablo.com/d2wiki/Experience) (the
-  ±5 / 81-62-43-24-5 % penalty table behind the EXP RANGES line)
+  ±5 / 81-62-43-24-5 % penalty table behind the CLVL line)
 
 ## When a rule is wrong in play
 

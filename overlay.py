@@ -61,7 +61,7 @@ list_monitors = native.impl.list_monitors
 COMMANDS = ("hide", "freeze", "quit", "flag", "edit")
 
 DIFFICULTY_COLOURS = {"normal": "#9be59b", "nightmare": "#ffd166", "hell": "#ff5f5f"}
-GOOD, AVG, BAD = "#00ff9c", "#ffd166", "#ff5f5f"
+GOOD = "#00ff9c"
 NORULE = "#ff9f5f"
 
 
@@ -75,9 +75,9 @@ def direction(hint) -> str:
     return f'<span foreground="{colour}" weight="bold">{esc(hint.label)}</span>'
 
 
-def band(rate: str, levels: str, colour: str) -> str:
-    """'100%  45–55': the XP rate, then the clvls that get it."""
-    return f'<span foreground="{colour}" weight="bold">{rate}</span>  {levels}'
+def band(levels: str, label: str, colour: str) -> str:
+    """'45–55 recommended': a clvl range, coloured, then its label."""
+    return f'<span foreground="{colour}" weight="bold">{levels}</span> {label}'
 
 
 def rng(pair) -> str:
@@ -532,16 +532,16 @@ class Overlay:
             if quest:
                 label.set_markup(f"QUEST  {esc(quest)}")
 
+        # One line: the clvl band that gets full XP here, then the band that
+        # still gets a worthwhile rate (43-81%).
+        self.exp_head_label.set_visible(False)
         if level:
             b = areas.exp_bands(level)
-            self.exp_head_label.set_markup(
-                f"EXP RANGES  <span foreground=\"#8a9a94\">(your clvl vs mlvl {level})</span>")
             self.exp_label.set_markup(
-                f"{band('100%', rng(b['good']), GOOD)}     "
-                f"{band('43–81%', rng(b['avg_low']) + ' · ' + rng(b['avg_high']), AVG)}     "
-                f"{band('≤24%', f'≤{b['bad_low'][1]} · ≥{b['bad_high'][0]}', BAD)}")
+                f"CLVL  {band(rng(b['good']), 'recommended', GOOD)}"
+                f"  <span foreground=\"#8a9a94\">"
+                f"({rng((b['avg_low'][0], b['avg_high'][1]))} still ok, mlvl {level})</span>")
         else:
-            self.exp_head_label.set_visible(False)
             self.exp_label.set_visible(False)
 
         drops = areas.drop_note(area.act, rec.difficulty, level)

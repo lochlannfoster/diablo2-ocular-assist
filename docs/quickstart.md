@@ -55,8 +55,7 @@ Keep heading up: the Lower Kurast exit is on the last grid tile
 
 QUEST  Blade of the Old Religion: Gidbinn
 
-EXP RANGES  (your clvl vs mlvl 50)
-100%  45–55     43–81%  42–44 · 56–58     ≤24%  ≤41 · ≥59
+CLVL  45–55 recommended  (42–58 still ok, mlvl 50)
 
 SUPERUNIQUE  Stormtree
 ```

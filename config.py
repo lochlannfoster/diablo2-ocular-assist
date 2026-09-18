@@ -24,7 +24,7 @@ SECTIONS = {
     "next": "Next area",
     "farm": "Farm routes",
     "quests": "Quests",
-    "exp": "Exp ranges",
+    "exp": "Recommended clvl",
     "drops": "Drops",
     "notes": "Notes",
     "uniques": "Superuniques",
