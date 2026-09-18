@@ -34,7 +34,8 @@ jobs:
             mingw-w64-x86_64-python-gobject
             mingw-w64-x86_64-python-pillow
             mingw-w64-x86_64-python-pytest
-            mingw-w64-x86_64-python-pyinstaller
+            mingw-w64-x86_64-pyinstaller
+            mingw-w64-x86_64-pyinstaller-hooks-contrib
             mingw-w64-x86_64-gtk4
             mingw-w64-x86_64-tesseract-ocr
             mingw-w64-x86_64-tesseract-data-eng
