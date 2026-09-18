@@ -81,3 +81,19 @@ def test_small_caps_o_read_as_e_still_matches():
     assert ocr.match("BLeeD [Meer", NAMES)[0] == "Blood Moor"
     # Genuine E's are unaffected: the unfixed variant still scores 1.0.
     assert ocr.match("DEN OF EVIL", NAMES) == ("Den of Evil", 1.0)
+
+
+def test_lowconf_predicate():
+    from ocr import Reading, should_save_lowconf
+    assert not should_save_lowconf(Reading("", None, 0.0))                       # blank: map off
+    assert not should_save_lowconf(Reading("@4:13 PM\n", None, 0.3))            # no letters worth it
+    assert should_save_lowconf(Reading("BLeopD [Meer", None, 0.66))              # text, no match
+    assert should_save_lowconf(Reading("BLeopD [Meer", "Blood Moor", 0.80))      # barely matched
+    assert not should_save_lowconf(Reading("BLACK MARSH", "Black Marsh", 1.0))
+
+
+def test_line_scores_marks_skipped_lines():
+    rows = ocr.line_scores("@7:14 P\nGame: RASI\nBLeeD [Meer\nDifFrFicuLTY: NIGHTMARE\n", NAMES)
+    by_line = {line: (cand, skipped) for line, cand, score, skipped in rows}
+    assert by_line["Game: RASI"][1] and by_line["@7:14 P"][1]
+    assert by_line["BLeeD [Meer"] == ("Blood Moor", False)

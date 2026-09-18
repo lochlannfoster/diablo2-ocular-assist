@@ -98,6 +98,20 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self._row(grid, 1, "Area", self.area_label)
         self._row(grid, 2, "OCR read", self.ocr_label)
         self._row(grid, 3, "Capture", self.preview)
+
+        # OCR detail: what tesseract was shown, how each line scored, and why
+        # the overlay is or isn't on screen. Collapsed by default.
+        detail = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.processed_preview = Gtk.Picture(content_fit=Gtk.ContentFit.CONTAIN, can_shrink=True)
+        self.processed_preview.set_size_request(-1, 70)
+        self.lines_label = Gtk.Label(xalign=0, wrap=True, selectable=True, max_width_chars=60)
+        self.lines_label.add_css_class("monospace")
+        self.visibility_label = Gtk.Label(xalign=0, wrap=True, max_width_chars=60)
+        detail.append(self.processed_preview)
+        detail.append(self.lines_label)
+        detail.append(self.visibility_label)
+        self.detail_expander = Gtk.Expander(label="OCR detail", child=detail)
+        grid.attach(self.detail_expander, 0, 4, 2, 1)
         return frame
 
     def _build_overlay_section(self):
@@ -453,6 +467,36 @@ class SettingsWindow(Gtk.ApplicationWindow):
 
     # -- status ------------------------------------------------------------
 
+    @staticmethod
+    def _show_image(picture, image):
+        buffer = io.BytesIO()
+        image.save(buffer, format="PNG")
+        try:
+            picture.set_paintable(Gdk.Texture.new_from_bytes(GLib.Bytes.new(buffer.getvalue())))
+        except GLib.Error:
+            pass
+
+    def _refresh_detail(self, reading):
+        session = self.session
+        if reading is not None and reading.processed is not None \
+                and reading.processed is not getattr(self, "_shown_processed", None):
+            self._shown_processed = reading.processed
+            self._show_image(self.processed_preview, reading.processed)
+        if reading is not None:
+            rows = []
+            for line, candidate, score, skipped in overlaymod.ocr.line_scores(
+                    reading.raw, session.reader.names):
+                if skipped:
+                    rows.append(f"{line!r:32} skipped")
+                else:
+                    rows.append(f"{line!r:32} → {candidate} ({score:.2f})")
+            rows.append(f"difficulty line: {reading.difficulty or 'not found'}")
+            self.lines_label.set_text("\n".join(rows) or "(blank frame)")
+        rec = session.recognizer
+        self.visibility_label.set_text(
+            f"{session.visibility_reason()}  ·  focused: {session.game_focused}  ·  "
+            f"misses: {rec.misses}  ·  frozen: {rec.frozen}")
+
     def _refresh_status_tick(self):
         self._refresh_status()
         return GLib.SOURCE_CONTINUE
@@ -488,13 +532,10 @@ class SettingsWindow(Gtk.ApplicationWindow):
         frame = session.last_frame
         if frame is not None and frame is not getattr(self, "_shown_frame", None):
             self._shown_frame = frame
-            buffer = io.BytesIO()
-            frame.save(buffer, format="PNG")
-            try:
-                texture = Gdk.Texture.new_from_bytes(GLib.Bytes.new(buffer.getvalue()))
-                self.preview.set_paintable(texture)
-            except GLib.Error:
-                pass
+            self._show_image(self.preview, frame)
+
+        if self.detail_expander.get_expanded():
+            self._refresh_detail(reading)
 
         # Keep the toggles honest when state changed via hotkey / --ctl.
         self._loading = True

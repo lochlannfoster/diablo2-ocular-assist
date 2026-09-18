@@ -14,7 +14,7 @@ from __future__ import annotations
 import difflib
 import re
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 
 from PIL import Image, ImageChops
 
@@ -23,7 +23,7 @@ MIN_SCORE = 0.75
 
 # Lines that can never be an area name; skipping them saves a fuzzy pass and
 # stops "Difficulty: Normal" from ever competing with a real name.
-_SKIP = re.compile(r"difficulty|^\s*game\b|^\s*\d{1,2}:\d{2}|^\s*$|^\W*[A-Za-z]+:", re.IGNORECASE)
+_SKIP = re.compile(r"difficulty|^\s*game\b|^\W*\d{1,2}:\d{2}|^\s*$|^\W*[A-Za-z]+:", re.IGNORECASE)
 _NOISE = re.compile(r"[^A-Za-z0-9' ]+")
 
 # Tesseract's usual misreads of a lone digit after "Level". Only applied in
@@ -41,6 +41,41 @@ class Reading:
     area: str | None  # best matching area name, or None
     score: float      # similarity of that match (0..1)
     difficulty: str | None = None  # "normal" | "nightmare" | "hell"
+    # What tesseract was actually shown (masked + upscaled), for the settings
+    # window's OCR detail view. Not part of equality.
+    processed: Image.Image | None = field(default=None, compare=False, repr=False)
+
+
+LOWCONF_BELOW = 0.85   # matches under this are worth keeping a crop of
+
+
+def has_text(raw: str) -> bool:
+    """Did tesseract see anything word-like at all (map on, text present)?"""
+    return len(re.findall(r"[A-Za-z]", raw)) >= 3
+
+
+def should_save_lowconf(reading: Reading) -> bool:
+    """A frame worth keeping for later: there was text, but it either did
+    not match any area or only just did. Blank frames (map off) are not
+    interesting; confident reads are not either."""
+    if not has_text(reading.raw):
+        return False
+    return reading.area is None or reading.score < LOWCONF_BELOW
+
+
+def line_scores(raw: str, names: list[str]) -> list[tuple[str, str | None, float, bool]]:
+    """Per OCR line: (line, best candidate, score, skipped). For the OCR
+    detail view -- shows exactly why a frame did or did not match."""
+    out = []
+    for line in raw.splitlines():
+        if not line.strip():
+            continue
+        if _SKIP.search(line):
+            out.append((line, None, 0.0, True))
+            continue
+        candidate, score = match(line, names)
+        out.append((line, candidate, score, False))
+    return out
 
 
 def read_difficulty(raw: str) -> str | None:
@@ -174,4 +209,5 @@ def recognise(raw: str, names: list[str]) -> Reading:
 
 def read_area(image: Image.Image, names: list[str]) -> Reading:
     """Capture crop in, Reading out."""
-    return recognise(run_tesseract(preprocess(image)), names)
+    processed = preprocess(image)
+    return replace(recognise(run_tesseract(processed), names), processed=processed)

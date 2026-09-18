@@ -172,7 +172,17 @@ uniques = true
 [overlay.profiles]   # presets cycled with Ctrl+Shift+F10; edit or delete freely
 farming = ["farm", "drops", "uniques", "exp"]
 speedrun = ["waypoint", "next", "quests"]
+
+[debug]
+save_lowconf = true  # keep crops of frames that matched poorly in debug/lowconf/
+lowconf_keep = 200
 ```
+
+The settings window's **Status → OCR detail** expander shows the masked image
+tesseract was given, every OCR line with the area it scored against, and why
+the overlay is currently shown or hidden. Frames with text that matched
+poorly (or not at all) are saved to `debug/lowconf/` with a log line — attach
+those when a zone keeps misreading.
 
 If the area name isn't being read, run `tools/calibrate.py`: it saves
 `debug/frame.png` (whole game window) and `debug/crop.png` (the region) and

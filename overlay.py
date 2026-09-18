@@ -57,6 +57,7 @@ CONFIG_PATH = configmod.CONFIG_PATH
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 SOCKET_PATH = RUNTIME / "d2-overlay.sock"
 FLAG_LOG = native.config_dir() / "debug" / "flagged.log"
+LOWCONF_DIR = native.config_dir() / "debug" / "lowconf"
 
 list_monitors = native.impl.list_monitors
 
@@ -676,6 +677,8 @@ class Session:
     def on_reading(self, reading: ocr.Reading):
         self.error = None
         self.last_reading = reading
+        if self.config.get("debug", {}).get("save_lowconf", True) and ocr.should_save_lowconf(reading):
+            self.save_lowconf(reading)
         changed = self.recognizer.feed(reading.area, reading.difficulty)
         if changed:
             raw = " / ".join(reading.raw.split("\n")).strip(" /")
@@ -779,6 +782,41 @@ class Session:
             self.bridge.start()
         else:
             self.bridge.stop()
+
+    def save_lowconf(self, reading: ocr.Reading):
+        """Keep the crop of a frame that had text but matched poorly, so the
+        glyph confusions can be studied and fixed in ocr.py later."""
+        frame = self.last_frame
+        if frame is None:
+            return
+        try:
+            LOWCONF_DIR.mkdir(parents=True, exist_ok=True)
+            stamp = time.strftime("%Y%m%d-%H%M%S")
+            frame.save(LOWCONF_DIR / f"{stamp}_{reading.score:.2f}.png")
+            raw = " / ".join(reading.raw.split("\n")).strip(" /")
+            with open(LOWCONF_DIR / "lowconf.log", "a") as handle:
+                handle.write(f"{stamp}  {reading.score:.2f}  {raw!r} -> {reading.area}\n")
+            keep = int(self.config.get("debug", {}).get("lowconf_keep", 200))
+            files = sorted(LOWCONF_DIR.glob("*.png"))
+            for old in files[:max(0, len(files) - keep)]:
+                old.unlink()
+        except OSError as exc:
+            print(f"lowconf: could not save: {exc}", flush=True)
+
+    def visibility_reason(self) -> str:
+        """Why the overlay is (not) on screen right now; for the settings window."""
+        ov = self.config["overlay"]
+        rec = self.recognizer
+        if self.overlay.editing:
+            return "shown: edit mode"
+        if self.hidden:
+            return "hidden: Ctrl+F9 / Show switch"
+        if ov.get("follow_focus", True) and not self.game_focused:
+            return "hidden: game not focused"
+        if ov.get("hide_unread", True) and not rec.frozen and not rec.visible \
+                and rec.misses >= self.UNREAD_GRACE:
+            return f"hidden: area name unreadable for {rec.misses} frames"
+        return "shown"
 
     def flag(self):
         """Append the current area to debug/flagged.log for later correction."""

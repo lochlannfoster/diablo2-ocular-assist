@@ -64,6 +64,10 @@ DEFAULTS = {
         "sections": {key: True for key in SECTIONS},
         "profiles": {},
     },
+    "debug": {
+        "save_lowconf": True,   # keep crops of frames that barely (or never) matched
+        "lowconf_keep": 200,    # newest N files kept in debug/lowconf/
+    },
 }
 
 TEMPLATE = """\
@@ -106,6 +110,10 @@ profile = {profile}          # all | custom | a name from [overlay.profiles] (Ct
 # block above) always exist; add, edit or delete entries freely.
 [overlay.profiles]
 {profiles}
+
+[debug]
+save_lowconf = {save_lowconf}  # save crops that matched poorly to debug/lowconf/ (for fixing OCR)
+lowconf_keep = {lowconf_keep}  # keep the newest N of them
 """
 
 
@@ -211,6 +219,8 @@ def dumps(config: dict) -> str:
         sections=sections,
         profiles=profiles,
         compact=_toml_bool(bool(ov.get("compact", False))),
+        save_lowconf=_toml_bool(bool(config.get("debug", {}).get("save_lowconf", True))),
+        lowconf_keep=int(config.get("debug", {}).get("lowconf_keep", 200)),
         profile=_toml_str(str(ov.get("profile", "all"))),
     )
 
