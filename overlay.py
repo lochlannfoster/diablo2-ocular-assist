@@ -187,6 +187,7 @@ class Overlay:
         self.exp_head_label = self._label("head", "exp", wrap=False)
         self.exp_label = self._label("hint", "exp")
         self.drops_label = self._label("hint", "drops")
+        self.immune_label = self._label("hint", "immune")
         self.notes_label = self._label("hint", "notes")
         self.uniques_label = self._label("hint", "uniques")
         self.next_label = self.next_head_label
@@ -476,7 +477,7 @@ class Overlay:
         for label in (self.title_label, self.wp_head_label, self.wp_label,
                       self.next_head_label, self.next_tip_label, self.farm_label,
                       *self.quest_labels, self.exp_head_label, self.exp_label,
-                      self.drops_label, self.notes_label, self.uniques_label):
+                      self.drops_label, self.immune_label, self.notes_label, self.uniques_label):
             for cls in ("stale", "frozen", "error"):
                 label.remove_css_class(cls)
             label.set_visible(True)
@@ -493,8 +494,8 @@ class Overlay:
                 self.wp_label.set_text("area name must be on screen")
             for label in (self.wp_head_label, self.next_label, self.next_tip_label,
                           self.farm_label, *self.quest_labels, self.exp_head_label,
-                          self.exp_label, self.drops_label, self.notes_label,
-                          self.uniques_label):
+                          self.exp_label, self.drops_label, self.immune_label,
+                          self.notes_label, self.uniques_label):
                 label.set_visible(False)
             return
 
@@ -532,6 +533,7 @@ class Overlay:
             ("quests", self.quest_labels),
             ("exp", (self.exp_head_label, self.exp_label)),
             ("drops", (self.drops_label,)),
+            ("immune", (self.immune_label,)),
             ("notes", (self.notes_label,)),
             ("uniques", (self.uniques_label,)),
         ):
@@ -543,9 +545,22 @@ class Overlay:
         gap = 3 if compact else 10
         for label in (self.wp_head_label, self.next_head_label, self.farm_label,
                       self.quest_labels[0], self.exp_head_label, self.drops_label,
-                      self.notes_label, self.uniques_label):
+                      self.immune_label, self.notes_label, self.uniques_label):
             label.set_margin_top(gap)
         (self.root.add_css_class if compact else self.root.remove_css_class)("compact")
+
+    def _render_immune(self, area, rec):
+        """Hell immunities possible here. Only meaningful in Hell (below that
+        almost nothing is immune), and only where the data exists."""
+        show = rec.difficulty == "hell" and area.immune is not None and bool(area.levels[2])
+        self.immune_label.set_visible(show)
+        if not show:
+            return
+        if area.immune:
+            body = esc("  ·  ".join(area.immune))
+        else:
+            body = '<span foreground="#00ff9c" weight="bold">none</span>'
+        self.immune_label.set_markup(f"{head('IMMUNE', 'immune')}  {body}")
 
     def _render_compact(self, area, rec, level, terrorised=False):
         """One wrapping line per section: header, direction, first clause."""
@@ -583,6 +598,8 @@ class Overlay:
         self.drops_label.set_visible(bool(drops))
         if drops:
             self.drops_label.set_markup(f"{head('DROPS', 'drops')}  {esc(terse(drops, limit + 16))}")
+
+        self._render_immune(area, rec)
 
         self.uniques_label.set_visible(bool(area.uniques))
         if area.uniques:
@@ -638,6 +655,8 @@ class Overlay:
         self.drops_label.set_visible(bool(drops))
         if drops:
             self.drops_label.set_markup(f"{head('DROPS', 'drops')}  " + esc(drops))
+
+        self._render_immune(area, rec)
 
         notes = list(area.notes)
         self.notes_label.set_visible(bool(notes))

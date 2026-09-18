@@ -35,6 +35,7 @@ LABELS = {
 GLYPHS = LABELS  # backwards-compatible name
 
 CONFIDENCE = ("high", "medium", "low")
+IMMUNITIES = ("cold", "fire", "lightning", "poison", "physical", "magic")
 DIFFICULTIES = {"normal": 0, "nightmare": 1, "hell": 2}
 
 
@@ -75,6 +76,7 @@ class Area:
     uniques: tuple[str, ...] = ()
     notes: tuple[str, ...] = ()
     farm: tuple[str, ...] = ()   # farm-run routes that pass through here
+    immune: tuple[str, ...] | None = None   # Hell immunities possible here; None = unknown
 
     def level(self, difficulty: str | None) -> int | None:
         """alvl for a difficulty name, or None if unknown / town."""
@@ -120,10 +122,13 @@ def parse(data: dict) -> dict[str, Area]:
             uniques = tuple(str(q) for q in raw.get("uniques", ()))
             notes = tuple(str(q) for q in raw.get("notes", ()))
             farm = tuple(str(q) for q in raw.get("farm", ()))
+            immune = tuple(str(q) for q in raw["immune"]) if "immune" in raw else None
         except (KeyError, TypeError, ValueError) as exc:
             raise AreaError(f"{name}: {exc}")
         if len(levels) != 3:
             raise AreaError(f"{name}: levels must be [normal, nightmare, hell]")
+        if immune is not None and any(i not in IMMUNITIES for i in immune):
+            raise AreaError(f"{name}: immune must be a list of {', '.join(IMMUNITIES)}")
         if not 1 <= act <= 5:
             raise AreaError(f"{name}: act must be 1-5, got {act}")
         if confidence not in CONFIDENCE:
@@ -143,6 +148,7 @@ def parse(data: dict) -> dict[str, Area]:
             uniques=uniques,
             notes=notes,
             farm=farm,
+            immune=immune,
         )
     # Every `next` must be a real area, otherwise the overlay would happily
     # point at a place that does not exist.

@@ -45,6 +45,10 @@ SUPERUNIQUE  Stormtree
 - **DROPS** — what can drop at this alvl in the current difficulty: item qlvl
   cap, the act's rune tier, and the Hell 78 / 81 / 85 thresholds for Zod and
   "everything".
+- **IMMUNE** — (Hell only) the immunities monsters *can* have in this zone,
+  as a union over its spawn table — a given game rolls about three monster
+  types, so you may not meet them all. `none` in green marks the prized zones
+  (Mausoleum has only lightning; Pit has no physical/magic immunes).
 - **TERROR ZONE** — the purple terror-zone list under the difficulty line is
   read too (every ~10 s, or when the area changes). If the area you are in is
   on it, the title gets a purple badge and CLVL / DROPS switch to the terror
@@ -170,11 +174,12 @@ farm = true
 quests = true
 exp = true
 drops = true
+immune = true
 notes = true
 uniques = true
 
 [overlay.profiles]   # presets cycled with Ctrl+Shift+F10; edit or delete freely
-farming = ["farm", "drops", "uniques", "exp"]
+farming = ["farm", "drops", "immune", "uniques", "exp"]
 speedrun = ["waypoint", "next", "quests"]
 
 [debug]

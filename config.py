@@ -27,6 +27,7 @@ SECTIONS = {
     "quests": "Quests",
     "exp": "Recommended clvl",
     "drops": "Drops",
+    "immune": "Immunities",
     "notes": "Notes",
     "uniques": "Superuniques",
 }
@@ -36,7 +37,7 @@ SECTIONS = {
 BUILTIN_PROFILES = ("all", "custom")
 DEFAULT_PROFILES = {
     "speedrun": ["waypoint", "next", "quests"],
-    "farming": ["farm", "drops", "uniques", "exp"],
+    "farming": ["farm", "drops", "immune", "uniques", "exp"],
 }
 
 DEFAULTS = {

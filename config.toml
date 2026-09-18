@@ -37,6 +37,7 @@ farm = true
 quests = true
 exp = true
 drops = true
+immune = true
 notes = true
 uniques = true
 

@@ -66,7 +66,7 @@ def test_profiles_round_trip_seed_and_delete(tmp_path):
     config.save(cfg, path)
     again = config.load(path)
     assert again["overlay"]["compact"] is True and again["overlay"]["profile"] == "farming"
-    assert again["overlay"]["profiles"] == {"farming": ["farm", "drops", "uniques", "exp"],
+    assert again["overlay"]["profiles"] == {"farming": config.DEFAULT_PROFILES["farming"],
                                             "boss": ["uniques", "drops"]}   # deleted stays deleted
     assert tomllib.loads(path.read_text())
 

@@ -135,3 +135,14 @@ def test_terror_notes():
     assert "96" in areas.terror_drop_note("hell") and "every item" in areas.terror_drop_note("hell")
     assert "45" in areas.terror_drop_note("normal") and "every item" not in areas.terror_drop_note("normal")
     assert "71" in areas.terror_exp_note("nightmare")
+
+
+def test_immunities_load():
+    rules = areas.load()
+    assert rules["Pit Level 1"].immune == ("cold", "fire", "lightning", "poison")
+    assert rules["Mausoleum"].immune == ("lightning",)
+    assert rules["Rogue Encampment"].immune is None            # towns: no data, no line
+    assert rules["Stony Tomb Level 2"].levels[2] == 85         # D2R 2.4 value
+    for area in rules.values():
+        if area.immune is not None:
+            assert all(i in areas.IMMUNITIES for i in area.immune), area.name

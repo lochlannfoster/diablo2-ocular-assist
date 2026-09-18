@@ -11,6 +11,9 @@
 #   levels         alvl on [Normal, Nightmare, Hell]; [0,0,0] for towns
 #   quests         quest objectives located in this area (may be empty)
 #   uniques        superunique monsters that spawn here
+#   immune         immunities monsters CAN have here in Hell (union over the
+#                  spawn table; a given game rolls ~3 monster types, so you
+#                  may not meet them all). Source: diablo2.io area pages (2.4).
 #   notes          other zone-specific facts worth a line
 #   farm           farm-run routes through this area (Countess, Pit, ...):
 #                  how to reach the target fast, not the story path
@@ -31,7 +34,9 @@
 #   none                       not applicable (e.g. no waypoint here)
 #
 # Sources:
-#   levels     https://www.purediablo.com/diablo-2/diablo-2-area-levels
+#   levels     https://www.purediablo.com/diablo-2/diablo-2-area-levels, updated to
+#              D2R 2.4 values from https://diablo2.io/areas/
+#   immune     https://diablo2.io/areas/
 #   maxroll    https://maxroll.gg/d2/resources/map-reading
 #   cheatsheet https://github.com/minimapletinytools/d2r-speedrun-cheatsheet
 #              (speedrun community, derived from Teo-'s guide on speedrun.com)
@@ -68,6 +73,7 @@ source = "maxroll, cheatsheet"
 levels = [1, 36, 67]
 quests = []
 uniques = []
+immune = ["cold", "fire"]
 notes = []
 
 [area."Den of Evil"]
@@ -81,6 +87,7 @@ source = "maxroll"
 levels = [1, 36, 79]
 quests = ["Den of Evil: clear every monster - +1 skill point and one free respec (Akara)"]
 uniques = ["Corpsefire"]
+immune = ["cold", "fire"]
 notes = []
 
 [area."Cold Plains"]
@@ -94,6 +101,7 @@ source = "maxroll, cheatsheet"
 levels = [2, 36, 68]
 quests = []
 uniques = ["Bishibosh"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Cows/Tristram: head for the Stony Field exit. Bishibosh holds a fallen camp in the north; Cave 2 is a quick Normal XP stop."]
 
@@ -108,6 +116,7 @@ source = "maxroll"
 levels = [3, 36, 80]
 quests = ["Sisters' Burial Grounds: Blood Raven - Rogue mercenary (Kashya)"]
 uniques = ["Blood Raven"]
+immune = ["lightning"]
 notes = []
 farm = ["Blood Raven roams the graveyard. Two one-level tombs open off its edges: Mausoleum (Hell alvl 85, gold chest) and Crypt (Hell 83, Bonebreaker, gold chest)."]
 
@@ -122,6 +131,7 @@ source = "maxroll"
 levels = [3, 37, 83]
 quests = []
 uniques = ["Bonebreaker"]
+immune = ["lightning"]
 notes = []
 farm = ["Hell alvl 83 single level with a gold chest at the end; Bonebreaker. Usually paired with the Mausoleum next door."]
 
@@ -136,6 +146,7 @@ source = "maxroll"
 levels = [3, 37, 85]
 quests = []
 uniques = []
+immune = ["lightning"]
 notes = []
 farm = ["Hell alvl 85 in a single small level: clear to the gold chest at the far end, save+exit, repeat. Cold Plains WP -> Burial Grounds is the run."]
 
@@ -150,6 +161,7 @@ source = "maxroll"
 levels = [2, 36, 77]
 quests = []
 uniques = ["Coldcrow"]
+immune = ["fire", "lightning"]
 notes = []
 
 [area."Cave Level 2"]
@@ -163,6 +175,7 @@ source = "maxroll"
 levels = [2, 37, 78]
 quests = []
 uniques = []
+immune = ["fire", "lightning"]
 notes = []
 
 [area."Stony Field"]
@@ -176,6 +189,7 @@ source = "maxroll, cheatsheet"
 levels = [4, 37, 68]
 quests = ["Search for Cain: Cairn Stones + Scroll - free Cain yourself for a ring (Akara)"]
 uniques = ["Rakanishu"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = ["Tristram portal opens at the Cairn Stones once you have the Scroll of Inifuss."]
 farm = ["Tristram: the 5 Cairn Stones stand in a clearing guarded by Rakanishu; touch them in the order Cain's scroll shows (the Tree of Inifuss sequence). Stones and WP are both random in the field."]
 
@@ -190,6 +204,7 @@ source = "maxroll"
 levels = [6, 39, 76]
 quests = ["Search for Cain: free Cain - free identify + a ring (Akara)"]
 uniques = ["Griswold"]
+immune = ["fire", "lightning", "poison"]
 notes = ["Wirt's corpse drops Wirt's Leg for the cow level."]
 farm = ["Wirt's Leg (for cows) is on Wirt's body at the bottom-right of town. Griswold is by the well, Cain in the cage in the centre. Good early NM/Hell XP zone."]
 
@@ -204,6 +219,7 @@ source = "maxroll, cheatsheet"
 levels = [4, 37, 69]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 
 [area."Underground Passage Level 2"]
@@ -214,9 +230,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; golden chest." }
 confidence = "high"
 source = "maxroll"
-levels = [4, 38, 83]
+levels = [4, 38, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 
 [area."Dark Wood"]
@@ -230,6 +247,7 @@ source = "maxroll, cheatsheet"
 levels = [5, 38, 68]
 quests = ["Search for Cain: Tree of Inifuss - scroll with the stone order"]
 uniques = ["Treehead Woodfist"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Treehead Woodfist stands near the Tree of Inifuss on the path. Fast Countess: skip the Tree, follow the path to Black Marsh."]
 
@@ -244,6 +262,7 @@ source = "maxroll"
 levels = [5, 38, 80]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 
 [area."Hole Level 2"]
@@ -257,6 +276,7 @@ source = "maxroll"
 levels = [5, 39, 81]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 
 [area."Black Marsh"]
@@ -270,6 +290,7 @@ source = "maxroll, cheatsheet"
 levels = [6, 38, 69]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Countess: the Tower is random. From the WP trace the map edge; it also sits by the Hole entrance or a bridge. Found it before the WP? TP there."]
 
@@ -298,6 +319,7 @@ source = "maxroll, cheatsheet"
 levels = [7, 38, 75]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "physical"]
 notes = []
 farm = ["Countess: exit left; skip the trash, she is on Cellar 5."]
 
@@ -312,6 +334,7 @@ source = "maxroll, cheatsheet"
 levels = [7, 39, 76]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "physical"]
 notes = []
 farm = ["Countess: exit left; skip the trash, she is on Cellar 5."]
 
@@ -326,6 +349,7 @@ source = "maxroll, cheatsheet"
 levels = [7, 40, 77]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "physical"]
 notes = []
 farm = ["Countess: exit left; skip the trash, she is on Cellar 5."]
 
@@ -340,6 +364,7 @@ source = "maxroll, cheatsheet"
 levels = [7, 41, 78]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "physical"]
 notes = []
 farm = ["Countess: exit left; skip the trash, she is on Cellar 5."]
 
@@ -354,6 +379,7 @@ source = "maxroll, cheatsheet"
 levels = [7, 42, 79]
 quests = ["Forgotten Tower: the Countess - guaranteed rune drops (up to Ral / Io / Lo)"]
 uniques = ["The Countess"]
+immune = ["cold", "fire", "lightning", "physical"]
 notes = ["Countess rune drops: up to Ral (Normal), Io (Nightmare), Lo (Hell)."]
 farm = ["Countess: small room behind the fire wall at the end. Save+exit and re-run."]
 
@@ -368,6 +394,7 @@ source = "maxroll, cheatsheet"
 levels = [8, 39, 69]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Pit: the cave entrance is semi-random but sits close to the path through the middle of the zone; Black Marsh WP is the shortest start. Pit 1 & 2 are Hell alvl 85."]
 
@@ -382,6 +409,7 @@ source = "maxroll (not listed)"
 levels = [7, 39, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Hell alvl 85 throughout; clear it all. The stairs to Pit 2 are random - Pit 2 is tiny with a gold chest."]
 
@@ -396,6 +424,7 @@ source = "maxroll"
 levels = [7, 40, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Small level, gold chest, Hell alvl 85. Clear, pop the chest, save+exit."]
 
@@ -410,6 +439,7 @@ source = "cheatsheet"
 levels = [8, 40, 70]
 quests = []
 uniques = []
+immune = ["cold", "lightning", "poison"]
 notes = []
 
 [area."Outer Cloister"]
@@ -423,6 +453,7 @@ source = "maxroll, cheatsheet"
 levels = [9, 40, 70]
 quests = []
 uniques = []
+immune = ["cold", "fire"]
 notes = []
 
 [area."Barracks"]
@@ -436,6 +467,7 @@ source = "maxroll, cheatsheet"
 levels = [9, 40, 70]
 quests = ["Tools of the Trade: Horadric Malus - Charsi imbues one item"]
 uniques = ["The Smith"]
+immune = ["cold", "fire", "poison"]
 notes = []
 
 [area."Jail Level 1"]
@@ -449,6 +481,7 @@ source = "maxroll, cheatsheet"
 levels = [10, 41, 71]
 quests = []
 uniques = []
+immune = ["fire", "poison", "physical"]
 notes = []
 farm = ["Normal XP: a champion pack often spawns a tile from the WP - speedrunners farm it here to clvl 18."]
 
@@ -463,6 +496,7 @@ source = "maxroll, cheatsheet"
 levels = [10, 41, 71]
 quests = []
 uniques = ["Pitspawn Fouldog"]
+immune = ["fire", "poison", "physical"]
 notes = []
 
 [area."Jail Level 3"]
@@ -473,9 +507,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "left", tip = "Turn left from the entrance; the exit is only ever that way." }
 confidence = "high"
 source = "maxroll, cheatsheet"
-levels = [10, 41, 71]
+levels = [10, 41, 70]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison", "physical"]
 notes = []
 
 [area."Inner Cloister"]
@@ -489,6 +524,7 @@ source = "maxroll, cheatsheet"
 levels = [10, 41, 72]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison"]
 notes = []
 
 [area."Cathedral"]
@@ -502,6 +538,7 @@ source = "inferred (not in sources)"
 levels = [11, 42, 72]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "physical"]
 notes = []
 
 [area."Catacombs Level 1"]
@@ -515,6 +552,7 @@ source = "maxroll, cheatsheet"
 levels = [11, 42, 72]
 quests = []
 uniques = []
+immune = ["fire", "lightning"]
 notes = []
 
 [area."Catacombs Level 2"]
@@ -528,6 +566,7 @@ source = "maxroll, cheatsheet"
 levels = [11, 42, 73]
 quests = []
 uniques = []
+immune = ["fire", "lightning"]
 notes = []
 farm = ["Andariel: WP here. Exit down is right from the WP; Cat 3 exit is random; she is on 4."]
 
@@ -542,6 +581,7 @@ source = "maxroll, cheatsheet"
 levels = [12, 43, 73]
 quests = []
 uniques = ["Bone Ash"]
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Andariel: exit is random - hug the walls. She is on 4."]
 
@@ -556,6 +596,7 @@ source = "maxroll, cheatsheet"
 levels = [12, 43, 73]
 quests = ["Sisters to the Slaughter: Andariel - Act 2"]
 uniques = ["Andariel"]
+immune = ["fire", "lightning"]
 notes = ["D2R: Andariel always uses her quest-drop table."]
 farm = ["Andariel: fixed map - the corridor leads to her chamber. After the first kill D2R keeps her improved quest drop rate (patch 2.4). TP back and re-run from the Cat 2 WP."]
 
@@ -570,6 +611,7 @@ source = "inferred"
 levels = [28, 64, 81]
 quests = ["Cow King: killing him no longer closes the portal (D2R)"]
 uniques = ["The Cow King"]
+immune = ["lightning"]
 notes = ["Killing the Cow King stops that character opening more cow portals on this difficulty."]
 farm = ["Cows: the whole level is alvl 28/64/81 with huge packs. The Cow King stands in a fenced pen; his death no longer blocks the portal (D2R)."]
 
@@ -601,6 +643,7 @@ source = "maxroll (not listed)"
 levels = [13, 43, 74]
 quests = []
 uniques = []
+immune = ["fire", "poison"]
 notes = []
 
 [area."Sewers Level 2"]
@@ -614,6 +657,7 @@ source = "maxroll"
 levels = [13, 43, 74]
 quests = []
 uniques = []
+immune = ["fire", "poison"]
 notes = []
 farm = ["Radament: exit to 3 is straight (WP is left). He is on 3, off to the left."]
 
@@ -628,6 +672,7 @@ source = "maxroll"
 levels = [14, 44, 75]
 quests = ["Radament's Lair: Radament - Book of Skill (+1 skill point)"]
 uniques = ["Radament"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Radament: go left from the stairs; his Book of Skill is the quest reward."]
 
@@ -642,6 +687,7 @@ source = "maxroll, cheatsheet"
 levels = [14, 43, 75]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Stony Tomb: a hole in the ground placed randomly in the waste. Both levels are Hell alvl 85; Creeping Feature and a gold chest on 2."]
 
@@ -653,9 +699,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
-levels = [12, 44, 78]
+levels = [12, 44, 85]
 quests = []
 uniques = []
+immune = ["fire", "lightning"]
 notes = []
 farm = ["Hell alvl 85; stairs to 2 random. Level 2 has the gold chest."]
 
@@ -667,9 +714,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "left", tip = "Turn left for the golden chest; Creeping Feature is straight ahead." }
 confidence = "medium"
 source = "maxroll"
-levels = [12, 44, 79]
+levels = [12, 44, 85]
 quests = []
 uniques = ["Creeping Feature"]
+immune = ["fire", "lightning", "poison"]
 notes = []
 farm = ["Hell alvl 85; Creeping Feature and the gold chest. Save+exit re-rolls."]
 
@@ -684,6 +732,7 @@ source = "maxroll, cheatsheet"
 levels = [15, 44, 76]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Halls of the Dead: entrance and WP are random inside; Halls 1-2 exit left, the Cube chest on 3 is left."]
 
@@ -695,9 +744,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
-levels = [12, 44, 75]
+levels = [12, 44, 79]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison"]
 notes = []
 
 [area."Halls of the Dead Level 2"]
@@ -711,6 +761,7 @@ source = "maxroll, cheatsheet"
 levels = [13, 45, 81]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison"]
 notes = []
 
 [area."Halls of the Dead Level 3"]
@@ -724,6 +775,7 @@ source = "maxroll, cheatsheet"
 levels = [13, 45, 82]
 quests = ["Horadric Staff: Horadric Cube - the cube itself"]
 uniques = ["Bloodwitch the Wild"]
+immune = ["fire", "lightning", "poison"]
 notes = ["Horadric Cube is in the golden chest."]
 
 [area."Far Oasis"]
@@ -737,6 +789,7 @@ source = "maxroll, cheatsheet"
 levels = [16, 45, 76]
 quests = []
 uniques = ["Beetleburst"]
+immune = ["lightning", "poison", "physical"]
 notes = []
 farm = ["Beetleburst here. Maggot Lair entrance is random inside (a mound); Lair 1-2 exit right, Lair 3 (Hell alvl 85, Coldworm, Staff of Kings) is straight but a slow crawl."]
 
@@ -751,6 +804,7 @@ source = "maxroll, cheatsheet"
 levels = [17, 45, 84]
 quests = []
 uniques = []
+immune = ["lightning", "poison", "physical"]
 notes = []
 
 [area."Maggot Lair Level 2"]
@@ -764,6 +818,7 @@ source = "maxroll, cheatsheet"
 levels = [17, 45, 84]
 quests = []
 uniques = []
+immune = ["lightning", "poison", "physical"]
 notes = []
 
 [area."Maggot Lair Level 3"]
@@ -777,6 +832,7 @@ source = "maxroll, cheatsheet"
 levels = [17, 46, 85]
 quests = ["Horadric Staff: Staff of Kings - cube with the Amulet"]
 uniques = ["Coldworm the Burrower"]
+immune = ["lightning", "poison", "physical"]
 notes = []
 farm = ["Hell alvl 85 but tunnels are one monster wide. Coldworm and the Staff chest are straight from the entrance."]
 
@@ -791,6 +847,7 @@ source = "maxroll, cheatsheet"
 levels = [17, 46, 77]
 quests = []
 uniques = ["Dark Elder"]
+immune = ["cold", "fire", "lightning", "magic"]
 notes = []
 farm = ["Ancient Tunnels: a trapdoor placed randomly in the city (Dark Elder roams). Hell alvl 85, no cold-immunes, gold chest - the cold-sorc run. Lost City has a WP."]
 
@@ -805,6 +862,7 @@ source = "maxroll"
 levels = [17, 46, 85]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison", "magic"]
 notes = ["Hell: no cold immunes — a Blizzard Sorc favourite."]
 farm = ["Hell alvl 85 single level, no cold-immune monsters, gold chest at the far end. Save+exit re-rolls."]
 
@@ -819,6 +877,7 @@ source = "maxroll, cheatsheet"
 levels = [18, 46, 77]
 quests = []
 uniques = []
+immune = []
 notes = []
 
 [area."Claw Viper Temple Level 1"]
@@ -832,6 +891,7 @@ source = "maxroll, cheatsheet"
 levels = [14, 47, 82]
 quests = []
 uniques = []
+immune = ["cold", "fire", "poison", "magic"]
 notes = []
 
 [area."Claw Viper Temple Level 2"]
@@ -845,6 +905,7 @@ source = "maxroll, cheatsheet"
 levels = [14, 47, 83]
 quests = ["Tainted Sun: altar - restores daylight (no item reward)", "Horadric Staff: Amulet of the Viper - cube with the Staff"]
 uniques = ["Fangskin"]
+immune = ["cold", "fire", "poison", "magic"]
 notes = []
 
 [area."Harem Level 1"]
@@ -871,6 +932,7 @@ source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 
 [area."Palace Cellar Level 1"]
@@ -884,6 +946,7 @@ source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison"]
 notes = []
 
 [area."Palace Cellar Level 2"]
@@ -894,9 +957,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "straight", tip = "Static map. Go straight from the entrance for the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
-levels = [13, 47, 78]
+levels = [12, 47, 78]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison"]
 notes = []
 
 [area."Palace Cellar Level 3"]
@@ -910,6 +974,7 @@ source = "maxroll, cheatsheet"
 levels = [13, 48, 78]
 quests = ["Arcane Sanctuary: the portal - opened by Jerhyn after Tainted Sun"]
 uniques = ["Fire Eye"]
+immune = ["fire", "lightning", "poison"]
 notes = []
 farm = ["Fire Eye guards the Arcane portal. The cellars are quick NM/Hell XP with lots of champions."]
 
@@ -924,6 +989,7 @@ source = "maxroll, cheatsheet"
 levels = [14, 48, 79]
 quests = ["The Summoner - read his journal for the Canyon portal"]
 uniques = ["The Summoner - read his journal for the Canyon portal"]
+immune = ["cold", "fire", "physical"]
 notes = []
 farm = ["Summoner: WP in the centre, four arms; he is on the platform at the end of one (random). Read his journal to open the Canyon portal. Ghosts drop no gold but normal items."]
 
@@ -938,6 +1004,7 @@ source = "maxroll, cheatsheet"
 levels = [16, 48, 79]
 quests = ["Seven Tombs: find the true tomb - symbol shown in your quest log"]
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = ["Tomb symbols left to right: ○ ◡ ☐ ⊹ ≫ △ ⚇."]
 farm = ["Duriel: fixed map, tombs run left to right o u [] + >> ^ oo; the real one matches the symbol in your quest log. Ancient Kaa is in a false tomb."]
 
@@ -952,6 +1019,7 @@ source = "maxroll, cheatsheet"
 levels = [17, 49, 80]
 quests = ["Seven Tombs: Staff into the Orifice - opens Duriel's chamber"]
 uniques = ["Ancient Kaa the Soulless (one tomb)"]
+immune = ["cold", "fire", "lightning", "poison", "physical", "magic"]
 notes = []
 farm = ["Duriel: exit is left. Place the staff in the orifice to open his chamber. Ancient Kaa's tomb is a decent Hell XP run."]
 
@@ -996,6 +1064,7 @@ source = "maxroll, cheatsheet"
 levels = [21, 49, 79]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison"]
 notes = []
 farm = ["Spider Cavern (Khalim's Eye, Sszark) and Arachnid Lair each sit in an alcove tile; entrance from the docks is always at the bottom. The Cavern is the one you need."]
 
@@ -1010,6 +1079,7 @@ source = "maxroll"
 levels = [21, 50, 79]
 quests = ["Khalim's Will: Khalim's Eye - cube with Brain, Heart, Flail"]
 uniques = ["Sszark the Burning"]
+immune = ["fire", "lightning", "poison"]
 notes = []
 farm = ["Fixed map: Khalim's Eye chest is SW of the entrance; Sszark drops the Jade Figurine if you still need it."]
 
@@ -1021,9 +1091,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "random", tip = "No accepted rule; optional cave." }
 confidence = "medium"
 source = "maxroll (not listed)"
-levels = [21, 50, 79]
+levels = [21, 50, 85]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison"]
 notes = []
 
 [area."Great Marsh"]
@@ -1037,6 +1108,7 @@ source = "maxroll, cheatsheet"
 levels = [21, 50, 80]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 
 [area."Flayer Jungle"]
@@ -1050,6 +1122,7 @@ source = "maxroll, cheatsheet"
 levels = [22, 50, 80]
 quests = ["Blade of the Old Religion: Gidbinn - rare ring (Ormus) + Iron Wolf mercenary"]
 uniques = ["Stormtree"]
+immune = ["fire", "lightning", "poison"]
 notes = []
 farm = ["Flayer Dungeon is on the same tile as the Gidbinn altar; Stormtree is on the path. Dungeon 1-2 exit left, the Brain is on 3 (Witch Doctor Endugu). Swampy Pit is the decoy."]
 
@@ -1061,9 +1134,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
-levels = [21, 51, 80]
+levels = [21, 51, 85]
 quests = []
 uniques = []
+immune = ["fire", "lightning", "poison"]
 notes = []
 
 [area."Swampy Pit Level 2"]
@@ -1074,9 +1148,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
-levels = [21, 51, 81]
+levels = [21, 51, 85]
 quests = []
 uniques = []
+immune = ["fire", "lightning"]
 notes = []
 
 [area."Swampy Pit Level 3"]
@@ -1087,9 +1162,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; golden chest." }
 confidence = "high"
 source = "maxroll"
-levels = [21, 51, 82]
+levels = [21, 51, 85]
 quests = []
 uniques = []
+immune = ["fire", "lightning"]
 notes = []
 
 [area."Flayer Dungeon Level 1"]
@@ -1103,6 +1179,7 @@ source = "maxroll"
 levels = [22, 51, 81]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison", "physical"]
 notes = []
 
 [area."Flayer Dungeon Level 2"]
@@ -1116,6 +1193,7 @@ source = "maxroll"
 levels = [22, 51, 82]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison", "physical"]
 notes = []
 
 [area."Flayer Dungeon Level 3"]
@@ -1129,6 +1207,7 @@ source = "maxroll"
 levels = [22, 51, 83]
 quests = ["Khalim's Will: Khalim's Brain - cube with Eye, Heart, Flail"]
 uniques = ["Witch Doctor Endugu"]
+immune = ["fire", "lightning"]
 notes = []
 farm = ["Khalim's Brain: one of a few fixed layouts, guarded by Witch Doctor Endugu. Dungeon 1-2 exit left on the way in."]
 
@@ -1143,6 +1222,7 @@ source = "maxroll, cheatsheet"
 levels = [22, 52, 80]
 quests = []
 uniques = []
+immune = ["fire", "lightning"]
 notes = ["Hell: the 'LK' campfire super chests are a classic rune farm."]
 farm = ["LK chest runs: two bonfire huts, each with 2 superchests plus racks (Hell drops runes up to Ber). Exit is the N or E corner, WP random. Single-player seeds make this a patterned run."]
 
@@ -1157,6 +1237,7 @@ source = "maxroll, cheatsheet"
 levels = [22, 52, 81]
 quests = []
 uniques = []
+immune = ["cold", "fire", "physical"]
 notes = ["Two Sewers entrances are always in the same spots."]
 farm = ["Ruined Temple (Lam Esen's Tome, Battlemaid Sarina) and Disused Fane both open here; both tiny Hell alvl 85 temples. Kurast Sewers trapdoor here too - the Heart is on Sewers 2."]
 
@@ -1168,9 +1249,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map. Lam Esen's Tome is in the chest at the end." }
 confidence = "high"
 source = "maxroll"
-levels = [23, 53, 84]
+levels = [23, 53, 85]
 quests = ["Lam Esen's Tome - +5 stat points (Alkor)"]
 uniques = []
+immune = ["cold", "fire", "magic"]
 notes = []
 farm = ["Tiny Hell alvl 85 temple: clear it, grab Lam Esen's Tome (chest at the back), out. Battlemaid Sarina."]
 
@@ -1182,9 +1264,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; optional temple." }
 confidence = "high"
 source = "maxroll"
-levels = [23, 53, 84]
+levels = [23, 53, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "magic"]
 notes = []
 farm = ["Tiny Hell alvl 85 temple, one room. Pair it with the Ruined Temple next door."]
 
@@ -1197,9 +1280,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "right", tip = "Find the sparkling chest, then turn right from it: the lever-opened stairs to Level 2 are that way." }
 confidence = "high"
 source = "maxroll, cheatsheet"
-levels = [23, 52, 84]
+levels = [23, 52, 85]
 quests = []
 uniques = ["Icehawk Riftwing"]
+immune = ["lightning", "poison", "magic"]
 notes = []
 
 [area."Kurast Sewers Level 2"]
@@ -1214,6 +1298,7 @@ source = "maxroll, cheatsheet"
 levels = [24, 53, 85]
 quests = ["Khalim's Will: Khalim's Heart - cube with Eye, Brain, Flail"]
 uniques = []
+immune = ["lightning", "poison", "magic"]
 notes = []
 farm = ["Khalim's Heart chest; Hell alvl 85 and short. Return to Sewers 1 and take the straight exit up to Upper Kurast."]
 
@@ -1225,9 +1310,10 @@ to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule
 to_next = { dir = "straight", tip = "You enter from a left or bottom corner; the Causeway exit is in the middle of the far top-right edge, so head straight up and across." }
 confidence = "high"
 source = "maxroll, cheatsheet"
-levels = [23, 52, 81]
+levels = [23, 53, 81]
 quests = []
 uniques = []
+immune = ["cold", "lightning"]
 notes = []
 farm = ["Forgotten Temple and Forgotten Reliquary both open here - tiny Hell alvl 85 temples; chain them with the Bazaar and Causeway ones as a temple run."]
 
@@ -1242,6 +1328,7 @@ source = "maxroll"
 levels = [24, 54, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Tiny Hell alvl 85 temple, one room."]
 
@@ -1253,9 +1340,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; optional temple." }
 confidence = "high"
 source = "maxroll"
-levels = [23, 53, 84]
+levels = [23, 53, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "magic"]
 notes = []
 farm = ["Tiny Hell alvl 85 temple, one room."]
 
@@ -1270,6 +1358,7 @@ source = "maxroll"
 levels = [24, 53, 81]
 quests = []
 uniques = []
+immune = ["cold", "lightning"]
 notes = []
 farm = ["Ruined Fane and Disused Reliquary both open here - tiny Hell alvl 85 temples."]
 
@@ -1284,6 +1373,7 @@ source = "maxroll"
 levels = [24, 54, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Tiny Hell alvl 85 temple, one room."]
 
@@ -1298,6 +1388,7 @@ source = "maxroll"
 levels = [24, 54, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Tiny Hell alvl 85 temple, one room."]
 
@@ -1312,6 +1403,7 @@ source = "maxroll, cheatsheet"
 levels = [24, 54, 82]
 quests = ["Blackened Temple: Council + Orb - smash the Orb with Khalim's Will to open the Durance", "Khalim's Will: Khalim's Flail - from the council"]
 uniques = ["Ismail Vilehand", "Geleb Flamefinger", "Toorc Icefist"]
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Council: fixed map. From the WP go up the stairs to the central platform; the council stands around the Compelling Orb. Hell alvl 82, dense drops - the classic gold/rune run. Smash the Orb with Khalim's Will to open the Durance."]
 
@@ -1326,6 +1418,7 @@ source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
 quests = []
 uniques = []
+immune = ["cold", "lightning", "poison"]
 notes = []
 farm = ["Mephisto: exit is left. Take the WP on 2 next time."]
 
@@ -1340,6 +1433,7 @@ source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
 quests = []
 uniques = []
+immune = ["cold", "lightning", "poison"]
 notes = []
 farm = ["Mephisto: WP is left of the entrance, exit to 3 is straight. Run from this WP."]
 
@@ -1354,6 +1448,7 @@ source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
 quests = ["The Guardian: Mephisto - Act 4"]
 uniques = ["Wyand Voidbringer", "Maffer Dragonhand", "Bremm Sparkfist", "Mephisto"]
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Mephisto: fixed map - NW from the stairs to his platform past Bremm, Wyand and Maffer. Moat trick: stand across the blood moat and he cannot reach you. Red portal to Act 4 behind him."]
 
@@ -1385,6 +1480,7 @@ source = "maxroll, cheatsheet"
 levels = [26, 56, 82]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Izual roams the Plains of Despair next door: kill him for +2 skill points from Tyrael. Exit is any edge but the NW one."]
 
@@ -1399,6 +1495,7 @@ source = "maxroll, cheatsheet"
 levels = [26, 56, 83]
 quests = ["The Fallen Angel: Izual - +2 skill points (Tyrael)"]
 uniques = ["Izual"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Izual wanders somewhere in here - +2 skill points. Exit is on an edge other than the one you entered."]
 
@@ -1413,6 +1510,7 @@ source = "maxroll, cheatsheet"
 levels = [27, 57, 84]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["WP is near the exit down to the River. Diablo runs start from the River WP instead."]
 
@@ -1427,6 +1525,7 @@ source = "maxroll, cheatsheet"
 levels = [27, 57, 85]
 quests = ["Hell's Forge: Hephasto, smash Soulstone - a rune (El-Amn / Sol-Um / Hel-Gul) + gems"]
 uniques = ["Hephasto the Armorer"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Diablo: from the WP the Chaos Sanctuary entrance is straight ahead; Hephasto and the Hellforge are off to the side. Hell alvl 85. The Hellforge quest drops a rune up to Um (NM) / Gul (Hell)."]
 
@@ -1441,6 +1540,7 @@ source = "maxroll, cheatsheet"
 levels = [28, 58, 85]
 quests = ["Terror's End: Diablo - Act 5"]
 uniques = ["Grand Vizier of Chaos", "Lord De Seis", "Infector of Souls", "Diablo"]
+immune = ["cold", "fire", "lightning"]
 notes = ["Seals: Vizier (left, 2 seals), De Seis (top), Infector (right, 2 seals)."]
 farm = ["Diablo: fixed star map. Seals: Vizier bottom-left, De Seis top, Infector right - open all five (each pair spawns its boss) and Diablo appears at the centre pentagram. Hell alvl 85 throughout."]
 
@@ -1473,6 +1573,7 @@ source = "maxroll, cheatsheet"
 levels = [24, 58, 80]
 quests = ["Siege on Harrogath: Shenk - Larzuk sockets one item"]
 uniques = ["Dac Farren", "Shenk the Overseer"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = ["Classic Shenk + Eldritch run with the Frigid Highlands waypoint."]
 farm = ["Shenk the Overseer stands at the far end by the Frigid Highlands passage; Dac Farren on the way. Faster: take the Frigid WP and walk back down."]
 
@@ -1487,6 +1588,7 @@ source = "maxroll, cheatsheet"
 levels = [25, 59, 81]
 quests = ["Rescue on Mount Arreat: 3 cages - Barbarian mercenary + Tal, Ral, Ort (Qual-Kehk)"]
 uniques = ["Eldritch the Rectifier", "Sharptooth Slayer", "Eyeback the Unleashed"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Eldritch the Rectifier is a few steps north of the WP; Shenk is south, just inside Bloody Foothills - the Eldritch+Shenk run. Sharptooth Slayer and the Abaddon red portal (Hell alvl 85) are here too."]
 
@@ -1498,9 +1600,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
-levels = [39, 60, 81]
+levels = [39, 60, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison", "physical"]
 notes = []
 farm = ["Red-portal cave off Frigid Highlands; Hell alvl 85, one small level, no boss."]
 
@@ -1515,6 +1618,7 @@ source = "maxroll, cheatsheet"
 levels = [26, 60, 81]
 quests = []
 uniques = ["Thresh Socket"]
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Thresh Socket at the far end; the Pit of Acheron red portal (Hell alvl 85) is in the plateau. Exit to Crystalline Passage is the centre of the far short edge."]
 
@@ -1526,9 +1630,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
-levels = [39, 61, 82]
+levels = [39, 61, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "poison", "physical", "magic"]
 notes = []
 farm = ["Red-portal cave off Arreat Plateau; Hell alvl 85, one small level."]
 
@@ -1543,6 +1648,7 @@ source = "maxroll, cheatsheet"
 levels = [29, 61, 82]
 quests = []
 uniques = []
+immune = ["cold", "lightning", "poison", "physical"]
 notes = []
 farm = ["Glacial Trail is left, Frozen River (Anya, Frozenstein) straight, WP right. Anya's rescue unlocks Pindle's portal."]
 
@@ -1557,6 +1663,7 @@ source = "maxroll"
 levels = [29, 61, 83]
 quests = ["Prison of Ice: Anya - +10 all resistances scroll (Malah) + Nihlathak's portal"]
 uniques = ["Frozenstein"]
+immune = ["cold", "lightning", "poison", "physical"]
 notes = ["Anya rewards a personalised item and +10 all resists (after the Nihlathak quest)."]
 farm = ["Anya is at the end of the fixed layout; Frozenstein guards her. Rescuing her opens the red portal to Nihlathak's Temple (Pindleskin)."]
 
@@ -1571,6 +1678,7 @@ source = "maxroll, cheatsheet"
 levels = [29, 61, 83]
 quests = []
 uniques = ["Bonesaw Breaker"]
+immune = ["cold", "fire", "lightning", "poison", "physical"]
 notes = []
 farm = ["Drifter Cavern (Hell alvl 85, small, no boss) opens off the trail; Bonesaw Breaker. Frozen Tundra exit is left, WP back."]
 
@@ -1582,9 +1690,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
-levels = [29, 61, 84]
+levels = [29, 61, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison", "physical"]
 notes = []
 farm = ["Hell alvl 85 single level off Glacial Trail; quiet, quick clear."]
 
@@ -1599,6 +1708,7 @@ source = "maxroll, cheatsheet"
 levels = [27, 60, 81]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison", "physical"]
 notes = []
 farm = ["Infernal Pit red portal (Hell alvl 85) sits in the tundra. Exit to the Ancients' Way is on the opposite edge."]
 
@@ -1610,9 +1720,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
-levels = [39, 62, 83]
+levels = [39, 62, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Red-portal cave off Frozen Tundra; Hell alvl 85, one small level."]
 
@@ -1627,6 +1738,7 @@ source = "maxroll, cheatsheet"
 levels = [29, 62, 82]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Icy Cellar (Hell alvl 85, Snapchip Shatter, gold chest) opens off here. Exit to the Summit is left, WP right."]
 
@@ -1638,9 +1750,10 @@ to_waypoint = { dir = "none", tip = "No waypoint in this area." }
 to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
-levels = [29, 62, 83]
+levels = [29, 62, 85]
 quests = []
 uniques = ["Snapchip Shatter"]
+immune = ["cold", "lightning", "poison", "physical"]
 notes = []
 farm = ["Hell alvl 85 single level with a gold chest; Snapchip Shatter. Ancients' Way WP -> cellar is the run."]
 
@@ -1668,6 +1781,7 @@ source = "maxroll, cheatsheet"
 levels = [39, 65, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning"]
 notes = []
 farm = ["Baal: exit is random; all three keep levels are Hell alvl 85 and worth clearing."]
 
@@ -1682,6 +1796,7 @@ source = "maxroll, cheatsheet"
 levels = [40, 65, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "magic"]
 notes = []
 farm = ["Baal: WP here, exit to 3 is right. Start Baal runs from this WP."]
 
@@ -1696,6 +1811,7 @@ source = "maxroll, cheatsheet"
 levels = [42, 66, 85]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison", "physical"]
 notes = []
 farm = ["Baal: exit to the Throne is random; Hell alvl 85."]
 
@@ -1710,6 +1826,7 @@ source = "maxroll, cheatsheet"
 levels = [43, 66, 85]
 quests = ["Eve of Destruction: Baal's waves - Lister's pack is the big drop"]
 uniques = ["Colenzo the Annihilator", "Achmel the Cursed", "Bartuc the Bloody", "Ventar the Unholy", "Lister the Tormentor"]
+immune = ["cold", "fire", "lightning", "poison", "magic"]
 notes = ["Wave order: Colenzo, Achmel, Bartuc, Ventar, Lister — then Baal walks off."]
 farm = ["Baal: fixed map - the throne room is at the top. Five waves: Colenzo, Achmel, Bartuc, Ventar, Lister (the big drop), then Baal opens the portal to his Chamber. Hell alvl 85."]
 
@@ -1724,6 +1841,7 @@ source = "maxroll"
 levels = [43, 66, 85]
 quests = ["Eve of Destruction: Baal - difficulty complete; next difficulty + cow portal"]
 uniques = ["Baal"]
+immune = []
 notes = []
 farm = ["Baal alone, fixed map. Kill, loot, TP out, save+exit."]
 
@@ -1738,6 +1856,7 @@ source = "maxroll"
 levels = [32, 63, 83]
 quests = []
 uniques = ["Pindleskin"]
+immune = ["cold", "poison"]
 notes = ["Reached by Anya's red portal in Harrogath."]
 farm = ["Pindleskin's pack stands right past Anya's portal at the top of the stairs (mlvl 86: everything but TC87 items). Down the stairs -> Anguish -> Pain -> Vaught for Nihlathak."]
 
@@ -1752,6 +1871,7 @@ source = "maxroll"
 levels = [33, 63, 83]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison"]
 notes = []
 farm = ["Nihlathak: exit random; Hell alvl 83. Keep moving, he is two levels down."]
 
@@ -1766,6 +1886,7 @@ source = "maxroll"
 levels = [34, 64, 84]
 quests = []
 uniques = []
+immune = ["cold", "fire", "lightning", "poison", "magic"]
 notes = []
 farm = ["Nihlathak: exit random; Hell alvl 84. Vaught is next."]
 
@@ -1780,5 +1901,6 @@ source = "maxroll"
 levels = [36, 64, 84]
 quests = ["Betrayal of Harrogath: Nihlathak - Anya personalises one item"]
 uniques = ["Nihlathak"]
+immune = ["cold", "fire", "lightning", "poison", "physical"]
 notes = []
 farm = ["Nihlathak: four arms from the centre, he is on the platform at the end of one (random) - reveal each arm's end on the map. Beware Corpse Explosion: kill him fast or clear corpses. Hell alvl 84."]
