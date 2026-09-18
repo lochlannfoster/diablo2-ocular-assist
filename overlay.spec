@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 """PyInstaller spec for the Windows build (run from an MSYS2 MINGW64 shell).
 
-Produces dist/diablo2-overlay/ with overlay.exe, the GTK runtime, tesseract
+Produces dist/diablo2-ocular-assist/ with overlay.exe, the GTK runtime, tesseract
 and the data files. See .github/workflows/build.yml.
 """
 
@@ -50,5 +50,5 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=False,
-    name="diablo2-overlay",
+    name="diablo2-ocular-assist",
 )

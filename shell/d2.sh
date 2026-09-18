@@ -9,7 +9,8 @@
 #     d2_outputs       list monitors (for [overlay].output in config.toml)
 #     d2_calibrate     check what the OCR sees right now
 
-D2_OVERLAY_DIR="${D2_OVERLAY_DIR:-$HOME/diablo2-overlay}"
+# The checkout may be called either name.
+D2_OVERLAY_DIR="${D2_OVERLAY_DIR:-$([ -d "$HOME/diablo2-ocular-assist" ] && echo "$HOME/diablo2-ocular-assist" || echo "$HOME/diablo2-overlay")}"
 
 D2_OVERLAY_LOG="${D2_OVERLAY_LOG:-${XDG_RUNTIME_DIR:-/tmp}/diablo2-overlay.log}"
 

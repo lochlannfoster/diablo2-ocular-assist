@@ -1,6 +1,10 @@
-# diablo2-overlay
+# diablo2-ocular-assist
 
-A click-through "which way now" overlay for Diablo II: Resurrected on KDE Wayland.
+A click-through "which way now" overlay for Diablo II: Resurrected — Linux
+(KDE Wayland) and Windows.
+
+**New here?** Read [docs/quickstart.md](docs/quickstart.md). To change or add
+rules, [docs/editing-rules.md](docs/editing-rules.md).
 
 It reads the area name the game draws in the top-right corner, looks it up in a
 hand-written table, and shows two hints on top of the game:
@@ -88,7 +92,7 @@ down** — nothing keeps running in the background.
 ## Windows
 
 A Windows build is produced by GitHub Actions on every push
-(`.github/workflows/build.yml`): download `diablo2-overlay-windows.zip` from the
+(`.github/workflows/build.yml`): download `diablo2-ocular-assist-windows.zip` from the
 latest run's artifacts (or from a release for `v*` tags), unzip, run
 `overlay.exe`. It bundles Python, GTK and tesseract — nothing to install.
 
@@ -114,7 +118,7 @@ sudo pacman -S gtk4 gtk4-layer-shell python-gobject python-cairo python-evdev \
 Hotkeys need your user in the `input` group (see Hotkeys). Then:
 
 ```
-source ~/diablo2-overlay/shell/d2.sh    # put in ~/.bashrc
+source ~/diablo2-ocular-assist/shell/d2.sh    # put in ~/.bashrc
 d2_on          # start (detached, logs to $XDG_RUNTIME_DIR/d2-overlay.log)
 d2_off         # stop
 d2_status

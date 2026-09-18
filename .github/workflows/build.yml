@@ -46,21 +46,21 @@ jobs:
         run: pyinstaller --noconfirm overlay.spec
       - name: Smoke test (imports only)
         run: |
-          ls dist/diablo2-overlay | head -50
-          test -f dist/diablo2-overlay/overlay.exe
-          test -f dist/diablo2-overlay/_internal/tesseract.exe
-          test -f dist/diablo2-overlay/_internal/tessdata/eng.traineddata
+          ls dist/diablo2-ocular-assist | head -50
+          test -f dist/diablo2-ocular-assist/overlay.exe
+          test -f dist/diablo2-ocular-assist/_internal/tesseract.exe
+          test -f dist/diablo2-ocular-assist/_internal/tessdata/eng.traineddata
       - name: Package
         run: |
-          cp README.md dist/diablo2-overlay/
-          cd dist && zip -qr diablo2-overlay-windows.zip diablo2-overlay
+          cp README.md dist/diablo2-ocular-assist/
+          cd dist && zip -qr diablo2-ocular-assist-windows.zip diablo2-ocular-assist
       - uses: actions/upload-artifact@v4
         with:
-          name: diablo2-overlay-windows
-          path: dist/diablo2-overlay-windows.zip
+          name: diablo2-ocular-assist-windows
+          path: dist/diablo2-ocular-assist-windows.zip
       - name: Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/diablo2-overlay-windows.zip
+          files: dist/diablo2-ocular-assist-windows.zip
           generate_release_notes: true

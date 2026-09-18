@@ -16,10 +16,10 @@ h = 0.09
 
 [overlay]
 output = "DP-1"            # monitor the game is on, by connector; "" = compositor default
-anchor = "bottom-left"            # top-left | top-right | bottom-left | bottom-right
-margin_x = 36        # logical (scaled) pixels from the side edge
-margin_y = 235        # logical pixels from the top/bottom edge
-font_size = 15
+anchor = "top-right"            # top-left | top-right | bottom-left | bottom-right
+margin_x = 38        # logical (scaled) pixels from the side edge
+margin_y = 188        # logical pixels from the top/bottom edge
+font_size = 13
 width = 30              # minimum characters per line; long tips wrap
 hotkeys = true          # read /dev/input for Ctrl+F9..F12 while D2R runs
 
