@@ -706,6 +706,9 @@ class Session:
         self.bridge = native.hotkey_bridge(self.handle)
         if config["overlay"].get("hotkeys", True):
             self.bridge.start()
+        # Tray icon: with one, closing the settings window only hides it.
+        self.tray = native.tray_icon(self.handle, self.hidden)
+        app.hold()   # the app must outlive its windows while we sit in the tray
         print(f"overlay running: {len(rules)} areas loaded", flush=True)
         if self.server:
             print(f"control socket: {SOCKET_PATH}", flush=True)
@@ -781,6 +784,8 @@ class Session:
     def set_hidden(self, hidden: bool):
         self.hidden = hidden
         self.apply_visibility()
+        if self.tray is not None:
+            self.tray.set_overlay_hidden(hidden)
 
     def set_edit_mode(self, editing: bool):
         self.overlay.set_edit_mode(editing)
@@ -889,8 +894,11 @@ class Session:
         self.bridge.stop()
         if self.server:
             self.server.close()
+        if self.tray is not None:
+            self.tray.close()
         self.overlay.win.destroy()
         print("overlay stopped", flush=True)
+        self.app.release()
         self.app.quit()
 
 

@@ -20,7 +20,7 @@ def test_both_backends_implement_the_interface():
         line.split(" = ")[1].split(".")[1].strip()
         for line in init.splitlines()
         if line.startswith(("init", "prepare", "on_", "set_", "monitor", "capture", "hotkey",
-                            "game", "tesseract", "config", "HAS_")) and " = impl." in line
+                            "tray", "game", "tesseract", "config", "HAS_")) and " = impl." in line
     }
     assert wanted, "nothing to check"
     for backend in ("linux.py", "windows.py"):

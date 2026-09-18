@@ -45,6 +45,7 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.set_default_size(600, 860)
         self.connect("close-request", self._on_close)
         session.on_update = self._refresh_status
+        session.on_show_settings = self._show
         session.overlay.on_placement_edited = self._on_placement_edited
 
         outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14,
@@ -212,7 +213,7 @@ class SettingsWindow(Gtk.ApplicationWindow):
         reset.connect("clicked", self._on_reload)
         quit_button = Gtk.Button(label="Quit")
         quit_button.add_css_class("destructive-action")
-        quit_button.connect("clicked", lambda *_: self.close())
+        quit_button.connect("clicked", lambda *_: self._quit())
         for button in (flag, reset, quit_button):
             box.append(button)
         return box
@@ -502,6 +503,8 @@ class SettingsWindow(Gtk.ApplicationWindow):
         return GLib.SOURCE_CONTINUE
 
     def _refresh_status(self):
+        if not self.get_visible():
+            return
         session = self.session
         rec = session.recognizer
         running = hotkeys.game_is_running()
@@ -559,15 +562,40 @@ class SettingsWindow(Gtk.ApplicationWindow):
     # -- lifecycle ---------------------------------------------------------
 
     def _on_close(self, *_):
+        """Title-bar close. With a tray icon the window only hides (the tray
+        menu / Quit button end the session); without one, closing quits."""
         if self.session.overlay.editing:
-            self.session.overlay.set_edit_mode(False)
+            self.session.set_edit_mode(False)
+            self.edit_check.set_active(False)
         if self._save_timer is not None:
             GLib.source_remove(self._save_timer)
             self._save_now()
-        GLib.source_remove(self._status_timer)
-        self.session.on_update = None
-        self.session.shutdown()
+        if self.session.tray is not None:
+            if self._status_timer is not None:
+                GLib.source_remove(self._status_timer)
+                self._status_timer = None
+            self.set_visible(False)
+            return True   # keep the window (hidden) so the tray can bring it back
+        self._quit()
         return False  # let the window close
+
+    def _show(self):
+        """Bring the settings window back (tray click, --ctl settings)."""
+        if self._status_timer is None:
+            self._status_timer = GLib.timeout_add_seconds(2, self._refresh_status_tick)
+        self.present()
+        self._refresh_status()
+
+    def _quit(self):
+        if self._save_timer is not None:
+            GLib.source_remove(self._save_timer)
+            self._save_now()
+        if self._status_timer is not None:
+            GLib.source_remove(self._status_timer)
+            self._status_timer = None
+        self.session.on_update = None
+        self.session.on_show_settings = None
+        self.session.shutdown()
 
 
 class RegionPicker(Gtk.Window):

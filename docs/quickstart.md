@@ -17,7 +17,8 @@
    the picture shows the three lines, the *OCR read* line will show the area
    name and the overlay fills in.
 6. Tick **Edit mode** to drag the overlay where you want it; untick to lock it.
-7. Closing the settings window quits everything.
+7. Closing the settings window sends it to the system tray; right-click the
+   icon for Show/Hide overlay and Quit, double-click to reopen settings.
 
 Hotkeys while the game is running: `Ctrl+F9` hide/show · `Ctrl+F10` freeze ·
 `Ctrl+F11` quit · `Ctrl+F12` flag the current area's rule as wrong ·

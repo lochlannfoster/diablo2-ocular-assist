@@ -16,6 +16,9 @@ package. The interface, implemented by both backends:
                                       unavailable there); Linux: no-op, CSS does it
     capture_backend(capture_config)   object with .grab(region) / .window_size()
     hotkey_bridge(on_command)         object with .start() / .stop()
+    tray_icon(on_command, hidden)     tray/status icon with .set_overlay_hidden(bool)
+                                      / .close(), or None when no tray is available;
+                                      on_command gets "settings" | "hide" | "quit"
     game_is_running() -> bool
     tesseract_command() -> list[str]  how to invoke tesseract
     HAS_CONTROL_SOCKET                unix-socket --ctl support
@@ -43,6 +46,7 @@ set_click_through = impl.set_click_through
 set_opacity = impl.set_opacity
 capture_backend = impl.capture_backend
 hotkey_bridge = impl.hotkey_bridge
+tray_icon = impl.tray_icon
 game_is_running = impl.game_is_running
 tesseract_command = impl.tesseract_command
 config_dir = impl.config_dir

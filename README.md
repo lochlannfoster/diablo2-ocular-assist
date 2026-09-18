@@ -82,6 +82,12 @@ No memory reading, no injection, no hooks. The pipeline is:
 
 ## The settings window
 
+Closing it minimises to the system tray (KDE: StatusNotifierItem over DBus;
+Windows: a notification-area icon). Left-click / double-click the icon to
+reopen it; right-click for *Show/Hide overlay* and *Quit*. Where no tray
+exists, closing the window quits as before.
+
+
 `./overlay.py` (or `d2_on`) opens a normal, clickable **settings window** on the
 desktop alongside the overlay. It is the application: the OCR thread, hotkeys,
 control socket and overlay all belong to it, and **closing it shuts everything

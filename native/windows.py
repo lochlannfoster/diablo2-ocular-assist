@@ -335,6 +335,190 @@ def hotkey_bridge(on_command):
     return WinHotkeys(on_command)
 
 
+# -- tray icon ---------------------------------------------------------------
+
+WM_DESTROY, WM_CLOSE, WM_COMMAND, WM_NULL = 0x0002, 0x0010, 0x0111, 0x0000
+WM_RBUTTONUP, WM_LBUTTONDBLCLK, WM_CONTEXTMENU = 0x0205, 0x0203, 0x007B
+WM_APP = 0x8000
+WM_TRAY = WM_APP + 1
+NIM_ADD, NIM_DELETE, NIM_SETVERSION = 0x0, 0x2, 0x4
+NIF_MESSAGE, NIF_ICON, NIF_TIP = 0x1, 0x2, 0x4
+NOTIFYICON_VERSION_4 = 4
+TPM_RETURNCMD, TPM_NONOTIFY, TPM_RIGHTBUTTON = 0x0100, 0x0080, 0x0002
+MF_STRING, MF_SEPARATOR = 0x0, 0x800
+IDI_APPLICATION = 32512
+WS_OVERLAPPED = 0
+CS_DBLCLKS = 0x0008
+
+# LRESULT is pointer-sized; the default int return would truncate on x64.
+WNDPROC = ctypes.WINFUNCTYPE(ctypes.c_ssize_t, wintypes.HWND, wintypes.UINT,
+                             wintypes.WPARAM, wintypes.LPARAM) if user32 else None
+
+
+class NOTIFYICONDATAW(ctypes.Structure):
+    _fields_ = [
+        ("cbSize", wintypes.DWORD),
+        ("hWnd", wintypes.HWND),
+        ("uID", wintypes.UINT),
+        ("uFlags", wintypes.UINT),
+        ("uCallbackMessage", wintypes.UINT),
+        ("hIcon", wintypes.HICON),
+        ("szTip", wintypes.WCHAR * 128),
+        ("dwState", wintypes.DWORD),
+        ("dwStateMask", wintypes.DWORD),
+        ("szInfo", wintypes.WCHAR * 256),
+        ("uVersion", wintypes.UINT),
+        ("szInfoTitle", wintypes.WCHAR * 64),
+        ("dwInfoFlags", wintypes.DWORD),
+        ("guidItem", ctypes.c_byte * 16),
+        ("hBalloonIcon", wintypes.HICON),
+    ]
+
+
+class WNDCLASSW(ctypes.Structure):
+    _fields_ = [
+        ("style", wintypes.UINT),
+        ("lpfnWndProc", WNDPROC or ctypes.c_void_p),
+        ("cbClsExtra", ctypes.c_int),
+        ("cbWndExtra", ctypes.c_int),
+        ("hInstance", wintypes.HINSTANCE),
+        ("hIcon", wintypes.HICON),
+        ("hCursor", wintypes.HANDLE),
+        ("hbrBackground", wintypes.HBRUSH),
+        ("lpszMenuName", wintypes.LPCWSTR),
+        ("lpszClassName", wintypes.LPCWSTR),
+    ]
+
+
+class WinTray(threading.Thread):
+    """Shell_NotifyIcon needs a window and a message loop, so like the
+    hotkeys it lives on its own thread; menu picks are forwarded to the GTK
+    thread with GLib.idle_add. The menu text is shared with the Linux tray
+    (native/sni.py) so both platforms say the same thing."""
+
+    CLASS = "D2OverlayTray"
+
+    def __init__(self, on_command, overlay_hidden: bool):
+        super().__init__(daemon=True)
+        self.on_command = on_command
+        self._hidden = bool(overlay_hidden)
+        self.hwnd = None
+        self.started_ok = threading.Event()
+        self._proc = None
+        self._nid = None
+        self._taskbar_created = 0
+
+    # -- run on the tray thread ----------------------------------------------
+
+    def run(self):
+        from gi.repository import GLib
+        self._glib = GLib
+        shell32 = ctypes.windll.shell32
+        user32.DefWindowProcW.restype = ctypes.c_ssize_t
+        user32.CreateWindowExW.restype = wintypes.HWND
+        self._proc = WNDPROC(self._wndproc)   # keep referenced: ctypes callbacks must not be GC'd
+        wc = WNDCLASSW()
+        wc.style = CS_DBLCLKS
+        wc.lpfnWndProc = self._proc
+        wc.hInstance = kernel32.GetModuleHandleW(None)
+        wc.lpszClassName = self.CLASS
+        user32.RegisterClassW(ctypes.byref(wc))
+        self.hwnd = user32.CreateWindowExW(0, self.CLASS, "diablo2-ocular-assist", WS_OVERLAPPED,
+                                           0, 0, 0, 0, None, None, wc.hInstance, None)
+        if not self.hwnd:
+            print("tray: could not create the message window", file=sys.stderr)
+            self.started_ok.set()
+            return
+        self._taskbar_created = user32.RegisterWindowMessageW("TaskbarCreated")
+        icon = None
+        if getattr(sys, "frozen", False):
+            icon = shell32.ExtractIconW(wc.hInstance, sys.executable, 0)
+        if not icon:
+            icon = user32.LoadIconW(None, wintypes.LPCWSTR(IDI_APPLICATION))
+        nid = NOTIFYICONDATAW()
+        nid.cbSize = ctypes.sizeof(NOTIFYICONDATAW)
+        nid.hWnd = self.hwnd
+        nid.uID = 1
+        nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP
+        nid.uCallbackMessage = WM_TRAY
+        nid.hIcon = icon
+        nid.szTip = "Diablo II overlay"
+        self._nid = nid
+        self._add_icon()
+        self.started_ok.set()
+        msg = wintypes.MSG()
+        while user32.GetMessageW(ctypes.byref(msg), None, 0, 0) > 0:
+            user32.TranslateMessage(ctypes.byref(msg))
+            user32.DispatchMessageW(ctypes.byref(msg))
+
+    def _add_icon(self):
+        shell32 = ctypes.windll.shell32
+        if not shell32.Shell_NotifyIconW(NIM_ADD, ctypes.byref(self._nid)):
+            print("tray: Shell_NotifyIcon failed", file=sys.stderr)
+            return
+        self._nid.uVersion = NOTIFYICON_VERSION_4
+        shell32.Shell_NotifyIconW(NIM_SETVERSION, ctypes.byref(self._nid))
+
+    def _wndproc(self, hwnd, msg, wparam, lparam):
+        if msg == WM_TRAY:
+            event = lparam & 0xFFFF
+            if event in (WM_RBUTTONUP, WM_CONTEXTMENU):
+                self._popup()
+            elif event == WM_LBUTTONDBLCLK:
+                self._dispatch("settings")
+            return 0
+        if msg == self._taskbar_created and self._nid is not None:
+            self._add_icon()          # explorer restarted: the icon is gone, add it back
+            return 0
+        if msg == WM_DESTROY:
+            if self._nid is not None:
+                ctypes.windll.shell32.Shell_NotifyIconW(NIM_DELETE, ctypes.byref(self._nid))
+            user32.PostQuitMessage(0)
+            return 0
+        return user32.DefWindowProcW(hwnd, msg, wparam, lparam)
+
+    def _popup(self):
+        from . import sni
+        menu = user32.CreatePopupMenu()
+        for item_id, props in sni.menu_items(self._hidden):
+            if props.get("type") == "separator":
+                user32.AppendMenuW(menu, MF_SEPARATOR, 0, None)
+            else:
+                user32.AppendMenuW(menu, MF_STRING, item_id, props["label"])
+        point = wintypes.POINT()
+        user32.GetCursorPos(ctypes.byref(point))
+        user32.SetForegroundWindow(self.hwnd)   # otherwise the menu will not dismiss on click-away
+        picked = user32.TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY | TPM_RIGHTBUTTON,
+                                       point.x, point.y, 0, self.hwnd, None)
+        user32.PostMessageW(self.hwnd, WM_NULL, 0, 0)
+        user32.DestroyMenu(menu)
+        command = sni.command_for(int(picked)) if picked else None
+        if command:
+            self._dispatch(command)
+
+    def _dispatch(self, command):
+        self._glib.idle_add(lambda c=command: (self.on_command(c), False)[1])
+
+    # -- interface used by the Session (GTK thread) --------------------------
+
+    def set_overlay_hidden(self, hidden: bool):
+        self._hidden = bool(hidden)      # the menu is rebuilt on every right-click
+
+    def close(self):
+        if self.hwnd:
+            user32.PostMessageW(self.hwnd, WM_CLOSE, 0, 0)
+
+
+def tray_icon(on_command, overlay_hidden: bool):
+    tray = WinTray(on_command, overlay_hidden)
+    tray.start()
+    tray.started_ok.wait(2)
+    if not tray.hwnd:
+        return None
+    print("tray: icon added (double-click: settings, right click: menu)", flush=True)
+    return tray
+
+
 # -- misc ------------------------------------------------------------------
 
 def game_is_running() -> bool:

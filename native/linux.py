@@ -205,6 +205,20 @@ def hotkey_bridge(on_command):
     return HotkeyBridge()
 
 
+def tray_icon(on_command, overlay_hidden: bool):
+    """StatusNotifierItem over DBus (native/sni.py); None if there is no host."""
+    from gi.repository import GLib
+    from . import sni
+
+    try:
+        tray = sni.SniTray(on_command, overlay_hidden)
+    except (sni.TrayUnavailable, GLib.Error) as exc:
+        print(f"tray: unavailable ({exc}); closing the settings window quits", flush=True)
+        return None
+    print("tray: icon registered (left click: settings, right click: menu)", flush=True)
+    return tray
+
+
 def game_is_running() -> bool:
     import hotkeys
     return hotkeys.game_is_running()
