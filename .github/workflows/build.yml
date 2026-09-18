@@ -7,6 +7,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write   # softprops/action-gh-release needs to create the release
+
 jobs:
   test-linux:
     runs-on: ubuntu-latest
