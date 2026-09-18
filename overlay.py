@@ -132,10 +132,12 @@ class Overlay:
         self.win.set_child(self.root)
 
         self.title_label = self._label("title")
+        self.wp_head_label = self._label("head", "wp")
         self.wp_label = self._label("hint", "wp")
-        self.next_label = self._label("hint", "next")
+        self.next_head_label = self._label("head", "next")
         self.next_tip_label = self._label("hint", "next")
         self.quest_labels = [self._label("hint", "quest"), self._label("hint", "quest")]
+        self.next_label = self.next_head_label
 
         self._load_css()
         self.win.connect("realize", self._clear_input_region)
@@ -150,7 +152,11 @@ class Overlay:
         # and clipped the ends of lines when it was also the maximum.
         label = Gtk.Label(xalign=0)
         label.set_width_chars(self.width)
-        label.set_wrap(False)
+        label.set_max_width_chars(self.width)
+        # Long tips wrap onto further lines inside the fixed width rather than
+        # being cut; the box grows in height only.
+        label.set_wrap(True)
+        label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
         label.set_ellipsize(Pango.EllipsizeMode.NONE)
         for cls in classes:
             label.add_css_class(cls)
@@ -230,8 +236,8 @@ class Overlay:
             return
         self._last_render = state
 
-        for label in (self.title_label, self.wp_label, self.next_label,
-                      self.next_tip_label, *self.quest_labels):
+        for label in (self.title_label, self.wp_head_label, self.wp_label,
+                      self.next_head_label, self.next_tip_label, *self.quest_labels):
             for cls in ("stale", "frozen", "error"):
                 label.remove_css_class(cls)
 
@@ -245,6 +251,7 @@ class Overlay:
                 self.title_label.set_text("reading…")
                 self.title_label.add_css_class("stale")
                 self.wp_label.set_text("area name must be on screen")
+            self.wp_head_label.set_text("")
             self.next_label.set_text("")
             self.next_tip_label.set_text("")
             for label in self.quest_labels:
@@ -272,21 +279,24 @@ class Overlay:
 
         wp = area.to_waypoint
         if area.has_waypoint:
-            self.wp_label.set_text(f"WP    {wp.label:<10}  {wp.tip}")
+            self.wp_head_label.set_text(f"WAYPOINT  ·  {wp.label}")
+            self.wp_label.set_text(wp.tip)
         else:
-            self.wp_label.set_text(f"WP    {'-':<10}  none here")
+            self.wp_head_label.set_text("WAYPOINT  ·  none")
+            self.wp_label.set_text("No waypoint in this area.")
         (self.wp_label.add_css_class if wp.no_rule else self.wp_label.remove_css_class)("norule")
 
         nx = area.to_next
-        origin = "from WP" if area.has_waypoint else "from entry"
-        self.next_label.set_text(f"NEXT  {area.next or 'end of the line'}  ({origin})")
-        self.next_tip_label.set_text(f"      {nx.label:<10}  {nx.tip}")
+        origin = "from waypoint" if area.has_waypoint else "from entrance"
+        self.next_head_label.set_text(
+            f"NEXT  {area.next or 'end of the line'}  ·  {nx.label}  ({origin})")
+        self.next_tip_label.set_text(nx.tip)
         (self.next_tip_label.add_css_class if nx.no_rule
          else self.next_tip_label.remove_css_class)("norule")
 
         # One quest per line; a blank line keeps the box the same height.
         for label, quest in zip(self.quest_labels, list(area.quests) + ["", ""]):
-            label.set_text(f"Q     {quest}" if quest else "")
+            label.set_text(f"QUEST  {quest}" if quest else "")
 
     # -- commands ----------------------------------------------------------
 

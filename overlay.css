@@ -40,6 +40,14 @@ label {
   color: #5d726c;
 }
 
+/* Section headers: what and which way. */
+.head {
+  font-weight: bold;
+  padding-top: 4px;
+}
+.head.wp   { color: #7fc8ff; }
+.head.next { color: #9be59b; }
+
 /* The two hint lines. */
 .hint {
   color: #c9d6d1;

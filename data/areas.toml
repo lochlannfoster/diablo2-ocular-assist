@@ -15,10 +15,11 @@
 #                  picks by the act you were last in)
 #
 # dir values. Left/straight/right/back are from YOUR CHARACTER'S FACING as you
-# arrive through the entrance (the speedrunners' convention) -- it is never
-# compass north/south. Compass values are used only where the sources do.
+# arrive through the entrance (the speedrunners' convention) -- never compass
+# directions. Where a source gives a compass direction and the entrance side
+# is fixed (e.g. you always enter Spider Forest from the bottom) it has been
+# converted; otherwise the tip spells it out in screen terms (top-right etc).
 #   left straight right back   character-relative, from the entrance (or WP)
-#   n ne e se s sw w nw        compass on the automap
 #   corner  edge  opposite     outdoor shape rules ("some other corner", etc.)
 #   near    inside  path       right next to you / somewhere inside / follow the path
 #   fixed                      static layout, memorise it
@@ -42,8 +43,8 @@
 act = 1
 next = "Blood Moor"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
-to_next = { dir = "fixed", tip = "gap in the palisade, fixed" }
+to_waypoint = { dir = "fixed", tip = "Town, fixed layout." }
+to_next = { dir = "fixed", tip = "Leave through the gap in the palisade." }
 confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
@@ -53,8 +54,8 @@ quests = []
 act = 1
 next = "Cold Plains"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "path", tip = "follow the path; Den is at the fork" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "path", tip = "Follow the dirt path from the camp; it runs straight to Cold Plains. The Den of Evil is at the fork in the path." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [1, 36, 67]
@@ -64,8 +65,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; clear it all" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Clear every monster for the quest." }
 confidence = "high"
 source = "maxroll"
 levels = [1, 36, 79]
@@ -75,8 +76,8 @@ quests = ["Den of Evil: clear every monster"]
 act = 1
 next = "Stony Field"
 has_waypoint = true
-to_waypoint = { dir = "near", tip = "next to the entrance, in the corner" }
-to_next = { dir = "edge", tip = "mid-edge; corner path = Burial Grounds" }
+to_waypoint = { dir = "near", tip = "Right next to where you come in from Blood Moor, in the corner." }
+to_next = { dir = "edge", tip = "Follow the road. The Stony Field exit is near the middle of an edge; if the path heads for a corner it goes to Burial Grounds instead. Neither exit shares an edge with the entrance." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [2, 36, 68]
@@ -86,8 +87,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "semi-static; Blood Raven inside" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Semi-static. Blood Raven is in the graveyard; Crypt and Mausoleum are off to the sides." }
 confidence = "high"
 source = "maxroll"
 levels = [3, 36, 80]
@@ -97,8 +98,8 @@ quests = ["Sisters' Burial Grounds: Blood Raven"]
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "chest + Bonebreaker: left" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance: the golden chest and Bonebreaker are that way. Nothing straight or right." }
 confidence = "medium"
 source = "maxroll"
 levels = [3, 37, 83]
@@ -108,8 +109,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "golden chest: left" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance for the golden chest. Nothing straight or right." }
 confidence = "medium"
 source = "maxroll"
 levels = [3, 37, 85]
@@ -119,8 +120,8 @@ quests = []
 act = 1
 next = "Cave Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
 levels = [2, 36, 77]
@@ -130,8 +131,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; golden chest" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; golden chest at the end." }
 confidence = "high"
 source = "maxroll"
 levels = [2, 37, 78]
@@ -141,8 +142,8 @@ quests = []
 act = 1
 next = "Underground Passage Level 1"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "path", tip = "follow path; Cairn Stones beside it" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "path", tip = "Follow the path from the entrance; it leads to the Underground Passage. The Cairn Stones (Rakanishu) are always right beside the path." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [4, 37, 68]
@@ -152,8 +153,8 @@ quests = ["Search for Cain: Cairn Stones + Scroll"]
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Cain caged near centre" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Cain is in the cage near the centre." }
 confidence = "high"
 source = "maxroll"
 levels = [6, 39, 76]
@@ -163,8 +164,8 @@ quests = ["Search for Cain: free Cain"]
 act = 1
 next = "Dark Wood"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "straight", tip = "straight; Level 2 is left" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "straight", tip = "Go straight from the entrance to reach the Dark Wood exit. The stairs to Level 2 are to the left." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [4, 37, 69]
@@ -174,8 +175,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; golden chest" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; golden chest." }
 confidence = "high"
 source = "maxroll"
 levels = [4, 38, 83]
@@ -185,8 +186,8 @@ quests = []
 act = 1
 next = "Black Marsh"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "path", tip = "path runs entrance→exit; on an edge" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "path", tip = "A path directly connects the entrance to the Black Marsh exit, which sits on an edge. Follow it; the Tree of Inifuss is near the path too." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [5, 38, 68]
@@ -196,8 +197,8 @@ quests = ["Search for Cain: Tree of Inifuss"]
 act = 1
 next = "Hole Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
 levels = [5, 38, 80]
@@ -207,8 +208,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; golden chest" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; golden chest." }
 confidence = "high"
 source = "maxroll"
 levels = [5, 39, 81]
@@ -218,8 +219,8 @@ quests = []
 act = 1
 next = "Tamoe Highland"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "edge", tip = "another edge, never bottom-left" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "edge", tip = "The Tamoe Highland exit is on a different edge from the one you came in on, and is never on the bottom-left edge. Follow the path (a river can break it)." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [6, 38, 69]
@@ -229,8 +230,8 @@ quests = []
 act = 1
 next = "Tower Cellar Level 1"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "stairs in the tower ruin" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "The stairs down are inside the tower ruin." }
 confidence = "high"
 source = "maxroll"
 levels = [7, 38, 75]
@@ -240,8 +241,8 @@ quests = []
 act = 1
 next = "Tower Cellar Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 38, 75]
@@ -251,8 +252,8 @@ quests = []
 act = 1
 next = "Tower Cellar Level 3"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 39, 76]
@@ -262,8 +263,8 @@ quests = []
 act = 1
 next = "Tower Cellar Level 4"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 40, 77]
@@ -273,8 +274,8 @@ quests = []
 act = 1
 next = "Tower Cellar Level 5"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 41, 78]
@@ -284,8 +285,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Countess in the end room" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. The Countess is in the room at the end." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [7, 42, 79]
@@ -295,8 +296,8 @@ quests = ["Forgotten Tower: the Countess"]
 act = 1
 next = "Monastery Gate"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "ne", tip = "top-right edge, always" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "edge", tip = "The Monastery Gate is always on the top-right edge of the map. Follow the path; the Pit is a side branch off it." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [8, 39, 69]
@@ -306,8 +307,8 @@ quests = []
 act = 1
 next = "Pit Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "random", tip = "no accepted rule" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "random", tip = "No accepted rule for the stairs down." }
 confidence = "medium"
 source = "maxroll (not listed)"
 levels = [7, 39, 85]
@@ -317,8 +318,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; golden chest" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; golden chest." }
 confidence = "high"
 source = "maxroll"
 levels = [7, 40, 85]
@@ -328,8 +329,8 @@ quests = []
 act = 1
 next = "Outer Cloister"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "straight", tip = "static; straight through" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "straight", tip = "Static map. Go straight through the gate." }
 confidence = "high"
 source = "cheatsheet"
 levels = [8, 40, 70]
@@ -339,8 +340,8 @@ quests = []
 act = 1
 next = "Barracks"
 has_waypoint = true
-to_waypoint = { dir = "straight", tip = "static; by the cross/fountain" }
-to_next = { dir = "ne", tip = "NE; WP SE of fountain→NW, NW→SE" }
+to_waypoint = { dir = "straight", tip = "Static map. Go straight to the courtyard; the WP is by the cross-shaped fountain." }
+to_next = { dir = "fixed", tip = "Exit is normally to the upper-right. If the WP is below-right of the fountain the exit is upper-left; if the WP is upper-left, the exit is below-right." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [9, 40, 70]
@@ -350,8 +351,8 @@ quests = []
 act = 1
 next = "Jail Level 1"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left or straight; Malus left-straight" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left or go straight from the entrance for the Jail stairs. The Smith and the Horadric Malus are left-then-straight." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [9, 40, 70]
@@ -361,8 +362,8 @@ quests = ["Tools of the Trade: Horadric Malus"]
 act = 1
 next = "Jail Level 2"
 has_waypoint = true
-to_waypoint = { dir = "left", tip = "left from entrance" }
-to_next = { dir = "left", tip = "left from WP (straight from entrance)" }
+to_waypoint = { dir = "left", tip = "Turn left from the entrance to reach the waypoint." }
+to_next = { dir = "left", tip = "From the waypoint, turn left for the stairs down (they are straight ahead from the entrance)." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [10, 41, 71]
@@ -372,8 +373,8 @@ quests = []
 act = 1
 next = "Jail Level 3"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "straight", tip = "straight; Pitspawn is left" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "straight", tip = "Go straight from the entrance for the stairs down. Pitspawn Fouldog is to the left." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [10, 41, 71]
@@ -383,8 +384,8 @@ quests = []
 act = 1
 next = "Inner Cloister"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance; the exit is only ever that way." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [10, 41, 71]
@@ -394,8 +395,8 @@ quests = []
 act = 1
 next = "Cathedral"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "static; centre" }
-to_next = { dir = "ne", tip = "static; NE" }
+to_waypoint = { dir = "fixed", tip = "Static map. The waypoint is in the centre of the courtyard." }
+to_next = { dir = "straight", tip = "Static map. The Cathedral door is straight ahead at the top of the courtyard." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [10, 41, 72]
@@ -405,8 +406,8 @@ quests = []
 act = 1
 next = "Catacombs Level 1"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; far end of the nave" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. The Catacombs stairs are at the far end of the nave from the entrance." }
 confidence = "low"
 source = "inferred (not in sources)"
 levels = [11, 42, 72]
@@ -416,8 +417,8 @@ quests = []
 act = 1
 next = "Catacombs Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "random", tip = "no accepted rule" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "random", tip = "No accepted rule: random map. Explore." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [11, 42, 72]
@@ -427,8 +428,8 @@ quests = []
 act = 1
 next = "Catacombs Level 3"
 has_waypoint = true
-to_waypoint = { dir = "random", tip = "no accepted rule" }
-to_next = { dir = "right", tip = "right from WP, only" }
+to_waypoint = { dir = "random", tip = "No accepted rule for the waypoint from the entrance." }
+to_next = { dir = "right", tip = "From the waypoint, turn right. The stairs to Level 3 are only ever right of the WP." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [11, 42, 73]
@@ -438,8 +439,8 @@ quests = []
 act = 1
 next = "Catacombs Level 4"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "random", tip = "no accepted rule" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "random", tip = "No accepted rule: random map. Explore." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [12, 43, 73]
@@ -449,8 +450,8 @@ quests = []
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Andariel at the far end" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Andariel is in the far chamber; follow the corridor." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [12, 43, 73]
@@ -460,8 +461,8 @@ quests = ["Sisters to the Slaughter: Andariel"]
 act = 1
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "random", tip = "no accepted rule; King in a pen" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "random", tip = "No accepted rule. The Cow King is in a fenced pen somewhere in the field." }
 confidence = "medium"
 source = "inferred"
 levels = [28, 64, 81]
@@ -475,8 +476,8 @@ quests = ["Cow King: kill = no more cow portals"]
 act = 2
 next = "Rocky Waste"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
-to_next = { dir = "fixed", tip = "top gate; Sewers by the docks" }
+to_waypoint = { dir = "fixed", tip = "Town, fixed layout." }
+to_next = { dir = "fixed", tip = "Rocky Waste gate is at the top of town. The Sewers are by the docks; the Harem is in the palace." }
 confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
@@ -486,8 +487,8 @@ quests = []
 act = 2
 next = "Sewers Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "random", tip = "no accepted rule" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "random", tip = "No accepted rule; the sources do not list this level." }
 confidence = "medium"
 source = "maxroll (not listed)"
 levels = [13, 43, 74]
@@ -497,8 +498,8 @@ quests = []
 act = 2
 next = "Sewers Level 3"
 has_waypoint = true
-to_waypoint = { dir = "left", tip = "left from entrance" }
-to_next = { dir = "left", tip = "left from WP (straight from entrance)" }
+to_waypoint = { dir = "left", tip = "Turn left from the entrance to reach the waypoint." }
+to_next = { dir = "left", tip = "From the waypoint, turn left for the stairs down (straight ahead from the entrance)." }
 confidence = "medium"
 source = "maxroll"
 levels = [13, 43, 74]
@@ -508,8 +509,8 @@ quests = []
 act = 2
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "Radament: left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance; Radament is that way." }
 confidence = "medium"
 source = "maxroll"
 levels = [14, 44, 75]
@@ -519,8 +520,8 @@ quests = ["Radament's Lair: Radament"]
 act = 2
 next = "Dry Hills"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "corner", tip = "another corner; can be right beside you" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "corner", tip = "You enter in one corner; the Dry Hills exit is in a different corner. It can be right next to the entrance, so check the near corners first. Stony Tomb is random." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 43, 75]
@@ -530,8 +531,8 @@ quests = []
 act = 2
 next = "Stony Tomb Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
 levels = [12, 44, 78]
@@ -541,8 +542,8 @@ quests = []
 act = 2
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "chest left; Creeping Feature straight" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left for the golden chest; Creeping Feature is straight ahead." }
 confidence = "medium"
 source = "maxroll"
 levels = [12, 44, 79]
@@ -552,8 +553,8 @@ quests = []
 act = 2
 next = "Far Oasis"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "corner", tip = "other corner, not on entrance's edge" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "corner", tip = "The Far Oasis exit is in one of the three other corners, but never on the same edge as the entrance (it can be the same corner). A rock wall splits the map in halves or cuts off a quarter at the bottom." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [15, 44, 76]
@@ -563,8 +564,8 @@ quests = []
 act = 2
 next = "Halls of the Dead Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [12, 44, 75]
@@ -574,8 +575,8 @@ quests = []
 act = 2
 next = "Halls of the Dead Level 3"
 has_waypoint = true
-to_waypoint = { dir = "straight", tip = "straight from entrance" }
-to_next = { dir = "right", tip = "right from WP (left from entrance)" }
+to_waypoint = { dir = "straight", tip = "Go straight from the entrance to reach the waypoint." }
+to_next = { dir = "right", tip = "From the waypoint, turn right for the stairs down (from the entrance they are to the left)." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 45, 81]
@@ -585,8 +586,8 @@ quests = []
 act = 2
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "Cube + Bloodwitch: left" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance: Bloodwitch and the Horadric Cube chest are that way." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 45, 82]
@@ -596,8 +597,8 @@ quests = ["Horadric Staff: Horadric Cube"]
 act = 2
 next = "Lost City"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "corner", tip = "one of the 3 other corners" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "corner", tip = "The Lost City exit is in one of the three other corners. A rock wall splits the map in halves or cuts off a quarter at the bottom; Maggot Lair is random." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [16, 45, 76]
@@ -607,8 +608,8 @@ quests = []
 act = 2
 next = "Maggot Lair Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "right", tip = "right from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "right", tip = "Turn right from the entrance and follow the tunnel to the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 45, 84]
@@ -618,8 +619,8 @@ quests = []
 act = 2
 next = "Maggot Lair Level 3"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "right", tip = "right from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "right", tip = "Turn right from the entrance and follow the tunnel to the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 45, 84]
@@ -629,8 +630,8 @@ quests = []
 act = 2
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "straight", tip = "Coldworm + Staff: straight" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "straight", tip = "Go straight from the entrance: Coldworm and the Staff of Kings chest are ahead." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 46, 85]
@@ -640,8 +641,8 @@ quests = ["Horadric Staff: Staff of Kings"]
 act = 2
 next = "Valley of Snakes"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "corner", tip = "W, N or E corner — never South" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "corner", tip = "The Valley of Snakes exit is in the left, top or right corner, never the bottom one. Ancient Tunnels is a random trapdoor in the city." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 46, 77]
@@ -651,8 +652,8 @@ quests = []
 act = 2
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "golden chest: left" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance for the golden chest." }
 confidence = "medium"
 source = "maxroll"
 levels = [17, 46, 85]
@@ -662,8 +663,8 @@ quests = []
 act = 2
 next = "Claw Viper Temple Level 1"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; temple in the centre" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. The Claw Viper Temple is in the centre." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [18, 46, 77]
@@ -673,8 +674,8 @@ quests = []
 act = 2
 next = "Claw Viper Temple Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 47, 82]
@@ -684,8 +685,8 @@ quests = []
 act = 2
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; altar in the centre" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. The altar with the Amulet of the Viper is in the centre." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 47, 83]
@@ -695,8 +696,8 @@ quests = ["Tainted Sun: altar", "Horadric Staff: Amulet of the Viper"]
 act = 2
 next = "Harem Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "static; left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Static map. Turn left from the entrance for the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
@@ -706,8 +707,8 @@ quests = []
 act = 2
 next = "Palace Cellar Level 1"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "straight", tip = "static; straight from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "straight", tip = "Static map. Go straight from the entrance for the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
@@ -717,8 +718,8 @@ quests = []
 act = 2
 next = "Palace Cellar Level 2"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "static; close to entrance" }
-to_next = { dir = "straight", tip = "static; straight from entrance" }
+to_waypoint = { dir = "fixed", tip = "Static map; the waypoint is close to the entrance." }
+to_next = { dir = "straight", tip = "Static map. Go straight from the entrance for the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
@@ -728,8 +729,8 @@ quests = []
 act = 2
 next = "Palace Cellar Level 3"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "straight", tip = "static; straight from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "straight", tip = "Static map. Go straight from the entrance for the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 47, 78]
@@ -739,8 +740,8 @@ quests = []
 act = 2
 next = "Arcane Sanctuary"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; portal in the centre" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. The Arcane Sanctuary portal is in the centre." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [13, 48, 78]
@@ -750,8 +751,8 @@ quests = ["Arcane Sanctuary: the portal"]
 act = 2
 next = "Canyon of the Magi"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "centre hub" }
-to_next = { dir = "random", tip = "no accepted rule; 1 of 4 arms" }
+to_waypoint = { dir = "fixed", tip = "The waypoint is on the central hub where the four arms meet." }
+to_next = { dir = "random", tip = "No accepted rule: the Summoner is at the end of one of the four arms. The portal to the Canyon opens beside him." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [14, 48, 79]
@@ -761,8 +762,8 @@ quests = ["The Summoner"]
 act = 2
 next = "Tal Rasha's Tomb"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "static; by the arrival portal" }
-to_next = { dir = "fixed", tip = "tombs L→R: ○ ◡ ☐ ⊹ ≫ △ ⚇" }
+to_waypoint = { dir = "fixed", tip = "Static map. The waypoint is by the arrival portal." }
+to_next = { dir = "fixed", tip = "Seven tombs ring the canyon; left to right their symbols are ○ ◡ ☐ ⊹ ≫ △ ⚇. The true tomb has the symbol shown on your Horadric Staff." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [16, 48, 79]
@@ -772,8 +773,8 @@ quests = ["Seven Tombs: find the true tomb"]
 act = 2
 next = "Tal Rasha's Chamber"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "Orifice (or chest): left" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance. In the true tomb the Orifice is that way; in the wrong tombs it is a golden chest (one has Ancient Kaa)." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [17, 49, 80]
@@ -783,8 +784,8 @@ quests = ["Seven Tombs: Staff into the Orifice"]
 act = 2
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Duriel" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Duriel is right there." }
 confidence = "high"
 source = "maxroll"
 levels = [17, 49, 80]
@@ -798,8 +799,8 @@ quests = ["Seven Tombs: Duriel"]
 act = 3
 next = "Spider Forest"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
-to_next = { dir = "fixed", tip = "top of the docks" }
+to_waypoint = { dir = "fixed", tip = "Town, fixed layout." }
+to_next = { dir = "fixed", tip = "The Spider Forest exit is at the top of the docks." }
 confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
@@ -809,8 +810,8 @@ quests = []
 act = 3
 next = "Flayer Jungle"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "2-pole camp with Arachnid Lair" }
-to_next = { dir = "n", tip = "tile 3/5/6 (Marsh always, Jungle maybe)" }
+to_waypoint = { dir = "inside", tip = "Three camps are marked by pairs of poles. The waypoint is in the camp with the Arachnid Lair entrance; Spider Cavern is in another." }
+to_next = { dir = "straight", tip = "You always enter from the bottom, so keep heading up. The map is a 2x6 grid: the Great Marsh exit is on row 3, 5 or 6, and a Flayer Jungle exit (not guaranteed) is on the same row or later. A river connects every tile; follow it if lost." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [21, 49, 79]
@@ -820,8 +821,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Khalim's Eye" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Khalim's Eye is in the chest at the end." }
 confidence = "high"
 source = "maxroll"
 levels = [21, 50, 79]
@@ -831,8 +832,8 @@ quests = ["Khalim's Will: Khalim's Eye"]
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "random", tip = "no accepted rule; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "random", tip = "No accepted rule; optional cave." }
 confidence = "medium"
 source = "maxroll (not listed)"
 levels = [21, 50, 79]
@@ -842,8 +843,8 @@ quests = []
 act = 3
 next = "Flayer Jungle"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "one of the 3 two-pole camps" }
-to_next = { dir = "n", tip = "tile 3/5/6 — NOT guaranteed; river" }
+to_waypoint = { dir = "inside", tip = "Three camps are marked by pairs of poles; the waypoint is in one, the other two have sparkling chests." }
+to_next = { dir = "straight", tip = "You enter from the bottom; keep heading up. A Flayer Jungle exit may exist on row 3, 5 or 6 but is not guaranteed; if there is none, go back to Spider Forest. Follow the river." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [21, 50, 80]
@@ -853,8 +854,8 @@ quests = []
 act = 3
 next = "Lower Kurast"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "camp with Swampy Pit entrance" }
-to_next = { dir = "n", tip = "tile 6 (Stormtree); follow the river" }
+to_waypoint = { dir = "inside", tip = "Three camps are marked by pairs of poles. The waypoint is in the camp with the Swampy Pit entrance; the Gidbinn and Flayer Dungeon share another." }
+to_next = { dir = "straight", tip = "Keep heading up: the Lower Kurast exit is on the last grid tile (row 6), where Stormtree stands. A river connects every tile; follow it." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [22, 50, 80]
@@ -864,8 +865,8 @@ quests = ["Blade of the Old Religion: Gidbinn"]
 act = 3
 next = "Swampy Pit Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
 levels = [21, 51, 80]
@@ -875,8 +876,8 @@ quests = []
 act = 3
 next = "Swampy Pit Level 3"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
 levels = [21, 51, 81]
@@ -886,8 +887,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; golden chest" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; golden chest." }
 confidence = "high"
 source = "maxroll"
 levels = [21, 51, 82]
@@ -897,8 +898,8 @@ quests = []
 act = 3
 next = "Flayer Dungeon Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
 levels = [22, 51, 81]
@@ -908,8 +909,8 @@ quests = []
 act = 3
 next = "Flayer Dungeon Level 3"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "medium"
 source = "maxroll"
 levels = [22, 51, 82]
@@ -919,8 +920,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Khalim's Brain" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Witch Doctor Endugu guards Khalim's Brain." }
 confidence = "high"
 source = "maxroll"
 levels = [22, 51, 83]
@@ -930,8 +931,8 @@ quests = ["Khalim's Will: Khalim's Brain"]
 act = 3
 next = "Kurast Bazaar"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "corner", tip = "North or East corner" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "corner", tip = "You enter at the middle of the bottom-left edge. The Bazaar exit is in the far-left (top) or far-right corner ahead of you." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [22, 52, 80]
@@ -941,8 +942,8 @@ quests = []
 act = 3
 next = "Upper Kurast"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "opposite", tip = "opposite corner from the entrance" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "opposite", tip = "The Upper Kurast exit is in the corner diagonally opposite the one you entered from. The two Sewers entrances are always in the same spots." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [22, 52, 81]
@@ -952,8 +953,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Lam Esen's Tome" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Lam Esen's Tome is in the chest at the end." }
 confidence = "high"
 source = "maxroll"
 levels = [23, 53, 84]
@@ -963,8 +964,8 @@ quests = ["Lam Esen's Tome"]
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional temple." }
 confidence = "high"
 source = "maxroll"
 levels = [23, 53, 84]
@@ -975,8 +976,8 @@ ocr_name = "Sewers Level 1"
 act = 3
 next = "Kurast Sewers Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "right", tip = "right from the sparkling chest" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "right", tip = "Find the sparkling chest, then turn right from it: the lever-opened stairs to Level 2 are that way." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [23, 52, 84]
@@ -987,8 +988,8 @@ ocr_name = "Sewers Level 2"
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Khalim's Heart" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Khalim's Heart is in the chest at the end." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 53, 85]
@@ -998,8 +999,8 @@ quests = ["Khalim's Will: Khalim's Heart"]
 act = 3
 next = "Kurast Causeway"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
-to_next = { dir = "ne", tip = "centre of the NE edge" }
+to_waypoint = { dir = "inside", tip = "Randomly placed somewhere inside; no rule." }
+to_next = { dir = "straight", tip = "You enter from a left or bottom corner; the Causeway exit is in the middle of the far top-right edge, so head straight up and across." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [23, 52, 81]
@@ -1009,8 +1010,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional temple." }
 confidence = "high"
 source = "maxroll"
 levels = [24, 54, 85]
@@ -1020,8 +1021,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional temple." }
 confidence = "high"
 source = "maxroll"
 levels = [23, 53, 84]
@@ -1031,8 +1032,8 @@ quests = []
 act = 3
 next = "Travincal"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; straight up the causeway" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "straight", tip = "Static map. Travincal is straight up the causeway; Ruined Fane and Disused Reliquary are off to the sides." }
 confidence = "high"
 source = "maxroll"
 levels = [24, 53, 81]
@@ -1042,8 +1043,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional temple." }
 confidence = "high"
 source = "maxroll"
 levels = [24, 54, 85]
@@ -1053,8 +1054,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional temple." }
 confidence = "high"
 source = "maxroll"
 levels = [24, 54, 85]
@@ -1064,8 +1065,8 @@ quests = []
 act = 3
 next = "Durance of Hate Level 1"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "static; up-left of entrance" }
-to_next = { dir = "straight", tip = "static; straight to Council + Orb" }
+to_waypoint = { dir = "fixed", tip = "Static map. The waypoint is up and to the left of where you arrive." }
+to_next = { dir = "straight", tip = "Static map. Go straight up to the Council and the Compelling Orb; smashing the Orb with Khalim's Will opens the Durance stairs." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 54, 82]
@@ -1075,8 +1076,8 @@ quests = ["Blackened Temple: Council + Orb", "Khalim's Will: Khalim's Flail"]
 act = 3
 next = "Durance of Hate Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "left", tip = "left from entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "left", tip = "Turn left from the entrance to find the stairs down." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
@@ -1086,8 +1087,8 @@ quests = []
 act = 3
 next = "Durance of Hate Level 3"
 has_waypoint = true
-to_waypoint = { dir = "left", tip = "left from entrance" }
-to_next = { dir = "left", tip = "left from WP (straight from entrance)" }
+to_waypoint = { dir = "left", tip = "Turn left from the entrance to reach the waypoint." }
+to_next = { dir = "left", tip = "From the waypoint, turn left for the stairs down (straight ahead from the entrance)." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
@@ -1097,8 +1098,8 @@ quests = []
 act = 3
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "nw", tip = "static; Mephisto NW of entrance" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Mephisto is up and to the left of the entrance, across the bridge." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 55, 83]
@@ -1112,8 +1113,8 @@ quests = ["The Guardian: Mephisto"]
 act = 4
 next = "Outer Steppes"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
-to_next = { dir = "fixed", tip = "bottom of the fortress" }
+to_waypoint = { dir = "fixed", tip = "Town, fixed layout." }
+to_next = { dir = "fixed", tip = "The Outer Steppes exit is at the bottom of the fortress." }
 confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
@@ -1123,8 +1124,8 @@ quests = []
 act = 4
 next = "Plains of Despair"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "edge", tip = "any edge except the NW one you came in" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "edge", tip = "You enter on the top-left edge; the Plains of Despair exit is on any of the other three edges. Walk the border." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [26, 56, 82]
@@ -1134,8 +1135,8 @@ quests = []
 act = 4
 next = "City of the Damned"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "edge", tip = "any edge except the entrance edge" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "edge", tip = "The City of the Damned exit is on any edge except the one you entered from. Izual wanders somewhere in the plains." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [26, 56, 83]
@@ -1145,8 +1146,8 @@ quests = ["The Fallen Angel: Izual"]
 act = 4
 next = "River of Flame"
 has_waypoint = true
-to_waypoint = { dir = "random", tip = "no accepted rule; WP is by the stairs" }
-to_next = { dir = "near", tip = "stairs are right next to the WP" }
+to_waypoint = { dir = "random", tip = "No accepted rule: the stairs are random, and the waypoint is next to them." }
+to_next = { dir = "near", tip = "The stairs to the River of Flame are right next to the waypoint." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [27, 57, 84]
@@ -1156,8 +1157,8 @@ quests = []
 act = 4
 next = "Chaos Sanctuary"
 has_waypoint = true
-to_waypoint = { dir = "straight", tip = "straight; Hellforge is left or right" }
-to_next = { dir = "straight", tip = "straight on from the WP" }
+to_waypoint = { dir = "straight", tip = "Go straight from the stairs to reach the waypoint. The Hellforge is off to the left or right." }
+to_next = { dir = "straight", tip = "Keep going straight from the waypoint to reach the Chaos Sanctuary." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [27, 57, 85]
@@ -1167,8 +1168,8 @@ quests = ["Hell's Forge: Hephasto, smash Soulstone"]
 act = 4
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; 5 seals around the star" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Open the five seals around the star; Diablo spawns in the centre." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [28, 58, 85]
@@ -1182,8 +1183,8 @@ quests = ["Terror's End: Diablo"]
 act = 5
 next = "Bloody Foothills"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
-to_next = { dir = "fixed", tip = "top gate of town" }
+to_waypoint = { dir = "fixed", tip = "Town, fixed layout." }
+to_next = { dir = "fixed", tip = "The Bloody Foothills gate is at the top of town." }
 confidence = "high"
 source = "maxroll"
 levels = [0, 0, 0]
@@ -1193,8 +1194,8 @@ quests = []
 act = 5
 next = "Frigid Highlands"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "straight", tip = "static; keep going forward" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "straight", tip = "Static map. Keep going forward past the catapults; Shenk is near the exit." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [24, 58, 80]
@@ -1204,8 +1205,8 @@ quests = ["Siege on Harrogath: Shenk"]
 act = 5
 next = "Arreat Plateau"
 has_waypoint = true
-to_waypoint = { dir = "near", tip = "near the entrance, with Eldritch" }
-to_next = { dir = "straight", tip = "far short edge; forward past 3 walls" }
+to_waypoint = { dir = "near", tip = "The waypoint is near the entrance, with Eldritch the Rectifier beside it." }
+to_next = { dir = "straight", tip = "Long rectangle: keep going forward past the three walls (the barbarian cages are in them). The Arreat Plateau exit is on the far short edge; Eyeback guards it." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [25, 59, 81]
@@ -1215,8 +1216,8 @@ quests = ["Rescue on Mount Arreat: 3 cages"]
 act = 5
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
 levels = [39, 60, 81]
@@ -1226,8 +1227,8 @@ quests = []
 act = 5
 next = "Crystalline Passage"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, between the walls" }
-to_next = { dir = "straight", tip = "centre of the far short edge" }
+to_waypoint = { dir = "inside", tip = "Randomly placed between the three walls; no rule." }
+to_next = { dir = "straight", tip = "Long rectangle: keep going forward. The Crystalline Passage entrance is in the centre of the far short edge, with Thresh Socket in front of it." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [26, 60, 81]
@@ -1237,8 +1238,8 @@ quests = []
 act = 5
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
 levels = [39, 61, 82]
@@ -1248,8 +1249,8 @@ quests = []
 act = 5
 next = "Glacial Trail"
 has_waypoint = true
-to_waypoint = { dir = "right", tip = "right from entrance" }
-to_next = { dir = "straight", tip = "straight from WP; Frozen River right" }
+to_waypoint = { dir = "right", tip = "Turn right from the entrance to reach the waypoint. Glacial Trail is left, Frozen River is straight." }
+to_next = { dir = "straight", tip = "From the waypoint, go straight for the Glacial Trail. The Frozen River (Anya) is to the right, the way back is left." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [29, 61, 82]
@@ -1259,8 +1260,8 @@ quests = []
 act = 5
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Anya at the far end" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Anya is frozen at the far end, past Frozenstein." }
 confidence = "high"
 source = "maxroll"
 levels = [29, 61, 83]
@@ -1270,8 +1271,8 @@ quests = ["Prison of Ice: Anya"]
 act = 5
 next = "Frozen Tundra"
 has_waypoint = true
-to_waypoint = { dir = "back", tip = "behind you; WP faces same way as entry" }
-to_next = { dir = "left", tip = "left; Drifter straight, chest right" }
+to_waypoint = { dir = "back", tip = "The waypoint is behind you: it and the entrance face the same direction." }
+to_next = { dir = "left", tip = "Turn left (from the entrance or the waypoint) for the Frozen Tundra. Drifter Cavern is straight; the golden chest and Bonesaw Breaker are right." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [29, 61, 83]
@@ -1281,8 +1282,8 @@ quests = []
 act = 5
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
 levels = [29, 61, 84]
@@ -1292,8 +1293,8 @@ quests = []
 act = 5
 next = "The Ancients' Way"
 has_waypoint = true
-to_waypoint = { dir = "inside", tip = "random, between the walls" }
-to_next = { dir = "opposite", tip = "opposite short edge from entrance" }
+to_waypoint = { dir = "inside", tip = "Randomly placed between the three walls; no rule." }
+to_next = { dir = "opposite", tip = "Long rectangle: you enter on the short bottom edge and the Ancients' Way exit is on the opposite short edge. Keep going forward." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [27, 60, 81]
@@ -1303,8 +1304,8 @@ quests = []
 act = 5
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
 levels = [39, 62, 83]
@@ -1314,8 +1315,8 @@ quests = []
 act = 5
 next = "Arreat Summit"
 has_waypoint = true
-to_waypoint = { dir = "right", tip = "right from entrance" }
-to_next = { dir = "straight", tip = "straight from WP; Icy Cellar right" }
+to_waypoint = { dir = "right", tip = "Turn right from the entrance to reach the waypoint. Arreat Summit is left, Icy Cellar is straight." }
+to_next = { dir = "straight", tip = "From the waypoint, go straight for the Arreat Summit. Icy Cellar is to the right, the way back is left." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [29, 62, 82]
@@ -1325,8 +1326,8 @@ quests = []
 act = 5
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; optional" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map; optional cave." }
 confidence = "high"
 source = "maxroll"
 levels = [29, 62, 83]
@@ -1336,8 +1337,8 @@ quests = []
 act = 5
 next = "The Worldstone Keep Level 1"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; altar, Ancients, door at top" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Touch the altar, defeat the Ancients, and the Worldstone Keep door opens at the top." }
 confidence = "high"
 source = "maxroll"
 levels = [37, 68, 87]
@@ -1347,8 +1348,8 @@ quests = ["Rite of Passage: the Ancients"]
 act = 5
 next = "The Worldstone Keep Level 2"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "random", tip = "no accepted rule" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "random", tip = "No accepted rule: random map. Explore." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [39, 65, 85]
@@ -1358,8 +1359,8 @@ quests = []
 act = 5
 next = "The Worldstone Keep Level 3"
 has_waypoint = true
-to_waypoint = { dir = "random", tip = "no accepted rule" }
-to_next = { dir = "right", tip = "right from WP, only" }
+to_waypoint = { dir = "random", tip = "No accepted rule for the waypoint from the entrance." }
+to_next = { dir = "right", tip = "From the waypoint, turn right. The stairs to Level 3 are only ever right of the WP." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [40, 65, 85]
@@ -1369,8 +1370,8 @@ quests = []
 act = 5
 next = "Throne of Destruction"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "random", tip = "no accepted rule" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "random", tip = "No accepted rule: random map. Explore." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [42, 66, 85]
@@ -1380,8 +1381,8 @@ quests = []
 act = 5
 next = "The Worldstone Chamber"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; throne at the top" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. The throne room is at the top; Baal opens the Chamber portal after five waves." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [43, 66, 85]
@@ -1391,8 +1392,8 @@ quests = ["Eve of Destruction: Baal's waves"]
 act = 5
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Baal" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Baal is right there." }
 confidence = "high"
 source = "maxroll"
 levels = [43, 66, 85]
@@ -1402,8 +1403,8 @@ quests = ["Eve of Destruction: Baal"]
 act = 5
 next = "Halls of Anguish"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; stairs ahead" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. The stairs down are straight ahead." }
 confidence = "high"
 source = "maxroll"
 levels = [32, 63, 83]
@@ -1413,8 +1414,8 @@ quests = []
 act = 5
 next = "Halls of Pain"
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static layout (memorise)" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map with a few fixed layouts; memorise them." }
 confidence = "medium"
 source = "maxroll"
 levels = [33, 63, 83]
@@ -1424,8 +1425,8 @@ quests = []
 act = 5
 next = "Halls of Vaught"
 has_waypoint = true
-to_waypoint = { dir = "fixed", tip = "static layout (memorise)" }
-to_next = { dir = "fixed", tip = "static layout (memorise)" }
+to_waypoint = { dir = "fixed", tip = "Static map with a few fixed layouts; memorise them." }
+to_next = { dir = "fixed", tip = "Static map with a few fixed layouts; memorise them." }
 confidence = "medium"
 source = "maxroll"
 levels = [34, 64, 84]
@@ -1435,8 +1436,8 @@ quests = []
 act = 5
 next = ""
 has_waypoint = false
-to_waypoint = { dir = "none", tip = "no WP" }
-to_next = { dir = "fixed", tip = "static; Nihlathak in a corner room" }
+to_waypoint = { dir = "none", tip = "No waypoint in this area." }
+to_next = { dir = "fixed", tip = "Static map. Nihlathak is on one of the four corner platforms." }
 confidence = "medium"
 source = "maxroll"
 levels = [36, 64, 84]

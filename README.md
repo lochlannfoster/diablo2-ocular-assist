@@ -7,10 +7,15 @@ hand-written table, and shows two hints on top of the game:
 
 ```
 ● Flayer Jungle   alvl 50 (NM)
-WP    INSIDE      camp with Swampy Pit entrance
-NEXT  Lower Kurast  (from WP)
-      NORTH       tile 6 (Stormtree); follow the river
-Q     Blade of the Old Religion: Gidbinn
+WAYPOINT  ·  INSIDE
+Three camps are marked by pairs of poles. The waypoint is in the
+camp with the Swampy Pit entrance; the Gidbinn and Flayer Dungeon
+share another.
+NEXT  Lower Kurast  ·  STRAIGHT  (from waypoint)
+Keep heading up: the Lower Kurast exit is on the last grid tile
+(row 6), where Stormtree stands. A river connects every tile;
+follow it.
+QUEST  Blade of the Old Religion: Gidbinn
 ```
 
 - **alvl** — the area level for the difficulty read off the screen
@@ -19,8 +24,9 @@ Q     Blade of the Old Religion: Gidbinn
 - **WP** — where the waypoint is, from the entrance.
 - **NEXT** — the next area and where its exit is, from the waypoint (or the
   entrance if the area has no waypoint).
-- **Left / straight / right are relative to how your character faces on
-  arriving** — the speedrunners' convention, never compass directions.
+- **TURN LEFT / STRAIGHT / TURN RIGHT are relative to how your character
+  faces on arriving** — the speedrunners' convention, never compass
+  directions. Tips are full sentences and wrap inside the fixed-width box.
 - `NO RULE  no accepted rule` (orange) means the sources say the map is random —
   don't look for a pattern.
 - The dot colour is source agreement: green = both sources, yellow = one,
@@ -115,8 +121,8 @@ One table per area, keyed by the exact name the game shows:
 act = 1
 next = "Stony Field"
 has_waypoint = true
-to_waypoint = { dir = "near", tip = "next to the entrance, in the corner" }
-to_next     = { dir = "edge", tip = "mid-edge; corner path = Burial Grounds" }
+to_waypoint = { dir = "near", tip = "Right next to where you come in from Blood Moor, in the corner." }
+to_next     = { dir = "edge", tip = "Follow the road. The Stony Field exit is near the middle of an edge; ..." }
 confidence = "high"
 source = "maxroll, cheatsheet"
 levels = [2, 36, 68]          # Normal, Nightmare, Hell
@@ -124,9 +130,8 @@ quests = []                   # e.g. ["Search for Cain: Tree of Inifuss"]
 ```
 
 `dir` vocabulary (labels in `areas.py`): `left straight right back` (character-
-relative), `n ne e se s sw w nw` (compass), `corner edge opposite near inside
-path` (outdoor shape rules), `fixed`, `random` (no accepted rule), `none`. Tips must fit the fixed-width box — `test_areas.py`
-enforces the limit. The file is validated on load; a bad entry is one clear
+relative), `corner edge opposite near inside path` (outdoor shape rules),
+`fixed`, `random` (no accepted rule), `none`. Tips are sentences; they wrap. The file is validated on load; a bad entry is one clear
 error at startup rather than a hint that silently never appears.
 
 ### Where the rules come from

@@ -15,23 +15,20 @@ DATA_PATH = Path(__file__).parent / "data" / "areas.toml"
 # dir value -> label shown in the overlay. See the header of data/areas.toml
 # for what each value means.
 LABELS = {
-    # character-relative, from the entrance (or the waypoint)
-    "left": "LEFT",
+    # relative to how your character faces on arriving (or at the waypoint)
+    "left": "TURN LEFT",
     "straight": "STRAIGHT",
-    "right": "RIGHT",
-    "back": "BACK",
-    # compass on the automap
-    "n": "NORTH", "ne": "NORTH EAST", "e": "EAST", "se": "SOUTH EAST",
-    "s": "SOUTH", "sw": "SOUTH WEST", "w": "WEST", "nw": "NORTH WEST",
+    "right": "TURN RIGHT",
+    "back": "TURN BACK",
     # outdoor shape rules
-    "corner": "CORNER",
-    "edge": "EDGE",
+    "corner": "A CORNER",
+    "edge": "AN EDGE",
     "opposite": "OPPOSITE",
-    "near": "NEAR",
+    "near": "RIGHT HERE",
     "inside": "INSIDE",
-    "path": "PATH",
+    "path": "FOLLOW PATH",
     # layout classes
-    "fixed": "FIXED",
+    "fixed": "FIXED MAP",
     "random": "NO RULE",
     "none": "-",
 }

@@ -26,13 +26,13 @@ def test_mainline_chain_reaches_each_act_boss():
         assert end in seen
 
 
-def test_tips_fit_fixed_width():
-    # overlay lines are "      LABEL       tip" (6 + 10 + 2) in a 60-char box.
+def test_tips_are_sentences():
+    # Tips wrap in the overlay, so no length cap -- but they should read as
+    # prose and never use compass words as the direction.
     for area in areas.load().values():
         for hint in (area.to_waypoint, area.to_next):
-            assert len(hint.label) <= 10, hint.label
-            assert len(hint.tip) <= 42, (area.name, hint.tip)
-        assert len(area.next) + len("  (from entry)") <= 42, area.next
+            assert hint.tip.endswith("."), (area.name, hint.tip)
+            assert hint.dir in areas.LABELS
 
 
 def test_unknown_next_is_rejected():
@@ -68,7 +68,7 @@ def test_no_rule_entries_say_so():
     for area in areas.load().values():
         for hint in (area.to_waypoint, area.to_next):
             if hint.no_rule:
-                assert "no accepted rule" in hint.tip, (area.name, hint)
+                assert "no accepted rule" in hint.tip.lower(), (area.name, hint)
 
 
 def test_shared_names_resolve_by_act():
