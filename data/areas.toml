@@ -55,6 +55,7 @@ levels = [0, 0, 0]
 quests = []
 uniques = []
 notes = ["Cow portal: Wirt's Leg + Tome of Town Portal in the Cube (after Baal dies on this difficulty)."]
+farm = ["Cows: once Baal is dead on this difficulty, cube Wirt's Leg (Tristram) + a Tome of Town Portal here; the red portal opens in town. Killing the Cow King no longer locks it (D2R)."]
 
 [area."Blood Moor"]
 act = 1
@@ -94,6 +95,7 @@ levels = [2, 36, 68]
 quests = []
 uniques = ["Bishibosh"]
 notes = []
+farm = ["Cows/Tristram: head for the Stony Field exit. Bishibosh holds a fallen camp in the north; Cave 2 is a quick Normal XP stop."]
 
 [area."Burial Grounds"]
 act = 1
@@ -107,6 +109,7 @@ levels = [3, 36, 80]
 quests = ["Sisters' Burial Grounds: Blood Raven"]
 uniques = ["Blood Raven"]
 notes = []
+farm = ["Blood Raven roams the graveyard. Two one-level tombs open off its edges: Mausoleum (Hell alvl 85, gold chest) and Crypt (Hell 83, Bonebreaker, gold chest)."]
 
 [area."Crypt"]
 act = 1
@@ -120,6 +123,7 @@ levels = [3, 37, 83]
 quests = []
 uniques = ["Bonebreaker"]
 notes = []
+farm = ["Hell alvl 83 single level with a gold chest at the end; Bonebreaker. Usually paired with the Mausoleum next door."]
 
 [area."Mausoleum"]
 act = 1
@@ -133,6 +137,7 @@ levels = [3, 37, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Hell alvl 85 in a single small level: clear to the gold chest at the far end, save+exit, repeat. Cold Plains WP -> Burial Grounds is the run."]
 
 [area."Cave Level 1"]
 act = 1
@@ -172,6 +177,7 @@ levels = [4, 37, 68]
 quests = ["Search for Cain: Cairn Stones + Scroll"]
 uniques = ["Rakanishu"]
 notes = ["Tristram portal opens at the Cairn Stones once you have the Scroll of Inifuss."]
+farm = ["Tristram: the 5 Cairn Stones stand in a clearing guarded by Rakanishu; touch them in the order Cain's scroll shows (the Tree of Inifuss sequence). Stones and WP are both random in the field."]
 
 [area."Tristram"]
 act = 1
@@ -185,6 +191,7 @@ levels = [6, 39, 76]
 quests = ["Search for Cain: free Cain"]
 uniques = ["Griswold"]
 notes = ["Wirt's corpse drops Wirt's Leg for the cow level."]
+farm = ["Wirt's Leg (for cows) is on Wirt's body at the bottom-right of town. Griswold is by the well, Cain in the cage in the centre. Good early NM/Hell XP zone."]
 
 [area."Underground Passage Level 1"]
 act = 1
@@ -224,6 +231,7 @@ levels = [5, 38, 68]
 quests = ["Search for Cain: Tree of Inifuss"]
 uniques = ["Treehead Woodfist"]
 notes = []
+farm = ["Treehead Woodfist stands near the Tree of Inifuss on the path. Fast Countess: skip the Tree, follow the path to Black Marsh."]
 
 [area."Hole Level 1"]
 act = 1
@@ -361,6 +369,7 @@ levels = [8, 39, 69]
 quests = []
 uniques = []
 notes = []
+farm = ["Pit: the cave entrance is semi-random but sits close to the path through the middle of the zone; Black Marsh WP is the shortest start. Pit 1 & 2 are Hell alvl 85."]
 
 [area."Pit Level 1"]
 act = 1
@@ -374,6 +383,7 @@ levels = [7, 39, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Hell alvl 85 throughout; clear it all. The stairs to Pit 2 are random - Pit 2 is tiny with a gold chest."]
 
 [area."Pit Level 2"]
 act = 1
@@ -387,6 +397,7 @@ levels = [7, 40, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Small level, gold chest, Hell alvl 85. Clear, pop the chest, save+exit."]
 
 [area."Monastery Gate"]
 act = 1
@@ -439,6 +450,7 @@ levels = [10, 41, 71]
 quests = []
 uniques = []
 notes = []
+farm = ["Normal XP: a champion pack often spawns a tile from the WP - speedrunners farm it here to clvl 18."]
 
 [area."Jail Level 2"]
 act = 1
@@ -517,6 +529,7 @@ levels = [11, 42, 73]
 quests = []
 uniques = []
 notes = []
+farm = ["Andariel: WP here. Exit down is right from the WP; Cat 3 exit is random; she is on 4."]
 
 [area."Catacombs Level 3"]
 act = 1
@@ -530,6 +543,7 @@ levels = [12, 43, 73]
 quests = []
 uniques = ["Bone Ash"]
 notes = []
+farm = ["Andariel: exit is random - hug the walls. She is on 4."]
 
 [area."Catacombs Level 4"]
 act = 1
@@ -543,6 +557,7 @@ levels = [12, 43, 73]
 quests = ["Sisters to the Slaughter: Andariel"]
 uniques = ["Andariel"]
 notes = ["D2R: Andariel always uses her quest-drop table."]
+farm = ["Andariel: fixed map - the corridor leads to her chamber. After the first kill D2R keeps her improved quest drop rate (patch 2.4). TP back and re-run from the Cat 2 WP."]
 
 [area."Moo Moo Farm"]
 act = 1
@@ -556,6 +571,7 @@ levels = [28, 64, 81]
 quests = ["Cow King: kill = no more cow portals"]
 uniques = ["The Cow King"]
 notes = ["Killing the Cow King stops that character opening more cow portals on this difficulty."]
+farm = ["Cows: the whole level is alvl 28/64/81 with huge packs. The Cow King stands in a fenced pen; his death no longer blocks the portal (D2R)."]
 
 # ---------------------------------------------------------------------------
 # Act 2
@@ -599,6 +615,7 @@ levels = [13, 43, 74]
 quests = []
 uniques = []
 notes = []
+farm = ["Radament: exit to 3 is straight (WP is left). He is on 3, off to the left."]
 
 [area."Sewers Level 3"]
 act = 2
@@ -612,6 +629,7 @@ levels = [14, 44, 75]
 quests = ["Radament's Lair: Radament"]
 uniques = ["Radament"]
 notes = []
+farm = ["Radament: go left from the stairs; his Book of Skill is the quest reward."]
 
 [area."Rocky Waste"]
 act = 2
@@ -625,6 +643,7 @@ levels = [14, 43, 75]
 quests = []
 uniques = []
 notes = []
+farm = ["Stony Tomb: a hole in the ground placed randomly in the waste. Both levels are Hell alvl 85; Creeping Feature and a gold chest on 2."]
 
 [area."Stony Tomb Level 1"]
 act = 2
@@ -638,6 +657,7 @@ levels = [12, 44, 78]
 quests = []
 uniques = []
 notes = []
+farm = ["Hell alvl 85; stairs to 2 random. Level 2 has the gold chest."]
 
 [area."Stony Tomb Level 2"]
 act = 2
@@ -651,6 +671,7 @@ levels = [12, 44, 79]
 quests = []
 uniques = ["Creeping Feature"]
 notes = []
+farm = ["Hell alvl 85; Creeping Feature and the gold chest. Save+exit re-rolls."]
 
 [area."Dry Hills"]
 act = 2
@@ -664,6 +685,7 @@ levels = [15, 44, 76]
 quests = []
 uniques = []
 notes = []
+farm = ["Halls of the Dead: entrance and WP are random inside; Halls 1-2 exit left, the Cube chest on 3 is left."]
 
 [area."Halls of the Dead Level 1"]
 act = 2
@@ -716,6 +738,7 @@ levels = [16, 45, 76]
 quests = []
 uniques = ["Beetleburst"]
 notes = []
+farm = ["Beetleburst here. Maggot Lair entrance is random inside (a mound); Lair 1-2 exit right, Lair 3 (Hell alvl 85, Coldworm, Staff of Kings) is straight but a slow crawl."]
 
 [area."Maggot Lair Level 1"]
 act = 2
@@ -755,6 +778,7 @@ levels = [17, 46, 85]
 quests = ["Horadric Staff: Staff of Kings"]
 uniques = ["Coldworm the Burrower"]
 notes = []
+farm = ["Hell alvl 85 but tunnels are one monster wide. Coldworm and the Staff chest are straight from the entrance."]
 
 [area."Lost City"]
 act = 2
@@ -768,6 +792,7 @@ levels = [17, 46, 77]
 quests = []
 uniques = ["Dark Elder"]
 notes = []
+farm = ["Ancient Tunnels: a trapdoor placed randomly in the city (Dark Elder roams). Hell alvl 85, no cold-immunes, gold chest - the cold-sorc run. Lost City has a WP."]
 
 [area."Ancient Tunnels"]
 act = 2
@@ -781,6 +806,7 @@ levels = [17, 46, 85]
 quests = []
 uniques = []
 notes = ["Hell: no cold immunes — a Blizzard Sorc favourite."]
+farm = ["Hell alvl 85 single level, no cold-immune monsters, gold chest at the far end. Save+exit re-rolls."]
 
 [area."Valley of Snakes"]
 act = 2
@@ -885,6 +911,7 @@ levels = [13, 48, 78]
 quests = ["Arcane Sanctuary: the portal"]
 uniques = ["Fire Eye"]
 notes = []
+farm = ["Fire Eye guards the Arcane portal. The cellars are quick NM/Hell XP with lots of champions."]
 
 [area."Arcane Sanctuary"]
 act = 2
@@ -898,6 +925,7 @@ levels = [14, 48, 79]
 quests = ["The Summoner"]
 uniques = ["The Summoner"]
 notes = []
+farm = ["Summoner: WP in the centre, four arms; he is on the platform at the end of one (random). Read his journal to open the Canyon portal. Ghosts drop no gold but normal items."]
 
 [area."Canyon of the Magi"]
 act = 2
@@ -911,6 +939,7 @@ levels = [16, 48, 79]
 quests = ["Seven Tombs: find the true tomb"]
 uniques = []
 notes = ["Tomb symbols left to right: ○ ◡ ☐ ⊹ ≫ △ ⚇."]
+farm = ["Duriel: fixed map, tombs run left to right o u [] + >> ^ oo; the real one matches the symbol in your quest log. Ancient Kaa is in a false tomb."]
 
 [area."Tal Rasha's Tomb"]
 act = 2
@@ -924,6 +953,7 @@ levels = [17, 49, 80]
 quests = ["Seven Tombs: Staff into the Orifice"]
 uniques = ["Ancient Kaa the Soulless (one tomb)"]
 notes = []
+farm = ["Duriel: exit is left. Place the staff in the orifice to open his chamber. Ancient Kaa's tomb is a decent Hell XP run."]
 
 [area."Tal Rasha's Chamber"]
 act = 2
@@ -967,6 +997,7 @@ levels = [21, 49, 79]
 quests = []
 uniques = []
 notes = []
+farm = ["Spider Cavern (Khalim's Eye, Sszark) and Arachnid Lair each sit in an alcove tile; entrance from the docks is always at the bottom. The Cavern is the one you need."]
 
 [area."Spider Cavern"]
 act = 3
@@ -980,6 +1011,7 @@ levels = [21, 50, 79]
 quests = ["Khalim's Will: Khalim's Eye"]
 uniques = ["Sszark the Burning"]
 notes = []
+farm = ["Fixed map: Khalim's Eye chest is SW of the entrance; Sszark drops the Jade Figurine if you still need it."]
 
 [area."Arachnid Lair"]
 act = 3
@@ -1019,6 +1051,7 @@ levels = [22, 50, 80]
 quests = ["Blade of the Old Religion: Gidbinn"]
 uniques = ["Stormtree"]
 notes = []
+farm = ["Flayer Dungeon is on the same tile as the Gidbinn altar; Stormtree is on the path. Dungeon 1-2 exit left, the Brain is on 3 (Witch Doctor Endugu). Swampy Pit is the decoy."]
 
 [area."Swampy Pit Level 1"]
 act = 3
@@ -1097,6 +1130,7 @@ levels = [22, 51, 83]
 quests = ["Khalim's Will: Khalim's Brain"]
 uniques = ["Witch Doctor Endugu"]
 notes = []
+farm = ["Khalim's Brain: one of a few fixed layouts, guarded by Witch Doctor Endugu. Dungeon 1-2 exit left on the way in."]
 
 [area."Lower Kurast"]
 act = 3
@@ -1110,6 +1144,7 @@ levels = [22, 52, 80]
 quests = []
 uniques = []
 notes = ["Hell: the 'LK' campfire super chests are a classic rune farm."]
+farm = ["LK chest runs: two bonfire huts, each with 2 superchests plus racks (Hell drops runes up to Ber). Exit is the N or E corner, WP random. Single-player seeds make this a patterned run."]
 
 [area."Kurast Bazaar"]
 act = 3
@@ -1123,6 +1158,7 @@ levels = [22, 52, 81]
 quests = []
 uniques = []
 notes = ["Two Sewers entrances are always in the same spots."]
+farm = ["Ruined Temple (Lam Esen's Tome, Battlemaid Sarina) and Disused Fane both open here; both tiny Hell alvl 85 temples. Kurast Sewers trapdoor here too - the Heart is on Sewers 2."]
 
 [area."Ruined Temple"]
 act = 3
@@ -1136,6 +1172,7 @@ levels = [23, 53, 84]
 quests = ["Lam Esen's Tome"]
 uniques = []
 notes = []
+farm = ["Tiny Hell alvl 85 temple: clear it, grab Lam Esen's Tome (chest at the back), out. Battlemaid Sarina."]
 
 [area."Disused Fane"]
 act = 3
@@ -1149,6 +1186,7 @@ levels = [23, 53, 84]
 quests = []
 uniques = []
 notes = []
+farm = ["Tiny Hell alvl 85 temple, one room. Pair it with the Ruined Temple next door."]
 
 [area."Kurast Sewers Level 1"]
 ocr_name = "Sewers Level 1"
@@ -1177,6 +1215,7 @@ levels = [24, 53, 85]
 quests = ["Khalim's Will: Khalim's Heart"]
 uniques = []
 notes = []
+farm = ["Khalim's Heart chest; Hell alvl 85 and short. Return to Sewers 1 and take the straight exit up to Upper Kurast."]
 
 [area."Upper Kurast"]
 act = 3
@@ -1190,6 +1229,7 @@ levels = [23, 52, 81]
 quests = []
 uniques = []
 notes = []
+farm = ["Forgotten Temple and Forgotten Reliquary both open here - tiny Hell alvl 85 temples; chain them with the Bazaar and Causeway ones as a temple run."]
 
 [area."Forgotten Temple"]
 act = 3
@@ -1203,6 +1243,7 @@ levels = [24, 54, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Tiny Hell alvl 85 temple, one room."]
 
 [area."Forgotten Reliquary"]
 act = 3
@@ -1216,6 +1257,7 @@ levels = [23, 53, 84]
 quests = []
 uniques = []
 notes = []
+farm = ["Tiny Hell alvl 85 temple, one room."]
 
 [area."Kurast Causeway"]
 act = 3
@@ -1229,6 +1271,7 @@ levels = [24, 53, 81]
 quests = []
 uniques = []
 notes = []
+farm = ["Ruined Fane and Disused Reliquary both open here - tiny Hell alvl 85 temples."]
 
 [area."Ruined Fane"]
 act = 3
@@ -1242,6 +1285,7 @@ levels = [24, 54, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Tiny Hell alvl 85 temple, one room."]
 
 [area."Disused Reliquary"]
 act = 3
@@ -1255,6 +1299,7 @@ levels = [24, 54, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Tiny Hell alvl 85 temple, one room."]
 
 [area."Travincal"]
 act = 3
@@ -1268,6 +1313,7 @@ levels = [24, 54, 82]
 quests = ["Blackened Temple: Council + Orb", "Khalim's Will: Khalim's Flail"]
 uniques = ["Ismail Vilehand", "Geleb Flamefinger", "Toorc Icefist"]
 notes = []
+farm = ["Council: fixed map. From the WP go up the stairs to the central platform; the council stands around the Compelling Orb. Hell alvl 82, dense drops - the classic gold/rune run. Smash the Orb with Khalim's Will to open the Durance."]
 
 [area."Durance of Hate Level 1"]
 act = 3
@@ -1281,6 +1327,7 @@ levels = [25, 55, 83]
 quests = []
 uniques = []
 notes = []
+farm = ["Mephisto: exit is left. Take the WP on 2 next time."]
 
 [area."Durance of Hate Level 2"]
 act = 3
@@ -1294,6 +1341,7 @@ levels = [25, 55, 83]
 quests = []
 uniques = []
 notes = []
+farm = ["Mephisto: WP is left of the entrance, exit to 3 is straight. Run from this WP."]
 
 [area."Durance of Hate Level 3"]
 act = 3
@@ -1307,6 +1355,7 @@ levels = [25, 55, 83]
 quests = ["The Guardian: Mephisto"]
 uniques = ["Wyand Voidbringer", "Maffer Dragonhand", "Bremm Sparkfist", "Mephisto"]
 notes = []
+farm = ["Mephisto: fixed map - NW from the stairs to his platform past Bremm, Wyand and Maffer. Moat trick: stand across the blood moat and he cannot reach you. Red portal to Act 4 behind him."]
 
 # ---------------------------------------------------------------------------
 # Act 4
@@ -1337,6 +1386,7 @@ levels = [26, 56, 82]
 quests = []
 uniques = []
 notes = []
+farm = ["Izual roams the Plains of Despair next door: kill him for +2 skill points from Tyrael. Exit is any edge but the NW one."]
 
 [area."Plains of Despair"]
 act = 4
@@ -1350,6 +1400,7 @@ levels = [26, 56, 83]
 quests = ["The Fallen Angel: Izual"]
 uniques = ["Izual"]
 notes = []
+farm = ["Izual wanders somewhere in here - +2 skill points. Exit is on an edge other than the one you entered."]
 
 [area."City of the Damned"]
 act = 4
@@ -1363,6 +1414,7 @@ levels = [27, 57, 84]
 quests = []
 uniques = []
 notes = []
+farm = ["WP is near the exit down to the River. Diablo runs start from the River WP instead."]
 
 [area."River of Flame"]
 act = 4
@@ -1376,6 +1428,7 @@ levels = [27, 57, 85]
 quests = ["Hell's Forge: Hephasto, smash Soulstone"]
 uniques = ["Hephasto the Armorer"]
 notes = []
+farm = ["Diablo: from the WP the Chaos Sanctuary entrance is straight ahead; Hephasto and the Hellforge are off to the side. Hell alvl 85. The Hellforge quest drops a rune up to Um (NM) / Gul (Hell)."]
 
 [area."Chaos Sanctuary"]
 act = 4
@@ -1389,6 +1442,7 @@ levels = [28, 58, 85]
 quests = ["Terror's End: Diablo"]
 uniques = ["Grand Vizier of Chaos", "Lord De Seis", "Infector of Souls", "Diablo"]
 notes = ["Seals: Vizier (left, 2 seals), De Seis (top), Infector (right, 2 seals)."]
+farm = ["Diablo: fixed star map. Seals: Vizier bottom-left, De Seis top, Infector right - open all five (each pair spawns its boss) and Diablo appears at the centre pentagram. Hell alvl 85 throughout."]
 
 # ---------------------------------------------------------------------------
 # Act 5
@@ -1406,6 +1460,7 @@ levels = [0, 0, 0]
 quests = []
 uniques = []
 notes = []
+farm = ["Pindleskin: Anya's red portal (after Prison of Ice) lands in Nihlathak's Temple - Pindle and his pack stand at the top of the stairs. Eldritch/Shenk: Frigid Highlands WP. Baal: WSK 2 WP."]
 
 [area."Bloody Foothills"]
 act = 5
@@ -1419,6 +1474,7 @@ levels = [24, 58, 80]
 quests = ["Siege on Harrogath: Shenk"]
 uniques = ["Dac Farren", "Shenk the Overseer"]
 notes = ["Classic Shenk + Eldritch run with the Frigid Highlands waypoint."]
+farm = ["Shenk the Overseer stands at the far end by the Frigid Highlands passage; Dac Farren on the way. Faster: take the Frigid WP and walk back down."]
 
 [area."Frigid Highlands"]
 act = 5
@@ -1432,6 +1488,7 @@ levels = [25, 59, 81]
 quests = ["Rescue on Mount Arreat: 3 cages"]
 uniques = ["Eldritch the Rectifier", "Sharptooth Slayer", "Eyeback the Unleashed"]
 notes = []
+farm = ["Eldritch the Rectifier is a few steps north of the WP; Shenk is south, just inside Bloody Foothills - the Eldritch+Shenk run. Sharptooth Slayer and the Abaddon red portal (Hell alvl 85) are here too."]
 
 [area."Abaddon"]
 act = 5
@@ -1445,6 +1502,7 @@ levels = [39, 60, 81]
 quests = []
 uniques = []
 notes = []
+farm = ["Red-portal cave off Frigid Highlands; Hell alvl 85, one small level, no boss."]
 
 [area."Arreat Plateau"]
 act = 5
@@ -1458,6 +1516,7 @@ levels = [26, 60, 81]
 quests = []
 uniques = ["Thresh Socket"]
 notes = []
+farm = ["Thresh Socket at the far end; the Pit of Acheron red portal (Hell alvl 85) is in the plateau. Exit to Crystalline Passage is the centre of the far short edge."]
 
 [area."Pit of Acheron"]
 act = 5
@@ -1471,6 +1530,7 @@ levels = [39, 61, 82]
 quests = []
 uniques = []
 notes = []
+farm = ["Red-portal cave off Arreat Plateau; Hell alvl 85, one small level."]
 
 [area."Crystalline Passage"]
 act = 5
@@ -1484,6 +1544,7 @@ levels = [29, 61, 82]
 quests = []
 uniques = []
 notes = []
+farm = ["Glacial Trail is left, Frozen River (Anya, Frozenstein) straight, WP right. Anya's rescue unlocks Pindle's portal."]
 
 [area."Frozen River"]
 act = 5
@@ -1497,6 +1558,7 @@ levels = [29, 61, 83]
 quests = ["Prison of Ice: Anya"]
 uniques = ["Frozenstein"]
 notes = ["Anya rewards a personalised item and +10 all resists (after the Nihlathak quest)."]
+farm = ["Anya is at the end of the fixed layout; Frozenstein guards her. Rescuing her opens the red portal to Nihlathak's Temple (Pindleskin)."]
 
 [area."Glacial Trail"]
 act = 5
@@ -1510,6 +1572,7 @@ levels = [29, 61, 83]
 quests = []
 uniques = ["Bonesaw Breaker"]
 notes = []
+farm = ["Drifter Cavern (Hell alvl 85, small, no boss) opens off the trail; Bonesaw Breaker. Frozen Tundra exit is left, WP back."]
 
 [area."Drifter Cavern"]
 act = 5
@@ -1523,6 +1586,7 @@ levels = [29, 61, 84]
 quests = []
 uniques = []
 notes = []
+farm = ["Hell alvl 85 single level off Glacial Trail; quiet, quick clear."]
 
 [area."Frozen Tundra"]
 act = 5
@@ -1536,6 +1600,7 @@ levels = [27, 60, 81]
 quests = []
 uniques = []
 notes = []
+farm = ["Infernal Pit red portal (Hell alvl 85) sits in the tundra. Exit to the Ancients' Way is on the opposite edge."]
 
 [area."Infernal Pit"]
 act = 5
@@ -1549,6 +1614,7 @@ levels = [39, 62, 83]
 quests = []
 uniques = []
 notes = []
+farm = ["Red-portal cave off Frozen Tundra; Hell alvl 85, one small level."]
 
 [area."The Ancients' Way"]
 act = 5
@@ -1562,6 +1628,7 @@ levels = [29, 62, 82]
 quests = []
 uniques = []
 notes = []
+farm = ["Icy Cellar (Hell alvl 85, Snapchip Shatter, gold chest) opens off here. Exit to the Summit is left, WP right."]
 
 [area."Icy Cellar"]
 act = 5
@@ -1575,6 +1642,7 @@ levels = [29, 62, 83]
 quests = []
 uniques = ["Snapchip Shatter"]
 notes = []
+farm = ["Hell alvl 85 single level with a gold chest; Snapchip Shatter. Ancients' Way WP -> cellar is the run."]
 
 [area."Arreat Summit"]
 act = 5
@@ -1601,6 +1669,7 @@ levels = [39, 65, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Baal: exit is random; all three keep levels are Hell alvl 85 and worth clearing."]
 
 [area."The Worldstone Keep Level 2"]
 act = 5
@@ -1614,6 +1683,7 @@ levels = [40, 65, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Baal: WP here, exit to 3 is right. Start Baal runs from this WP."]
 
 [area."The Worldstone Keep Level 3"]
 act = 5
@@ -1627,6 +1697,7 @@ levels = [42, 66, 85]
 quests = []
 uniques = []
 notes = []
+farm = ["Baal: exit to the Throne is random; Hell alvl 85."]
 
 [area."Throne of Destruction"]
 act = 5
@@ -1640,6 +1711,7 @@ levels = [43, 66, 85]
 quests = ["Eve of Destruction: Baal's waves"]
 uniques = ["Colenzo the Annihilator", "Achmel the Cursed", "Bartuc the Bloody", "Ventar the Unholy", "Lister the Tormentor"]
 notes = ["Wave order: Colenzo, Achmel, Bartuc, Ventar, Lister — then Baal walks off."]
+farm = ["Baal: fixed map - the throne room is at the top. Five waves: Colenzo, Achmel, Bartuc, Ventar, Lister (the big drop), then Baal opens the portal to his Chamber. Hell alvl 85."]
 
 [area."The Worldstone Chamber"]
 act = 5
@@ -1653,6 +1725,7 @@ levels = [43, 66, 85]
 quests = ["Eve of Destruction: Baal"]
 uniques = ["Baal"]
 notes = []
+farm = ["Baal alone, fixed map. Kill, loot, TP out, save+exit."]
 
 [area."Nihlathak's Temple"]
 act = 5
@@ -1666,6 +1739,7 @@ levels = [32, 63, 83]
 quests = []
 uniques = ["Pindleskin"]
 notes = ["Reached by Anya's red portal in Harrogath."]
+farm = ["Pindleskin's pack stands right past Anya's portal at the top of the stairs (mlvl 86: everything but TC87 items). Down the stairs -> Anguish -> Pain -> Vaught for Nihlathak."]
 
 [area."Halls of Anguish"]
 act = 5
@@ -1679,6 +1753,7 @@ levels = [33, 63, 83]
 quests = []
 uniques = []
 notes = []
+farm = ["Nihlathak: exit random; Hell alvl 83. Keep moving, he is two levels down."]
 
 [area."Halls of Pain"]
 act = 5
@@ -1692,6 +1767,7 @@ levels = [34, 64, 84]
 quests = []
 uniques = []
 notes = []
+farm = ["Nihlathak: exit random; Hell alvl 84. Vaught is next."]
 
 [area."Halls of Vaught"]
 act = 5
@@ -1705,3 +1781,4 @@ levels = [36, 64, 84]
 quests = ["Betrayal of Harrogath: Nihlathak"]
 uniques = ["Nihlathak"]
 notes = []
+farm = ["Nihlathak: four arms from the centre, he is on the platform at the end of one (random) - reveal each arm's end on the map. Beware Corpse Explosion: kill him fast or clear corpses. Hell alvl 84."]

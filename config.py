@@ -45,6 +45,7 @@ DEFAULTS = {
         "font_size": 15,
         "width": 60,
         "hotkeys": True,
+        "follow_focus": True,
         "sections": {key: True for key in SECTIONS},
     },
 }
@@ -74,6 +75,7 @@ margin_y = {margin_y}        # logical pixels from the top/bottom edge
 font_size = {font_size}
 width = {width}              # minimum characters per line; long tips wrap
 hotkeys = {hotkeys}          # read /dev/input for Ctrl+F9..F12 while D2R runs
+follow_focus = {follow_focus}  # show the overlay only while the game window is focused
 
 [overlay.sections]
 {sections}
@@ -134,6 +136,7 @@ def dumps(config: dict) -> str:
         margin_x=int(ov["margin_x"]), margin_y=int(ov["margin_y"]),
         font_size=int(ov["font_size"]), width=int(ov["width"]),
         hotkeys=_toml_bool(bool(ov["hotkeys"])),
+        follow_focus=_toml_bool(bool(ov.get("follow_focus", True))),
         sections=sections,
     )
 

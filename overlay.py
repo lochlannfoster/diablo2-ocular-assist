@@ -93,7 +93,9 @@ class Reader(threading.Thread):
     Recognizer and the widgets are only ever touched from the GTK thread.
     """
 
-    def __init__(self, config, names, on_reading, on_error, on_frame=None):
+    FOCUS_POLL = 0.25   # seconds between game-focus checks (cheap X/Win32 call)
+
+    def __init__(self, config, names, on_reading, on_error, on_frame=None, on_focus=None):
         super().__init__(daemon=True)
         cap = config["capture"]
         # `interval` and `region` may be reassigned from the GTK thread while
@@ -105,11 +107,36 @@ class Reader(threading.Thread):
         self.on_reading = on_reading
         self.on_error = on_error
         self.on_frame = on_frame
+        self.on_focus = on_focus
+        self._focused = None
         self.stop_event = threading.Event()
+
+    def _poll_focus(self):
+        """Report focus changes; runs on this thread because the X connection
+        belongs to the backend and must not be shared with the GTK thread."""
+        if self.on_focus is None:
+            return
+        try:
+            focused = bool(self.backend.game_focused())
+        except Exception:  # noqa: BLE001 - never let this kill the loop
+            focused = False
+        if focused != self._focused:
+            self._focused = focused
+            GLib.idle_add(self.on_focus, focused)
+
+    def _wait(self, seconds):
+        deadline = time.monotonic() + seconds
+        while not self.stop_event.is_set():
+            self._poll_focus()
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return
+            self.stop_event.wait(min(self.FOCUS_POLL, remaining))
 
     def run(self):
         while not self.stop_event.is_set():
             started = time.monotonic()
+            self._poll_focus()
             try:
                 image = self.backend.grab(self.region)
                 if self.on_frame is not None:
@@ -122,7 +149,7 @@ class Reader(threading.Thread):
             except Exception as exc:  # noqa: BLE001 - keep the loop alive
                 GLib.idle_add(self.on_error, f"{type(exc).__name__}: {exc}")
             elapsed = time.monotonic() - started
-            self.stop_event.wait(max(0.1, self.interval - elapsed))
+            self._wait(max(0.1, self.interval - elapsed))
 
     def stop(self):
         self.stop_event.set()
@@ -563,13 +590,14 @@ class Session:
         self.last_reading = None
         self.last_frame = None
         self.hidden = False
+        self.game_focused = True   # optimistic until the reader reports
         self.on_update = None   # settings window hook: called after each reading
         self._closed = False
 
         self.overlay = Overlay(app, self)
         self.server = ControlServer(SOCKET_PATH, self.handle) if native.HAS_CONTROL_SOCKET else None
         self.reader = Reader(config, areas.screen_names(rules),
-                             self.on_reading, self.on_error, self.on_frame)
+                             self.on_reading, self.on_error, self.on_frame, self.on_focus)
         self.reader.start()
         self.bridge = native.hotkey_bridge(self.handle)
         if config["overlay"].get("hotkeys", True):
@@ -582,6 +610,11 @@ class Session:
 
     def on_frame(self, image):
         self.last_frame = image
+        return GLib.SOURCE_REMOVE
+
+    def on_focus(self, focused: bool):
+        self.game_focused = focused
+        self.apply_visibility()
         return GLib.SOURCE_REMOVE
 
     def on_reading(self, reading: ocr.Reading):
@@ -616,7 +649,7 @@ class Session:
         elif command == "flag":
             self.flag()
         elif command == "edit":
-            self.overlay.set_edit_mode(not self.overlay.editing)
+            self.set_edit_mode(not self.overlay.editing)
         elif command == "quit":
             self.shutdown()
             return
@@ -628,7 +661,23 @@ class Session:
 
     def set_hidden(self, hidden: bool):
         self.hidden = hidden
-        self.overlay.set_visible(not hidden)
+        self.apply_visibility()
+
+    def set_edit_mode(self, editing: bool):
+        self.overlay.set_edit_mode(editing)
+        self.apply_visibility()   # edit mode always shows it, focus or not
+
+    def set_follow_focus(self, enabled: bool):
+        self.config["overlay"]["follow_focus"] = enabled
+        self.apply_visibility()
+
+    def apply_visibility(self):
+        """Ctrl+F9 hides outright; otherwise follow the game's focus unless
+        the user is dragging the overlay around in edit mode."""
+        visible = not self.hidden
+        if visible and self.config["overlay"].get("follow_focus", True) and not self.overlay.editing:
+            visible = self.game_focused
+        self.overlay.set_visible(visible)
 
     def set_frozen(self, frozen: bool):
         self.recognizer.frozen = frozen

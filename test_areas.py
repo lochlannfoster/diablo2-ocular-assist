@@ -117,7 +117,7 @@ def test_farm_routes_load():
     rules = areas.load()
     assert any("Tower" in f for f in rules["Black Marsh"].farm)
     assert rules["Tower Cellar Level 3"].farm
-    assert rules["Rogue Encampment"].farm == ()
+    assert rules["Blood Moor"].farm == ()
 
 
 def test_drop_note_per_difficulty():

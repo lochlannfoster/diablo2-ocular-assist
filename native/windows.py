@@ -216,6 +216,10 @@ class WindowsCapture:
         _, _, w, h = self._client_rect()
         return w, h
 
+    def game_focused(self):
+        hwnd = user32.FindWindowW(None, self.title)
+        return bool(hwnd) and user32.GetForegroundWindow() == hwnd
+
     def grab(self, region=None):
         from PIL import ImageGrab
 

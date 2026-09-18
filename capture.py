@@ -113,6 +113,20 @@ class XwaylandCapture:
         geometry = self.find_window().get_geometry()
         return geometry.width, geometry.height
 
+    def game_focused(self) -> bool:
+        """Is the game the active window? KWin mirrors the focused toplevel
+        into Xwayland's root _NET_ACTIVE_WINDOW; while a native Wayland window
+        (browser, terminal) has focus it points at a nameless placeholder
+        instead, so comparing against the game's id is enough."""
+        try:
+            window = self.find_window()
+            root = self._connect().screen().root
+            atom = self._display.intern_atom("_NET_ACTIVE_WINDOW")
+            prop = root.get_full_property(atom, X.AnyPropertyType)
+        except (CaptureError, XError):
+            return False
+        return bool(prop and prop.value and prop.value[0] == window.id)
+
     def grab(self, region: Region | None = None) -> Image.Image:
         """Return an RGB image of `region` (or the whole window)."""
         window = self.find_window()

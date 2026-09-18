@@ -99,6 +99,7 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.show_switch = self._switch(toggles, "Show", self._on_show)
         self.freeze_switch = self._switch(toggles, "Freeze recognition", self._on_freeze)
         self.hotkeys_switch = self._switch(toggles, "Hotkeys (Ctrl+F9–F12)", self._on_hotkeys)
+        self.focus_switch = self._switch(toggles, "Only while the game is focused", self._on_follow_focus)
         self._row(grid, row, "", toggles); row += 1
 
         self.edit_check = Gtk.CheckButton(
@@ -199,6 +200,7 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.show_switch.set_active(not self.session.hidden)
         self.freeze_switch.set_active(self.session.recognizer.frozen)
         self.hotkeys_switch.set_active(bool(ov["hotkeys"]))
+        self.focus_switch.set_active(bool(ov.get("follow_focus", True)))
         for key, check in self.section_checks.items():
             check.set_active(bool(ov["sections"].get(key, True)))
         output = ov["output"]
@@ -247,9 +249,15 @@ class SettingsWindow(Gtk.ApplicationWindow):
             self._schedule_save()
         return False
 
+    def _on_follow_focus(self, switch, state):
+        if not self._loading:
+            self.session.set_follow_focus(state)
+            self._schedule_save()
+        return False
+
     def _on_edit_mode(self, check):
         editing = check.get_active()
-        self.session.overlay.set_edit_mode(editing)
+        self.session.set_edit_mode(editing)
         if not editing:
             # Unticking is the "done" action: persist whatever was dragged.
             if self._save_timer is not None:
