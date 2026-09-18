@@ -10,7 +10,7 @@ It reads the area name the game draws in the top-right corner, looks it up in a
 hand-written table, and shows two hints on top of the game:
 
 ```
-● Flayer Jungle - NIGHTMARE (arealvl 50)
+● Flayer Jungle - NIGHTMARE (alvl 50)
 
 WAYPOINT  ·  INSIDE
 Three camps are marked by pairs of poles. The waypoint is in the
@@ -24,7 +24,7 @@ follow it.
 
 QUEST  Blade of the Old Religion: Gidbinn
 
-EXP RANGES  (your clvl vs monster lvl 50)
+EXP RANGES  (your clvl vs mlvl 50)
 100%  45–55     43–81%  42–44 · 56–58     ≤24%  ≤41 · ≥59
 
 SUPERUNIQUE  Stormtree
@@ -32,8 +32,8 @@ SUPERUNIQUE  Stormtree
 
 - **Title** — area, difficulty (coloured green / amber / red) and the area
   level for that difficulty; towns show "town".
-- **EXP RANGES** — the experience rate you get here, by character level. D2 pays full
-  experience while your level is within 5 of the monster level (= area level
+- **EXP RANGES** — the experience rate you get here, by clvl. D2 pays full
+  experience while your level is within 5 of the mlvl (= alvl
   in Nightmare/Hell), then 81 / 62 / 43 / 24 % at 6 / 7 / 8 / 9 apart and 5 %
   from 10 on ([PureDiablo](https://www.purediablo.com/d2wiki/Experience)).
   So 100% = within ±5, 43–81% = 6–8 apart, ≤24% = 9+ apart. (From clvl 25, monsters *above*

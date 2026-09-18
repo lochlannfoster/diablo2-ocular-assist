@@ -43,7 +43,7 @@ work; GNOME does not implement it.
 ## What the overlay shows
 
 ```
-● Flayer Jungle - NIGHTMARE (arealvl 50)
+● Flayer Jungle - NIGHTMARE (alvl 50)
 
 WAYPOINT  ·  INSIDE
 Three camps are marked by pairs of poles. The waypoint is in the
@@ -55,7 +55,7 @@ Keep heading up: the Lower Kurast exit is on the last grid tile
 
 QUEST  Blade of the Old Religion: Gidbinn
 
-EXP RANGES  (your clvl vs monster lvl 50)
+EXP RANGES  (your clvl vs mlvl 50)
 100%  45–55     43–81%  42–44 · 56–58     ≤24%  ≤41 · ≥59
 
 SUPERUNIQUE  Stormtree

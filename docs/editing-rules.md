@@ -12,7 +12,7 @@ to_waypoint = { dir = "left", tip = "Turn left from the entrance to reach the wa
 to_next = { dir = "left", tip = "From the waypoint, turn left for the stairs down (they are straight ahead from the entrance)." }
 confidence = "high"
 source = "maxroll, cheatsheet"
-levels = [10, 41, 71]          # area level on Normal, Nightmare, Hell
+levels = [10, 41, 71]          # alvl on Normal, Nightmare, Hell
 quests = []                    # quest objectives located here
 uniques = []                   # superuniques that spawn here
 notes = []                     # anything else worth a line

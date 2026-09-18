@@ -76,7 +76,7 @@ def direction(hint) -> str:
 
 
 def band(rate: str, levels: str, colour: str) -> str:
-    """'100%  45–55': the XP rate, then the character levels that get it."""
+    """'100%  45–55': the XP rate, then the clvls that get it."""
     return f'<span foreground="{colour}" weight="bold">{rate}</span>  {levels}'
 
 
@@ -461,7 +461,7 @@ class Overlay:
         level = area.level(rec.difficulty)
         diff = f'<span foreground="{DIFFICULTY_COLOURS[rec.difficulty]}">' \
                f'{rec.difficulty.upper()}</span>'
-        detail = f"arealvl {level}" if level else ("town" if not area.levels[0] else "arealvl ?")
+        detail = f"alvl {level}" if level else ("town" if not area.levels[0] else "alvl ?")
         frozen = "  (frozen)" if rec.frozen else ""
         self.title_label.set_markup(
             f"{dot} {esc(area.name)} - {diff} ({detail}){esc(frozen)}")
@@ -500,7 +500,7 @@ class Overlay:
         if level:
             b = areas.exp_bands(level)
             self.exp_head_label.set_markup(
-                f"EXP RANGES  <span foreground=\"#8a9a94\">(your clvl vs monster lvl {level})</span>")
+                f"EXP RANGES  <span foreground=\"#8a9a94\">(your clvl vs mlvl {level})</span>")
             self.exp_label.set_markup(
                 f"{band('100%', rng(b['good']), GOOD)}     "
                 f"{band('43–81%', rng(b['avg_low']) + ' · ' + rng(b['avg_high']), AVG)}     "

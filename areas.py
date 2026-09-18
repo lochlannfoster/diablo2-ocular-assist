@@ -76,7 +76,7 @@ class Area:
     notes: tuple[str, ...] = ()
 
     def level(self, difficulty: str | None) -> int | None:
-        """Area level for a difficulty name, or None if unknown / town."""
+        """alvl for a difficulty name, or None if unknown / town."""
         index = DIFFICULTIES.get(difficulty or "")
         if index is None:
             return None
@@ -194,12 +194,12 @@ def drop_note(act: int, difficulty: str, alvl: int | None) -> str | None:
 
 
 def exp_bands(alvl: int) -> dict[str, tuple[int, int]]:
-    """Recommended character-level bands for an area level.
+    """Recommended clvl bands for an alvl.
 
-    Diablo II pays 100% experience while clvl is within 5 of the monster
-    level (alvl in Nightmare/Hell), then 81/62/43/24% at a difference of
+    Diablo II pays 100% experience while clvl is within 5 of the mlvl
+    (= alvl in Nightmare/Hell), then 81/62/43/24% at a difference of
     6/7/8/9 and 5% from 10 on. From clvl 25 monsters *above* you scale by
-    clvl/mlvl instead, which is milder -- but that far below the area level
+    clvl/mlvl instead, which is milder -- but that far below the alvl
     you have other problems, so the bands are kept symmetric.
     """
     return {
