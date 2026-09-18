@@ -6,11 +6,11 @@ It reads the area name the game draws in the top-right corner, looks it up in a
 hand-written table, and shows two hints on top of the game:
 
 ```
-● Tower Cellar Level 5   alvl 42 (NM)
-WP    -  none here
-NEXT  end of the line  (from entry)
-      ▣  static; Countess in the end room
-Q     Forgotten Tower: the Countess
+● Flayer Jungle   alvl 50 (NM)
+WP    INSIDE      camp with Swampy Pit entrance
+NEXT  Lower Kurast  (from WP)
+      NORTH       tile 6 (Stormtree); follow the river
+Q     Blade of the Old Religion: Gidbinn
 ```
 
 - **alvl** — the area level for the difficulty read off the screen
@@ -21,7 +21,7 @@ Q     Forgotten Tower: the Countess
   entrance if the area has no waypoint).
 - **Left / straight / right are relative to how your character faces on
   arriving** — the speedrunners' convention, never compass directions.
-- `??  no accepted rule` (orange) means the sources say the map is random —
+- `NO RULE  no accepted rule` (orange) means the sources say the map is random —
   don't look for a pattern.
 - The dot colour is source agreement: green = both sources, yellow = one,
   red = inferred. Dim title = the corner isn't readable right now (menu,
@@ -81,7 +81,7 @@ anchor = "top-right" # top-left | top-right | bottom-left | bottom-right
 margin_x = 12
 margin_y = 122        # just under the clock/area/difficulty block
 font_size = 15
-width = 48           # fixed characters per line
+width = 60           # minimum characters per line (never clips)
 ```
 
 If the area name isn't being read, run `tools/calibrate.py`: it saves
@@ -123,7 +123,7 @@ levels = [2, 36, 68]          # Normal, Nightmare, Hell
 quests = []                   # e.g. ["Search for Cain: Tree of Inifuss"]
 ```
 
-`dir` vocabulary (glyphs in `areas.py`): `left straight right back` (character-
+`dir` vocabulary (labels in `areas.py`): `left straight right back` (character-
 relative), `n ne e se s sw w nw` (compass), `corner edge opposite near inside
 path` (outdoor shape rules), `fixed`, `random` (no accepted rule), `none`. Tips must fit the fixed-width box — `test_areas.py`
 enforces the limit. The file is validated on load; a bad entry is one clear

@@ -12,29 +12,30 @@ from pathlib import Path
 
 DATA_PATH = Path(__file__).parent / "data" / "areas.toml"
 
-# dir value -> glyph shown in the overlay. See the header of data/areas.toml
+# dir value -> label shown in the overlay. See the header of data/areas.toml
 # for what each value means.
-GLYPHS = {
+LABELS = {
     # character-relative, from the entrance (or the waypoint)
-    "left": "↰",
-    "straight": "⇧",
-    "right": "↱",
-    "back": "⇩",
+    "left": "LEFT",
+    "straight": "STRAIGHT",
+    "right": "RIGHT",
+    "back": "BACK",
     # compass on the automap
-    "n": "↑", "ne": "↗", "e": "→", "se": "↘",
-    "s": "↓", "sw": "↙", "w": "←", "nw": "↖",
+    "n": "NORTH", "ne": "NORTH EAST", "e": "EAST", "se": "SOUTH EAST",
+    "s": "SOUTH", "sw": "SOUTH WEST", "w": "WEST", "nw": "NORTH WEST",
     # outdoor shape rules
-    "corner": "◇",
-    "edge": "▭",
-    "opposite": "↔",
-    "near": "◎",
-    "inside": "◌",
-    "path": "⤳",
+    "corner": "CORNER",
+    "edge": "EDGE",
+    "opposite": "OPPOSITE",
+    "near": "NEAR",
+    "inside": "INSIDE",
+    "path": "PATH",
     # layout classes
-    "fixed": "▣",
-    "random": "??",
+    "fixed": "FIXED",
+    "random": "NO RULE",
     "none": "-",
 }
+GLYPHS = LABELS  # backwards-compatible name
 
 CONFIDENCE = ("high", "medium", "low")
 DIFFICULTIES = {"normal": 0, "nightmare": 1, "hell": 2}
@@ -50,8 +51,10 @@ class Hint:
     tip: str
 
     @property
-    def glyph(self) -> str:
-        return GLYPHS[self.dir]
+    def label(self) -> str:
+        return LABELS[self.dir]
+
+    glyph = label
 
     @property
     def no_rule(self) -> bool:

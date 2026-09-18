@@ -27,10 +27,11 @@ def test_mainline_chain_reaches_each_act_boss():
 
 
 def test_tips_fit_fixed_width():
-    # overlay lines are "      XX tip" in a 48-char box.
+    # overlay lines are "      LABEL       tip" (6 + 10 + 2) in a 60-char box.
     for area in areas.load().values():
         for hint in (area.to_waypoint, area.to_next):
-            assert len(hint.tip) <= 39, (area.name, hint.tip)
+            assert len(hint.label) <= 10, hint.label
+            assert len(hint.tip) <= 42, (area.name, hint.tip)
         assert len(area.next) + len("  (from entry)") <= 42, area.next
 
 
@@ -54,8 +55,8 @@ def test_bad_dir_is_rejected():
 
 def test_every_dir_has_a_glyph():
     for area in areas.load().values():
-        assert area.to_waypoint.glyph
-        assert area.to_next.glyph
+        assert area.to_waypoint.label
+        assert area.to_next.label
 
 
 def test_every_entry_cites_a_source():

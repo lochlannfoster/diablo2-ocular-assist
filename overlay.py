@@ -145,9 +145,11 @@ class Overlay:
     def _label(self, *classes):
         # Fixed width, never ellipsised: the box must not resize or truncate
         # as the area changes, so every tip in areas.toml is written to fit.
+        # width_chars is a *minimum*: GTK estimates it from the font's
+        # approximate character width, which undershoots Hack's real advance
+        # and clipped the ends of lines when it was also the maximum.
         label = Gtk.Label(xalign=0)
         label.set_width_chars(self.width)
-        label.set_max_width_chars(self.width)
         label.set_wrap(False)
         label.set_ellipsize(Pango.EllipsizeMode.NONE)
         for cls in classes:
@@ -270,15 +272,15 @@ class Overlay:
 
         wp = area.to_waypoint
         if area.has_waypoint:
-            self.wp_label.set_text(f"WP    {wp.glyph:<2} {wp.tip}")
+            self.wp_label.set_text(f"WP    {wp.label:<10}  {wp.tip}")
         else:
-            self.wp_label.set_text("WP    -  none here")
+            self.wp_label.set_text(f"WP    {'-':<10}  none here")
         (self.wp_label.add_css_class if wp.no_rule else self.wp_label.remove_css_class)("norule")
 
         nx = area.to_next
         origin = "from WP" if area.has_waypoint else "from entry"
         self.next_label.set_text(f"NEXT  {area.next or 'end of the line'}  ({origin})")
-        self.next_tip_label.set_text(f"      {nx.glyph:<2} {nx.tip}")
+        self.next_tip_label.set_text(f"      {nx.label:<10}  {nx.tip}")
         (self.next_tip_label.add_css_class if nx.no_rule
          else self.next_tip_label.remove_css_class)("norule")
 

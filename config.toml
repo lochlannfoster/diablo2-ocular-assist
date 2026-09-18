@@ -22,4 +22,4 @@ anchor = "top-right"          # top-left | top-right | bottom-left | bottom-righ
 margin_x = 12
 margin_y = 122
 font_size = 15
-width = 48                    # fixed characters per line; tips in areas.toml are written to fit
+width = 60                    # minimum characters per line; tips in areas.toml are written to fit
