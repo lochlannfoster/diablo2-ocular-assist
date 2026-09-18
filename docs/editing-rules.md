@@ -50,3 +50,18 @@ every entry cites a source).
 Press `Ctrl+F12` (or the *Flag current area as wrong* button). The area name is
 appended to `debug/flagged.log` with a timestamp, so wrong entries can be fixed
 in a batch after the session instead of interrupting it.
+
+## Superunique facts — `data/superuniques.toml`
+
+One table per boss, keyed by the exact name used in `uniques`:
+
+```toml
+[unique."Pindleskin"]
+mlvl = 86                 # Hell
+tc = 87                   # Hell treasure class; 87 = can drop everything
+immune = ["poison"]       # Hell
+base = "Reanimated Horde"
+note = ""                 # optional, shown after the facts
+```
+
+`test_areas.py` checks that every name in an area's `uniques` has an entry.

@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 DATA_PATH = Path(__file__).parent / "data" / "areas.toml"
+UNIQUES_PATH = Path(__file__).parent / "data" / "superuniques.toml"
 
 # dir value -> label shown in the overlay. See the header of data/areas.toml
 # for what each value means.
@@ -235,6 +236,50 @@ def exp_bands(alvl: int) -> dict[str, tuple[int, int]]:
         "bad_low": (1, max(1, alvl - 9)),
         "bad_high": (min(99, alvl + 9), 99),
     }
+
+
+@dataclass(frozen=True)
+class Unique:
+    name: str
+    mlvl: int                       # Hell
+    tc: int | None = None           # Hell treasure class; 87 = everything
+    immune: tuple[str, ...] = ()    # Hell
+    base: str = ""
+    note: str = ""
+
+    def facts(self) -> str:
+        """'mlvl 86 · TC 87 · immune poison' -- what the SUPERUNIQUE line adds."""
+        bits = [f"mlvl {self.mlvl}"]
+        if self.tc:
+            bits.append(f"TC {self.tc}")
+        bits.append("immune " + "/".join(self.immune) if self.immune else "no immunities")
+        if self.note:
+            bits.append(self.note)
+        return " · ".join(bits)
+
+
+def load_uniques(path: Path = UNIQUES_PATH) -> dict[str, Unique]:
+    """data/superuniques.toml -> name -> Unique. Missing file = no facts."""
+    try:
+        with open(path, "rb") as handle:
+            data = tomllib.load(handle)
+    except FileNotFoundError:
+        return {}
+    except tomllib.TOMLDecodeError as exc:
+        raise AreaError(f"{path.name}: {exc}")
+    out = {}
+    for name, raw in data.get("unique", {}).items():
+        try:
+            immune = tuple(str(i) for i in raw.get("immune", ()))
+            if any(i not in IMMUNITIES for i in immune):
+                raise ValueError(f"immune must be a list of {', '.join(IMMUNITIES)}")
+            out[name] = Unique(name=name, mlvl=int(raw["mlvl"]),
+                               tc=int(raw["tc"]) if "tc" in raw else None,
+                               immune=immune, base=str(raw.get("base", "")),
+                               note=str(raw.get("note", "")))
+        except (KeyError, TypeError, ValueError) as exc:
+            raise AreaError(f"{path.name}: {name}: {exc}")
+    return out
 
 
 def screen_names(areas: dict[str, Area]) -> list[str]:

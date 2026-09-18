@@ -146,3 +146,12 @@ def test_immunities_load():
     for area in rules.values():
         if area.immune is not None:
             assert all(i in areas.IMMUNITIES for i in area.immune), area.name
+
+
+def test_superunique_facts_load_and_cover_area_uniques():
+    facts = areas.load_uniques()
+    assert facts["Pindleskin"].mlvl == 86 and facts["Pindleskin"].immune == ("poison",)
+    assert "TC 87" in facts["Pindleskin"].facts()
+    assert facts["Nihlathak"].facts().endswith("no immunities")
+    listed = {u for a in areas.load().values() for u in a.uniques}
+    assert not listed - set(facts), listed - set(facts)     # every listed unique has facts

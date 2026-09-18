@@ -49,6 +49,9 @@ SUPERUNIQUE  Stormtree
   as a union over its spawn table — a given game rolls about three monster
   types, so you may not meet them all. `none` in green marks the prized zones
   (Mausoleum has only lightning; Pit has no physical/magic immunes).
+- **SUPERUNIQUE** — the bosses that spawn here; in full mode each carries its
+  Hell quick-facts from `data/superuniques.toml` (mlvl, treasure class,
+  immunities).
 - **TERROR ZONE** — the purple terror-zone list under the difficulty line is
   read too (every ~10 s, or when the area changes). If the area you are in is
   on it, the title gets a purple badge and CLVL / DROPS switch to the terror
@@ -289,6 +292,7 @@ python -m venv --system-site-packages .venv && .venv/bin/pip install pytest
 
 ```
 overlay.py        Session (owns everything), overlay window, reader thread, socket, CLI
+data/superuniques.toml   Hell mlvl / TC / immunities per superunique and act boss
 native/           OS layer: linux.py (layer-shell, Xlib, evdev) / windows.py (Win32 via ctypes)
 overlay.spec      PyInstaller spec for the Windows bundle
 .github/workflows/build.yml   tests on Linux + Windows, builds and uploads the zip

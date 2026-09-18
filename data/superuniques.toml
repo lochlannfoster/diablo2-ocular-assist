@@ -1,0 +1,368 @@
+# Superunique and boss quick-facts, keyed by the name used in areas.toml's
+# `uniques`. Hell stats from https://diablo2.io/monsters/ (D2R 2.4 data).
+#
+#   mlvl     monster level in Hell
+#   tc       treasure class in Hell (87 = can drop every item); omitted = n/a
+#   immune   immunities in Hell (empty = none)
+#   base     monster type it is built on
+#   note     anything else worth a few words
+
+[unique."Achmel the Cursed"]
+mlvl = 88
+tc = 87
+immune = ["magic"]
+base = "Greater Mummy"
+
+[unique."Ancient Kaa the Soulless"]
+mlvl = 83
+tc = 78
+immune = ["cold", "magic"]
+base = "Greater Mummy"
+
+[unique."Andariel"]
+mlvl = 75
+tc = 69
+immune = []
+
+[unique."Baal"]
+mlvl = 99
+tc = 87
+immune = []
+
+[unique."Bartuc the Bloody"]
+mlvl = 88
+tc = 87
+immune = []
+base = "Council Member"
+
+[unique."Battlemaid Sarina"]
+mlvl = 87
+tc = 78
+immune = ["cold"]
+base = "Corrupt Rogue"
+
+[unique."Beetleburst"]
+mlvl = 79
+tc = 75
+immune = ["lightning"]
+base = "Scarab Demon"
+
+[unique."Bishibosh"]
+mlvl = 71
+immune = ["fire"]
+base = "Fallen Shaman"
+
+[unique."Blood Raven"]
+mlvl = 88
+tc = 66
+immune = []
+base = "Corrupt Rogue Archer"
+
+[unique."Bloodwitch the Wild"]
+mlvl = 85
+tc = 78
+immune = ["cold"]
+base = "Sabre Cat"
+
+[unique."Bone Ash"]
+mlvl = 75
+immune = ["cold"]
+
+[unique."Bonebreaker"]
+mlvl = 86
+tc = 78
+immune = ["lightning"]
+base = "Skeleton"
+
+[unique."Bonesaw Breaker"]
+mlvl = 86
+tc = 84
+immune = ["cold"]
+base = "Reanimated Horde"
+
+[unique."Bremm Sparkfist"]
+mlvl = 86
+tc = 78
+immune = ["lightning"]
+base = "Council Member"
+
+[unique."Coldcrow"]
+mlvl = 80
+tc = 75
+immune = []
+
+[unique."Coldworm the Burrower"]
+mlvl = 88
+tc = 78
+immune = ["cold", "poison"]
+base = "Sand Maggot"
+
+[unique."Colenzo the Annihilator"]
+mlvl = 88
+tc = 87
+immune = ["fire"]
+base = "Fallen Shaman"
+
+[unique."Corpsefire"]
+mlvl = 82
+immune = ["cold"]
+base = "Zombie"
+
+[unique."Creeping Feature"]
+mlvl = 82
+tc = 78
+immune = ["cold", "poison"]
+
+[unique."Dac Farren"]
+mlvl = 83
+tc = 87
+immune = ["fire", "cold"]
+base = "Demon Imp"
+
+[unique."Dark Elder"]
+mlvl = 80
+tc = 75
+immune = ["magic"]
+base = "Zombie"
+
+[unique."Diablo"]
+mlvl = 94
+tc = 84
+immune = []
+
+[unique."Duriel"]
+mlvl = 88
+tc = 72
+immune = []
+
+[unique."Eldritch the Rectifier"]
+mlvl = 84
+tc = 84
+immune = ["cold"]
+base = "Baal's Minion"
+
+[unique."Eyeback the Unleashed"]
+mlvl = 84
+tc = 84
+immune = ["lightning"]
+base = "Death Mauler"
+
+[unique."Fangskin"]
+mlvl = 86
+tc = 78
+immune = ["cold"]
+base = "Claw Viper"
+
+[unique."Fire Eye"]
+mlvl = 81
+tc = 78
+immune = ["fire"]
+base = "Sand Raider"
+
+[unique."Frozenstein"]
+mlvl = 86
+tc = 87
+immune = ["cold"]
+base = "Abominable"
+
+[unique."Geleb Flamefinger"]
+mlvl = 85
+tc = 78
+immune = ["fire", "lightning"]
+base = "Council Member"
+
+[unique."Grand Vizier of Chaos"]
+mlvl = 88
+tc = 78
+immune = ["lightning"]
+base = "Finger Mage"
+
+[unique."Griswold"]
+mlvl = 84
+tc = 66
+immune = ["poison"]
+
+[unique."Hephasto the Armorer"]
+mlvl = 88
+tc = 84
+immune = []
+base = "Conviction"
+
+[unique."Icehawk Riftwing"]
+mlvl = 87
+tc = 78
+immune = ["cold"]
+base = "Bat Demon"
+
+[unique."Infector of Souls"]
+mlvl = 88
+tc = 78
+immune = ["fire"]
+base = "Megademon"
+
+[unique."Ismail Vilehand"]
+mlvl = 85
+tc = 78
+immune = ["fire"]
+base = "Council Member"
+
+[unique."Izual"]
+mlvl = 86
+tc = 78
+immune = []
+
+[unique."Korlic"]
+mlvl = 90
+immune = ["cold"]
+base = "Leap Attack"
+
+[unique."Lister the Tormentor"]
+mlvl = 88
+tc = 87
+immune = ["fire"]
+base = "Minion of Destruction"
+
+[unique."Lord De Seis"]
+mlvl = 88
+tc = 78
+immune = ["cold"]
+base = "Oblivion Knight"
+
+[unique."Madawc"]
+mlvl = 90
+immune = ["lightning"]
+base = "Shout"
+
+[unique."Maffer Dragonhand"]
+mlvl = 86
+tc = 78
+immune = ["lightning"]
+base = "Council Member"
+
+[unique."Mephisto"]
+mlvl = 87
+tc = 78
+immune = []
+
+[unique."Nihlathak"]
+mlvl = 95
+tc = 87
+immune = []
+
+[unique."Pindleskin"]
+mlvl = 86
+tc = 87
+immune = ["poison"]
+base = "Reanimated Horde"
+
+[unique."Pitspawn Fouldog"]
+mlvl = 74
+tc = 72
+immune = ["lightning"]
+base = "Tainted"
+
+[unique."Radament"]
+mlvl = 86
+tc = 75
+immune = []
+base = "Greater Mummy"
+
+[unique."Rakanishu"]
+mlvl = 71
+tc = 69
+immune = ["fire"]
+base = "Fallen"
+
+[unique."Sharptooth Slayer"]
+mlvl = 84
+tc = 87
+immune = ["cold"]
+base = "Overseer"
+
+[unique."Shenk the Overseer"]
+mlvl = 83
+tc = 84
+immune = ["cold"]
+base = "Overseer"
+
+[unique."Snapchip Shatter"]
+mlvl = 86
+tc = 87
+immune = ["cold"]
+base = "Frozen Horror"
+
+[unique."Sszark the Burning"]
+mlvl = 82
+tc = 78
+immune = ["fire"]
+base = "Giant Spider"
+
+[unique."Stormtree"]
+mlvl = 83
+tc = 78
+immune = ["cold"]
+base = "Thorned Hulk"
+
+[unique."Talic"]
+mlvl = 90
+immune = ["fire"]
+base = "Whirlwind"
+
+[unique."The Countess"]
+mlvl = 82
+tc = 66
+immune = ["fire", "cold"]
+base = "Corrupt Rogue"
+
+[unique."The Cow King"]
+mlvl = 86
+tc = 66
+immune = ["lightning"]
+base = "Hell Bovine"
+
+[unique."The Smith"]
+mlvl = 73
+tc = 66
+immune = []
+
+[unique."The Summoner"]
+mlvl = 80
+tc = 72
+immune = []
+base = "The Summoner"
+
+[unique."Thresh Socket"]
+mlvl = 84
+tc = 87
+immune = ["cold"]
+base = "Siege Beast"
+
+[unique."Toorc Icefist"]
+mlvl = 85
+tc = 78
+immune = ["fire", "cold"]
+base = "Council Member"
+
+[unique."Treehead Woodfist"]
+mlvl = 71
+tc = 69
+immune = ["cold"]
+base = "Wendigo"
+
+[unique."Ventar the Unholy"]
+mlvl = 88
+tc = 87
+immune = ["poison"]
+base = "Megademon"
+
+[unique."Witch Doctor Endugu"]
+mlvl = 86
+tc = 78
+immune = ["fire"]
+base = "Fetish Shaman"
+
+[unique."Wyand Voidbringer"]
+mlvl = 86
+tc = 78
+immune = ["lightning"]
+base = "Council Member"

@@ -13,6 +13,7 @@ MINGW = Path(os.environ.get("MINGW_PREFIX", "C:/msys64/mingw64"))
 datas = [
     ("overlay.css", "."),
     ("data/areas.toml", "data"),
+    ("data/superuniques.toml", "data"),
     (str(MINGW / "share/tessdata/eng.traineddata"), "tessdata"),
 ]
 # Listing tesseract.exe as a binary makes PyInstaller pull in the DLLs it

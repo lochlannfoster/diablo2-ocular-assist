@@ -601,11 +601,23 @@ class Overlay:
 
         self._render_immune(area, rec)
 
+        self._render_uniques(area, rec, compact=True)
+
+    def _render_uniques(self, area, rec, compact=False):
+        """Names in bold; in full mode each gets its Hell quick-facts
+        (mlvl / TC / immunities) from data/superuniques.toml when known."""
         self.uniques_label.set_visible(bool(area.uniques))
-        if area.uniques:
-            names = "  ·  ".join(esc(n) for n in area.uniques)
-            self.uniques_label.set_markup(
-                f"{head('SUPERUNIQUE', 'uniques')}  <span weight=\"bold\">{names}</span>")
+        if not area.uniques:
+            return
+        facts = getattr(self.session, "uniques", {})
+        parts = []
+        for name in area.uniques:
+            text = f"<span weight=\"bold\">{esc(name)}</span>"
+            if not compact and name in facts:
+                text += f" {dim(f'({facts[name].facts()})')}"
+            parts.append(text)
+        sep = "  ·  " if compact else "\n"
+        self.uniques_label.set_markup(f"{head('SUPERUNIQUE', 'uniques')}  " + sep.join(parts))
 
     def _render_full(self, area, rec, level, terrorised=False):
         wp = area.to_waypoint
@@ -663,11 +675,7 @@ class Overlay:
         if notes:
             self.notes_label.set_markup(f"{head('NOTE', 'notes')}  " + esc("  ·  ".join(notes)))
 
-        self.uniques_label.set_visible(bool(area.uniques))
-        if area.uniques:
-            names = "  ·  ".join(esc(n) for n in area.uniques)
-            self.uniques_label.set_markup(
-                f"{head('SUPERUNIQUE', 'uniques')}  <span weight=\"bold\">{names}</span>")
+        self._render_uniques(area, rec)
 
 class Session:
     """Everything that runs: config, rules, recogniser, overlay window, OCR
@@ -679,6 +687,7 @@ class Session:
         self.app = app
         self.config = config
         self.rules = rules
+        self.uniques = areas.load_uniques()
         self.recognizer = Recognizer()
         self.error = None
         self.last_reading = None
