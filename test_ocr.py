@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import areas
 import ocr
 
@@ -114,9 +116,12 @@ def test_purple_mask_keeps_purple_drops_gold():
     assert gold.getpixel((8, 14)) == 0 and gold.getpixel((8, 4)) > 150
 
 
+FIXTURE_CROP = Path(__file__).parent / "tests" / "fixtures" / "crop.png"   # real D2R frame
+
+
 def test_masks_are_disjoint_on_saved_crop():
     from PIL import Image, ImageChops
-    img = Image.open("debug/crop.png")
+    img = Image.open(FIXTURE_CROP)
     both = ImageChops.multiply(ocr.gold_only(img).point(lambda v: 255 if v else 0),
                                ocr.purple_only(img).point(lambda v: 255 if v else 0))
     assert both.getbbox() is None
@@ -131,3 +136,16 @@ def test_read_terror_zones_matches_lines():
 
 def test_reading_tz_defaults_to_none():
     assert ocr.Reading("", None, 0.0).terror_zones is None
+
+
+def test_real_crop_reads_area_and_terror_zones():
+    import shutil
+
+    import pytest
+    from PIL import Image
+    if shutil.which("tesseract") is None:
+        pytest.skip("tesseract not installed")
+    img = Image.open(FIXTURE_CROP)
+    reading = ocr.with_terror_zones(img, ocr.read_area(img, NAMES), NAMES)
+    assert reading.area == "Rogue Encampment"
+    assert reading.terror_zones == ("Outer Steppes", "Plains of Despair")
