@@ -20,15 +20,17 @@ anchor = "top-left"            # top-left | top-right | bottom-left | bottom-rig
 margin_x = 16        # logical (scaled) pixels from the side edge
 margin_y = 45        # logical pixels from the top/bottom edge
 font_size = 24
-font = "Hack"        # monospace family
-opacity = 0.82       # background scrim alpha, 0.2-1.0
-padding = 12         # px inside the box
+font = "Hack"                # monospace family; falls back to any monospace
+opacity = 0.82          # background scrim alpha, 0.2-1.0
+padding = 12          # px inside the box
 width = 30              # minimum characters per line; long tips wrap
 hotkeys = true          # read /dev/input for Ctrl+F9..F12 while D2R runs
 follow_focus = true  # show the overlay only while the game window is focused
 hide_unread = true   # hide it while the area name cannot be read (map off, menus)
+compact = false          # one terse line per section (Ctrl+Shift+F9)
+profile = "custom"          # all | custom | a name from [overlay.profiles] (Ctrl+Shift+F10)
 
-[overlay.sections]
+[overlay.sections]           # the "custom" profile
 waypoint = true
 next = true
 farm = true
@@ -37,3 +39,9 @@ exp = true
 drops = true
 notes = true
 uniques = true
+
+# Named section sets, cycled with Ctrl+Shift+F10. "all" and "custom" (the
+# block above) always exist; add, edit or delete entries freely.
+[overlay.profiles]
+"farming" = ["farm", "drops", "uniques", "exp"]
+"speedrun" = ["waypoint", "next", "quests"]

@@ -20,7 +20,9 @@
 7. Closing the settings window quits everything.
 
 Hotkeys while the game is running: `Ctrl+F9` hide/show · `Ctrl+F10` freeze ·
-`Ctrl+F11` quit · `Ctrl+F12` flag the current area's rule as wrong.
+`Ctrl+F11` quit · `Ctrl+F12` flag the current area's rule as wrong ·
+`Ctrl+Shift+F9` compact mode · `Ctrl+Shift+F10` next section preset ·
+`Ctrl+Shift+F11` edit mode.
 
 Settings are saved next to `overlay.exe` in `config.toml`. Everything the
 program prints (area reads, capture errors, crashes) goes to `overlay.log` in

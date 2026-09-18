@@ -273,7 +273,18 @@ def capture_backend(cap: dict):
 
 # -- hotkeys ---------------------------------------------------------------
 
-CHORDS = {0: "hide", 1: "freeze", 2: "quit", 3: "flag"}   # Ctrl+F9..F12
+MOD_SHIFT = 0x0004
+# (modifiers, virtual key, command); the RegisterHotKey id is the index + 1.
+# Same table as hotkeys.CHORDS on Linux.
+HOTKEYS = (
+    (MOD_CONTROL, VK_F9, "hide"),
+    (MOD_CONTROL, VK_F9 + 1, "freeze"),
+    (MOD_CONTROL, VK_F9 + 2, "quit"),
+    (MOD_CONTROL, VK_F9 + 3, "flag"),
+    (MOD_CONTROL | MOD_SHIFT, VK_F9, "compact"),
+    (MOD_CONTROL | MOD_SHIFT, VK_F9 + 1, "profile"),
+    (MOD_CONTROL | MOD_SHIFT, VK_F9 + 2, "edit"),
+)
 
 
 class WinHotkeys(threading.Thread):
@@ -290,17 +301,20 @@ class WinHotkeys(threading.Thread):
         from gi.repository import GLib
 
         self.thread_id = kernel32.GetCurrentThreadId()
-        for index in CHORDS:
-            if not user32.RegisterHotKey(None, index + 1, MOD_CONTROL | MOD_NOREPEAT, VK_F9 + index):
-                print(f"hotkeys: could not register Ctrl+F{9 + index}", file=sys.stderr)
+        for index, (mods, vk, command) in enumerate(HOTKEYS):
+            if not user32.RegisterHotKey(None, index + 1, mods | MOD_NOREPEAT, vk):
+                shift = "Shift+" if mods & MOD_SHIFT else ""
+                print(f"hotkeys: could not register Ctrl+{shift}F{9 + vk - VK_F9} ({command})",
+                      file=sys.stderr)
         self.started_ok.set()
         msg = wintypes.MSG()
         while user32.GetMessageW(ctypes.byref(msg), None, 0, 0) > 0:
             if msg.message == WM_HOTKEY:
-                command = CHORDS.get(int(msg.wParam) - 1)
-                if command:
+                index = int(msg.wParam) - 1
+                if 0 <= index < len(HOTKEYS):
+                    command = HOTKEYS[index][2]
                     GLib.idle_add(lambda c=command: (self.on_command(c), False)[1])
-        for index in CHORDS:
+        for index in range(len(HOTKEYS)):
             user32.UnregisterHotKey(None, index + 1)
 
     def start(self):
@@ -308,7 +322,8 @@ class WinHotkeys(threading.Thread):
             return True
         super().start()
         self.started_ok.wait(2)
-        print("hotkeys: Ctrl+F9 hide, F10 freeze, F11 quit, F12 flag", flush=True)
+        print("hotkeys: Ctrl+F9 hide, F10 freeze, F11 quit, F12 flag; "
+              "Ctrl+Shift+F9 compact, F10 profile, F11 edit", flush=True)
         return True
 
     def stop(self):

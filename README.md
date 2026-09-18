@@ -101,7 +101,7 @@ latest run's artifacts (or from a release for `v*` tags), unzip, run
 
 Platform differences live in `native/windows.py` (Win32 through `ctypes`):
 topmost/click-through window styles, `PIL.ImageGrab` of the game window, and
-`RegisterHotKey` for Ctrl+F9–F12. Same settings window, same data, same rules.
+`RegisterHotKey` for the same chords. Same settings window, same data, same rules.
 
 - **D2R must be in Windowed or Windowed (Fullscreen) mode.** Nothing can draw
   over, or capture, an exclusive-fullscreen game on Windows.
@@ -156,8 +156,10 @@ width = 60           # minimum characters per line (never clips)
 hotkeys = true
 follow_focus = true  # show the overlay only while the game window is focused
 hide_unread = true   # hide it while the area name cannot be read (map off, menus)
+compact = false      # one terse line per section (Ctrl+Shift+F9)
+profile = "all"      # all | custom | a name from [overlay.profiles] (Ctrl+Shift+F10)
 
-[overlay.sections]   # which blocks the overlay shows
+[overlay.sections]   # the "custom" profile
 waypoint = true
 next = true
 farm = true
@@ -166,6 +168,10 @@ exp = true
 drops = true
 notes = true
 uniques = true
+
+[overlay.profiles]   # presets cycled with Ctrl+Shift+F10; edit or delete freely
+farming = ["farm", "drops", "uniques", "exp"]
+speedrun = ["waypoint", "next", "quests"]
 ```
 
 If the area name isn't being read, run `tools/calibrate.py`: it saves
@@ -186,7 +192,12 @@ docstring.
 | Ctrl+F10 | `freeze` | stop updating (keep the current hint) |
 | Ctrl+F11 | `quit`   | |
 | Ctrl+F12 | `flag`   | append the current area to `debug/flagged.log` — "this rule was wrong" |
-| —        | `edit`   | toggle edit mode (socket only: `./overlay.py --ctl edit`) |
+| Ctrl+Shift+F9  | `compact` | one terse line per section |
+| Ctrl+Shift+F10 | `profile` | cycle section presets: all → custom → farming → speedrun … |
+| Ctrl+Shift+F11 | `edit`    | toggle edit mode (drag to move, corners to resize) |
+| —        | `settings` | re-show the settings window (socket / tray) |
+
+F1–F8 are deliberately unused: D2R binds them to skills.
 
 Every command also works over the control socket: `./overlay.py --ctl hide`, and from the settings window.
 `--no-hotkeys` starts with the hotkey switch off.

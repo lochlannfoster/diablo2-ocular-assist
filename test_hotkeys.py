@@ -27,6 +27,25 @@ class TestMatcher:
         assert press(matcher, "KEY_F9", "KEY_F10", "KEY_F11",
                      "KEY_F12") == ["hide", "freeze", "quit", "flag"]
 
+    def test_shift_chords(self, matcher):
+        matcher.feed(CTRL, KEY_DOWN_VALUE)
+        matcher.feed("KEY_LEFTSHIFT", KEY_DOWN_VALUE)
+        assert press(matcher, "KEY_F9", "KEY_F10", "KEY_F11") == ["compact", "profile", "edit"]
+        assert matcher.feed("KEY_F12", KEY_DOWN_VALUE) is None     # no Ctrl+Shift+F12 chord
+        matcher.feed("KEY_LEFTSHIFT", KEY_UP_VALUE)
+        assert matcher.feed("KEY_F9", KEY_DOWN_VALUE) == "hide"    # back to the plain chord
+
+    def test_shift_alone_does_nothing(self, matcher):
+        matcher.feed("KEY_RIGHTSHIFT", KEY_DOWN_VALUE)
+        assert matcher.feed("KEY_F9", KEY_DOWN_VALUE) is None
+
+    def test_reset_clears_shift(self, matcher):
+        matcher.feed(CTRL, KEY_DOWN_VALUE)
+        matcher.feed("KEY_LEFTSHIFT", KEY_DOWN_VALUE)
+        matcher.reset()
+        matcher.feed(CTRL, KEY_DOWN_VALUE)
+        assert matcher.feed("KEY_F9", KEY_DOWN_VALUE) == "hide"
+
     def test_without_ctrl_nothing_fires(self, matcher):
         # The whole point: bare arrows must reach the game's map scrolling.
         assert press(matcher, "KEY_F9", "KEY_F10", "KEY_F11") == [None] * 3

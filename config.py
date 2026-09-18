@@ -9,6 +9,7 @@ template every save; the settings window is the editor, not a text editor.
 from __future__ import annotations
 
 import copy
+import sys
 import tomllib
 from pathlib import Path
 
@@ -28,6 +29,14 @@ SECTIONS = {
     "drops": "Drops",
     "notes": "Notes",
     "uniques": "Superuniques",
+}
+
+# Section presets. "all" and "custom" ([overlay.sections]) always exist;
+# these two are written into a new config.toml and can be edited or deleted.
+BUILTIN_PROFILES = ("all", "custom")
+DEFAULT_PROFILES = {
+    "speedrun": ["waypoint", "next", "quests"],
+    "farming": ["farm", "drops", "uniques", "exp"],
 }
 
 DEFAULTS = {
@@ -50,7 +59,10 @@ DEFAULTS = {
         "hotkeys": True,
         "follow_focus": True,
         "hide_unread": True,
+        "compact": False,
+        "profile": "all",
         "sections": {key: True for key in SECTIONS},
+        "profiles": {},
     },
 }
 
@@ -84,9 +96,16 @@ width = {width}              # minimum characters per line; long tips wrap
 hotkeys = {hotkeys}          # read /dev/input for Ctrl+F9..F12 while D2R runs
 follow_focus = {follow_focus}  # show the overlay only while the game window is focused
 hide_unread = {hide_unread}   # hide it while the area name cannot be read (map off, menus)
+compact = {compact}          # one terse line per section (Ctrl+Shift+F9)
+profile = {profile}          # all | custom | a name from [overlay.profiles] (Ctrl+Shift+F10)
 
-[overlay.sections]
+[overlay.sections]           # the "custom" profile
 {sections}
+
+# Named section sets, cycled with Ctrl+Shift+F10. "all" and "custom" (the
+# block above) always exist; add, edit or delete entries freely.
+[overlay.profiles]
+{profiles}
 """
 
 
@@ -116,7 +135,43 @@ def load(path: Path = CONFIG_PATH) -> dict:
     config = _merge(DEFAULTS, data)
     if config["overlay"]["anchor"] not in ANCHORS:
         raise ConfigError(f"anchor must be one of {', '.join(ANCHORS)}")
+    ov = config["overlay"]
+    if "profiles" not in data.get("overlay", {}):
+        # Seed only when the table is absent, so a deleted default stays deleted.
+        ov["profiles"] = copy.deepcopy(DEFAULT_PROFILES)
+    for name, keys in ov["profiles"].items():
+        if name in BUILTIN_PROFILES:
+            raise ConfigError(f"[overlay.profiles] {name!r} is a built-in profile name")
+        if not isinstance(keys, list) or any(k not in SECTIONS for k in keys):
+            raise ConfigError(f"[overlay.profiles] {name} must be a list of: {', '.join(SECTIONS)}")
+    if ov["profile"] not in profile_names(ov):
+        print(f"warning: unknown profile {ov['profile']!r}; using 'all'", file=sys.stderr)
+        ov["profile"] = "all"
     return config
+
+
+# -- profiles ---------------------------------------------------------------
+
+def profile_names(ov: dict) -> list[str]:
+    return [*BUILTIN_PROFILES, *sorted(ov.get("profiles", {}))]
+
+
+def active_sections(ov: dict) -> dict[str, bool]:
+    """Which sections the current profile shows, as key -> bool."""
+    name = ov.get("profile", "all")
+    if name == "all":
+        return {key: True for key in SECTIONS}
+    if name in ov.get("profiles", {}):
+        chosen = set(ov["profiles"][name])
+        return {key: key in chosen for key in SECTIONS}
+    return {key: bool(ov["sections"].get(key, True)) for key in SECTIONS}   # custom / unknown
+
+
+def next_profile(ov: dict) -> str:
+    names = profile_names(ov)
+    current = ov.get("profile", "all")
+    index = names.index(current) if current in names else -1
+    return names[(index + 1) % len(names)]
 
 
 def _toml_str(value: str) -> str:
@@ -132,6 +187,10 @@ def dumps(config: dict) -> str:
     region = cap["region"]
     sections = "\n".join(
         f"{key} = {_toml_bool(bool(ov['sections'].get(key, True)))}" for key in SECTIONS
+    )
+    profiles = "\n".join(
+        f"{_toml_str(name)} = [{', '.join(_toml_str(k) for k in keys)}]"
+        for name, keys in sorted(ov.get("profiles", {}).items())
     )
     return TEMPLATE.format(
         backend=_toml_str(str(cap["backend"])),
@@ -150,6 +209,9 @@ def dumps(config: dict) -> str:
         follow_focus=_toml_bool(bool(ov.get("follow_focus", True))),
         hide_unread=_toml_bool(bool(ov.get("hide_unread", True))),
         sections=sections,
+        profiles=profiles,
+        compact=_toml_bool(bool(ov.get("compact", False))),
+        profile=_toml_str(str(ov.get("profile", "all"))),
     )
 
 

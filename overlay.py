@@ -47,6 +47,7 @@ import capture  # noqa: E402
 import config as configmod  # noqa: E402
 import hotkeys  # noqa: E402
 import ocr  # noqa: E402
+from compact import terse  # noqa: E402
 from markup import band, dim, direction, esc, head, rng  # noqa: E402
 from state import Recognizer  # noqa: E402
 
@@ -59,7 +60,7 @@ FLAG_LOG = native.config_dir() / "debug" / "flagged.log"
 
 list_monitors = native.impl.list_monitors
 
-COMMANDS = ("hide", "freeze", "quit", "flag", "edit")
+COMMANDS = ("hide", "freeze", "quit", "flag", "edit", "compact", "profile", "settings")
 
 DIFFICULTY_COLOURS = {"normal": "#9be59b", "nightmare": "#ffd166", "hell": "#ff5f5f"}
 
@@ -177,11 +178,7 @@ class Overlay:
         self.notes_label = self._label("hint", "notes")
         self.uniques_label = self._label("hint", "uniques")
         self.next_label = self.next_head_label
-        # Gaps between sections.
-        for label in (self.wp_head_label, self.next_head_label, self.farm_label,
-                      self.quest_labels[0], self.exp_head_label, self.drops_label,
-                      self.notes_label, self.uniques_label):
-            label.set_margin_top(10)
+        self._set_gaps(bool(session.config["overlay"].get("compact", False)))
 
         self._load_css()
         self.win.connect("realize", lambda w: native.on_realize(w, self))
@@ -452,13 +449,17 @@ class Overlay:
 
     def render(self):
         rec = self.session.recognizer
-        sections = self.session.config["overlay"]["sections"]
+        ov = self.session.config["overlay"]
+        sections = configmod.active_sections(ov)
+        compact = bool(ov.get("compact", False))
+        profile = str(ov.get("profile", "all"))
         error = self.session.error
-        state = (rec.area, rec.difficulty, rec.visible, rec.frozen, error,
+        state = (rec.area, rec.difficulty, rec.visible, rec.frozen, error, compact, profile,
                  tuple(sorted(sections.items())))
         if state == self._last_render:
             return
         self._last_render = state
+        self._set_gaps(compact)
 
         for label in (self.title_label, self.wp_head_label, self.wp_label,
                       self.next_head_label, self.next_tip_label, self.farm_label,
@@ -493,8 +494,9 @@ class Overlay:
                f'{rec.difficulty.upper()}</span>'
         detail = f"alvl {level}" if level else ("town" if not area.levels[0] else "alvl ?")
         frozen = "  (frozen)" if rec.frozen else ""
+        tag = f"  {dim(f'[{profile}]')}" if profile != "all" else ""
         self.title_label.set_markup(
-            f"{dot} {esc(area.name)} - {diff} ({detail}){esc(frozen)}")
+            f"{dot} {esc(area.name)} - {diff} ({detail}){esc(frozen)}{tag}")
         for cls in ("conf-high", "conf-medium", "conf-low"):
             self.title_label.remove_css_class(cls)
         self.title_label.add_css_class(f"conf-{area.confidence}")
@@ -503,6 +505,75 @@ class Overlay:
         elif not rec.visible:
             self.title_label.add_css_class("stale")
 
+        if compact:
+            self._render_compact(area, rec, level)
+        else:
+            self._render_full(area, rec, level)
+
+        # Sections the user switched off (settings window / profile).
+        for key, labels in (
+            ("waypoint", (self.wp_head_label, self.wp_label)),
+            ("next", (self.next_head_label, self.next_tip_label)),
+            ("farm", (self.farm_label,)),
+            ("quests", self.quest_labels),
+            ("exp", (self.exp_head_label, self.exp_label)),
+            ("drops", (self.drops_label,)),
+            ("notes", (self.notes_label,)),
+            ("uniques", (self.uniques_label,)),
+        ):
+            if not sections.get(key, True):
+                for label in labels:
+                    label.set_visible(False)
+
+    def _set_gaps(self, compact: bool):
+        gap = 3 if compact else 10
+        for label in (self.wp_head_label, self.next_head_label, self.farm_label,
+                      self.quest_labels[0], self.exp_head_label, self.drops_label,
+                      self.notes_label, self.uniques_label):
+            label.set_margin_top(gap)
+        (self.root.add_css_class if compact else self.root.remove_css_class)("compact")
+
+    def _render_compact(self, area, rec, level):
+        """One wrapping line per section: header, direction, first clause."""
+        limit = max(48, self.width)   # lines may wrap; terse() keeps them to a clause
+        for label in (self.wp_head_label, self.next_head_label, self.exp_head_label,
+                      *self.quest_labels, self.notes_label):
+            label.set_visible(False)
+
+        wp = area.to_waypoint
+        if area.has_waypoint:
+            self.wp_label.set_markup(f"{head('WP', 'wp')}  {direction(wp)}  {esc(terse(wp.tip, limit))}")
+        else:
+            self.wp_label.set_markup(f"{head('WP', 'wp')}  {dim('none')}")
+        (self.wp_label.add_css_class if wp.no_rule else self.wp_label.remove_css_class)("norule")
+
+        nx = area.to_next
+        self.next_tip_label.set_markup(
+            f"{head('NEXT', 'next')}  {esc(area.next or 'end')}  {direction(nx)}  {esc(terse(nx.tip, limit))}")
+        (self.next_tip_label.add_css_class if nx.no_rule
+         else self.next_tip_label.remove_css_class)("norule")
+
+        self.farm_label.set_visible(bool(area.farm))
+        if area.farm:
+            self.farm_label.set_markup(f"{head('FARM', 'farm')}  {esc(terse(area.farm[0], limit + 16))}")
+
+        self.exp_label.set_visible(bool(level))
+        if level:
+            b = areas.exp_bands(level)
+            self.exp_label.set_markup(f"{head('CLVL', 'exp')}  {band(rng(b['good']), 'recommended')}")
+
+        drops = areas.drop_note(area.act, rec.difficulty, level)
+        self.drops_label.set_visible(bool(drops))
+        if drops:
+            self.drops_label.set_markup(f"{head('DROPS', 'drops')}  {esc(terse(drops, limit + 16))}")
+
+        self.uniques_label.set_visible(bool(area.uniques))
+        if area.uniques:
+            names = "  ·  ".join(esc(n) for n in area.uniques)
+            self.uniques_label.set_markup(
+                f"{head('SUPERUNIQUE', 'uniques')}  <span weight=\"bold\">{names}</span>")
+
+    def _render_full(self, area, rec, level):
         wp = area.to_waypoint
         if area.has_waypoint:
             self.wp_head_label.set_markup(f"{head('WAYPOINT', 'wp')}  ·  {direction(wp)}")
@@ -559,21 +630,6 @@ class Overlay:
             self.uniques_label.set_markup(
                 f"{head('SUPERUNIQUE', 'uniques')}  <span weight=\"bold\">{names}</span>")
 
-        # Sections the user switched off in the settings window.
-        for key, labels in (
-            ("waypoint", (self.wp_head_label, self.wp_label)),
-            ("next", (self.next_head_label, self.next_tip_label)),
-            ("farm", (self.farm_label,)),
-            ("quests", self.quest_labels),
-            ("exp", (self.exp_head_label, self.exp_label)),
-            ("drops", (self.drops_label,)),
-            ("notes", (self.notes_label,)),
-            ("uniques", (self.uniques_label,)),
-        ):
-            if not sections.get(key, True):
-                for label in labels:
-                    label.set_visible(False)
-
 class Session:
     """Everything that runs: config, rules, recogniser, overlay window, OCR
     reader, control socket, hotkeys. Created by the settings window and torn
@@ -591,6 +647,7 @@ class Session:
         self.hidden = False
         self.game_focused = True   # optimistic until the reader reports
         self.on_update = None   # settings window hook: called after each reading
+        self.on_show_settings = None   # tray / --ctl settings: re-present the window
         self._closed = False
 
         self.overlay = Overlay(app, self)
@@ -652,6 +709,13 @@ class Session:
             self.flag()
         elif command == "edit":
             self.set_edit_mode(not self.overlay.editing)
+        elif command == "compact":
+            self.set_compact(not self.config["overlay"].get("compact", False))
+        elif command == "profile":
+            self.set_profile(configmod.next_profile(self.config["overlay"]))
+        elif command == "settings":
+            if self.on_show_settings:
+                self.on_show_settings()
         elif command == "quit":
             self.shutdown()
             return
@@ -668,6 +732,15 @@ class Session:
     def set_edit_mode(self, editing: bool):
         self.overlay.set_edit_mode(editing)
         self.apply_visibility()   # edit mode always shows it, focus or not
+
+    def set_compact(self, compact: bool):
+        self.config["overlay"]["compact"] = bool(compact)
+        self.overlay.refresh()
+
+    def set_profile(self, name: str):
+        self.config["overlay"]["profile"] = name
+        print(f"profile: {name}", flush=True)
+        self.overlay.refresh()
 
     def set_follow_focus(self, enabled: bool):
         self.config["overlay"]["follow_focus"] = enabled

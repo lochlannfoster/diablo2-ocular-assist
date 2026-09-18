@@ -32,6 +32,9 @@ except ImportError:  # pragma: no cover - reported by the caller
     ecodes = None
 
 # Key name -> command. Names rather than raw codes so this reads as a keymap.
+# Ctrl+F9..F12, plus Ctrl+Shift+F9..F11. F1-F8 are D2R's default skill keys
+# and this listener is passive (the game still sees the press), so they are
+# off limits.
 CHORDS = {
     "KEY_F9": "hide",
     "KEY_F10": "freeze",
@@ -39,9 +42,13 @@ CHORDS = {
     # Marks the current area's rule as wrong in the log, so bad entries in
     # data/areas.toml can be fixed in a batch after the session.
     "KEY_F12": "flag",
+    "shift+KEY_F9": "compact",
+    "shift+KEY_F10": "profile",
+    "shift+KEY_F11": "edit",
 }
 
 CTRL_KEYS = ("KEY_LEFTCTRL", "KEY_RIGHTCTRL")
+SHIFT_KEYS = ("KEY_LEFTSHIFT", "KEY_RIGHTSHIFT")
 
 # evdev event values.
 KEY_UP_VALUE, KEY_DOWN_VALUE, KEY_HELD_VALUE = 0, 1, 2
@@ -58,10 +65,12 @@ class Matcher:
     is what makes the interesting behaviour testable without a real device.
     """
 
-    def __init__(self, chords=None, ctrl_keys=CTRL_KEYS):
+    def __init__(self, chords=None, ctrl_keys=CTRL_KEYS, shift_keys=SHIFT_KEYS):
         self.chords = dict(chords or CHORDS)
         self.ctrl_keys = set(ctrl_keys)
+        self.shift_keys = set(shift_keys)
         self._ctrl_down: set[str] = set()
+        self._shift_down: set[str] = set()
 
     @property
     def ctrl_held(self) -> bool:
@@ -74,16 +83,18 @@ class Matcher:
         stream commands while a key is held, and key-up would fire everything
         twice.
         """
-        if key_name in self.ctrl_keys:
-            if value == KEY_UP_VALUE:
-                self._ctrl_down.discard(key_name)
-            else:
-                self._ctrl_down.add(key_name)
-            return None
+        for keys, held in ((self.ctrl_keys, self._ctrl_down), (self.shift_keys, self._shift_down)):
+            if key_name in keys:
+                if value == KEY_UP_VALUE:
+                    held.discard(key_name)
+                else:
+                    held.add(key_name)
+                return None
 
         if value != KEY_DOWN_VALUE or not self._ctrl_down:
             return None
-        return self.chords.get(key_name)
+        prefix = "shift+" if self._shift_down else ""
+        return self.chords.get(prefix + key_name)
 
     def reset(self):
         """Forget modifier state.
@@ -92,6 +103,7 @@ class Matcher:
         look held forever, and the next arrow press would fire a command.
         """
         self._ctrl_down.clear()
+        self._shift_down.clear()
 
 
 def key_name(code: int) -> str | None:

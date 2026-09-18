@@ -107,7 +107,9 @@ class SettingsWindow(Gtk.ApplicationWindow):
         toggles = Gtk.Box(spacing=18)
         self.show_switch = self._switch(toggles, "Show", self._on_show)
         self.freeze_switch = self._switch(toggles, "Freeze recognition", self._on_freeze)
-        self.hotkeys_switch = self._switch(toggles, "Hotkeys (Ctrl+F9–F12)", self._on_hotkeys)
+        self.hotkeys_switch = self._switch(toggles, "Hotkeys (Ctrl+F9–F12, Ctrl+Shift+F9–F11)",
+                                           self._on_hotkeys)
+        self.compact_switch = self._switch(toggles, "Compact", self._on_compact)
         self._row(grid, row, "", toggles); row += 1
 
         auto_hide = Gtk.Box(spacing=18)
@@ -120,15 +122,23 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.edit_check.connect("toggled", self._on_edit_mode)
         self._row(grid, row, "", self.edit_check); row += 1
 
-        sections = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE, max_children_per_line=3,
-                               column_spacing=12, row_spacing=4)
+        self._profiles = configmod.profile_names(self.config["overlay"])
+        self.profile_combo = Gtk.DropDown.new_from_strings(self._profiles)
+        self.profile_combo.set_tooltip_text(
+            "Which sections are shown. 'custom' is the checkbox row below; other "
+            "presets are edited in config.toml under [overlay.profiles].")
+        self.profile_combo.connect("notify::selected", self._on_profile)
+        self._row(grid, row, "Profile", self.profile_combo); row += 1
+
+        self.sections_box = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE,
+                                        max_children_per_line=3, column_spacing=12, row_spacing=4)
         self.section_checks = {}
         for key, label in configmod.SECTIONS.items():
             check = Gtk.CheckButton(label=label)
             check.connect("toggled", self._on_section, key)
             self.section_checks[key] = check
-            sections.append(check)
-        self._row(grid, row, "Sections", sections); row += 1
+            self.sections_box.append(check)
+        self._row(grid, row, "Sections (custom)", self.sections_box); row += 1
 
         self.output_combo = Gtk.DropDown.new_from_strings(["(compositor default)"])
         self._outputs = [""]
@@ -226,6 +236,8 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.unread_switch.set_active(bool(ov.get("hide_unread", True)))
         for key, check in self.section_checks.items():
             check.set_active(bool(ov["sections"].get(key, True)))
+        self.compact_switch.set_active(bool(ov.get("compact", False)))
+        self._sync_profile_widgets()
         output = ov["output"]
         self.output_combo.set_selected(
             self._outputs.index(output) if output in self._outputs else 0)
@@ -315,8 +327,38 @@ class SettingsWindow(Gtk.ApplicationWindow):
         if self._loading:
             return
         self.config["overlay"]["sections"][key] = check.get_active()
+        # Ticking a box while a preset is active means "I want my own set".
+        if self.config["overlay"].get("profile", "all") != "custom":
+            self.session.set_profile("custom")
+            self._sync_profile_widgets()
         self.session.overlay.refresh()
         self._schedule_save()
+
+    def _on_compact(self, switch, state):
+        if not self._loading:
+            self.session.set_compact(state)
+            self._schedule_save()
+        return False
+
+    def _on_profile(self, combo, *_):
+        if self._loading:
+            return
+        self.session.set_profile(self._profiles[combo.get_selected()])
+        self.sections_box.set_sensitive(self.config["overlay"]["profile"] == "custom")
+        self._schedule_save()
+
+    def _sync_profile_widgets(self):
+        """Mirror config -> profile dropdown (list may have changed on reload)."""
+        ov = self.config["overlay"]
+        names = configmod.profile_names(ov)
+        was_loading, self._loading = self._loading, True
+        if names != self._profiles:
+            self._profiles = names
+            self.profile_combo.set_model(Gtk.StringList.new(names))
+        current = ov.get("profile", "all")
+        self.profile_combo.set_selected(names.index(current) if current in names else 0)
+        self.sections_box.set_sensitive(current == "custom")
+        self._loading = was_loading
 
     def _on_output(self, combo, _param):
         if self._loading:
@@ -460,7 +502,18 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.freeze_switch.set_active(rec.frozen)
         if self.edit_check.get_active() != session.overlay.editing:
             self.edit_check.set_active(session.overlay.editing)
+        ov = self.config["overlay"]
+        dirty = False   # hotkey-driven compact/profile changes must reach config.toml
+        if self.compact_switch.get_active() != bool(ov.get("compact", False)):
+            self.compact_switch.set_active(bool(ov.get("compact", False)))
+            dirty = True
+        current = ov.get("profile", "all")
+        if current in self._profiles and self.profile_combo.get_selected() != self._profiles.index(current):
+            self._sync_profile_widgets()
+            dirty = True
         self._loading = False
+        if dirty:
+            self._schedule_save()
 
     # -- lifecycle ---------------------------------------------------------
 
