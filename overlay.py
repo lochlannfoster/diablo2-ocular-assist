@@ -47,8 +47,10 @@ import capture  # noqa: E402
 import config as configmod  # noqa: E402
 import hotkeys  # noqa: E402
 import ocr  # noqa: E402
+import gems  # noqa: E402
+import runes  # noqa: E402
 from compact import terse  # noqa: E402
-from markup import band, dim, direction, esc, head, rng  # noqa: E402
+from markup import band, dim, direction, esc, head, rng, tier, valued  # noqa: E402
 from state import Recognizer  # noqa: E402
 
 HERE = Path(__file__).parent
@@ -616,8 +618,10 @@ class Overlay:
             if not compact and name in facts:
                 text += f" {dim(f'({facts[name].facts()})')}"
             parts.append(text)
-        sep = "  ·  " if compact else "\n"
-        self.uniques_label.set_markup(f"{head('SUPERUNIQUE', 'uniques')}  " + sep.join(parts))
+        if compact:
+            self.uniques_label.set_markup(f"{head('SUPERUNIQUE', 'uniques')}  " + "  ·  ".join(parts))
+        else:
+            self.uniques_label.set_markup(f"{head('SUPERUNIQUE', 'uniques')}\n" + "\n".join(parts))
 
     def _render_full(self, area, rec, level, terrorised=False):
         wp = area.to_waypoint
@@ -640,13 +644,13 @@ class Overlay:
 
         self.farm_label.set_visible(bool(area.farm))
         if area.farm:
-            self.farm_label.set_markup(f"{head('FARM', 'farm')}  " + esc("  ·  ".join(area.farm)))
+            self.farm_label.set_markup(f"{head('FARM', 'farm')}\n" + esc("\n".join(area.farm)))
 
         # One quest per line; unused lines are hidden so the box stays tight.
         for label, quest in zip(self.quest_labels, list(area.quests) + ["", ""]):
             label.set_visible(bool(quest))
             if quest:
-                label.set_markup(f"{head('QUEST', 'quest')}  {esc(quest)}")
+                label.set_markup(f"{head('QUEST', 'quest')}\n{esc(quest)}")
 
         # One line: the clvl band that gets full XP here, then the band that
         # still gets a worthwhile rate (43-81%).
@@ -666,16 +670,135 @@ class Overlay:
             else areas.drop_note(area.act, rec.difficulty, level)
         self.drops_label.set_visible(bool(drops))
         if drops:
-            self.drops_label.set_markup(f"{head('DROPS', 'drops')}  " + esc(drops))
+            self.drops_label.set_markup(f"{head('DROPS', 'drops')}\n" + esc(drops))
 
         self._render_immune(area, rec)
 
         notes = list(area.notes)
         self.notes_label.set_visible(bool(notes))
         if notes:
-            self.notes_label.set_markup(f"{head('NOTE', 'notes')}  " + esc("  ·  ".join(notes)))
+            self.notes_label.set_markup(f"{head('NOTE', 'notes')}\n" + esc("\n".join(notes)))
 
         self._render_uniques(area, rec)
+
+class HelperOverlay:
+    """A second click-through box with a static table (runes, gems). No
+    render state -- it shares the main box's monitor, font and style CSS
+    (both are `.root` on the same display) and only has a corner and margins
+    of its own. Subclasses name their config block and produce the lines."""
+
+    TITLE = ""    # window title; Windows finds the HWND by it
+    KEY = ""      # config["overlay"][KEY] and the markup colour key
+    WORD = ""     # header word
+
+    def __init__(self, app, session):
+        self.session = session
+        self.editing = False   # native.on_realize reads it; no edit mode here
+        ov = session.config["overlay"]
+        cfg = ov[self.KEY]
+
+        self.win = Gtk.ApplicationWindow(application=app)
+        self.win.set_title(self.TITLE)
+        self.win.add_css_class("overlay")
+        native.prepare_window(self.win)
+        native.set_monitor(self.win, ov["output"])
+        native.set_placement(self.win, cfg["anchor"], int(cfg["margin_x"]), int(cfg["margin_y"]))
+
+        self.root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        self.root.add_css_class("root")
+        self.win.set_child(self.root)
+        self.head_label = Gtk.Label(xalign=0, use_markup=True)
+        self.head_label.add_css_class("head")
+        self.body_label = Gtk.Label(xalign=0, use_markup=True)
+        self.body_label.add_css_class("hint")
+        self.body_label.set_margin_end(12)
+        self.root.append(self.head_label)
+        self.root.append(self.body_label)
+        self.win.connect("realize", lambda w: native.on_realize(w, self))
+        self.render()
+        if cfg.get("enabled", False):
+            self.win.present()
+
+    def config(self) -> dict:
+        return self.session.config["overlay"][self.KEY]
+
+    def title(self, cfg) -> str:
+        return head(self.WORD, self.KEY)
+
+    def lines(self, cfg) -> list[str]:
+        """Body lines, as Pango markup."""
+        raise NotImplementedError
+
+    def render(self):
+        cfg = self.config()
+        self.head_label.set_markup(self.title(cfg))
+        self.body_label.set_markup("\n".join(self.lines(cfg)))
+
+    def set_placement(self, anchor, margin_x, margin_y):
+        native.set_placement(self.win, anchor, margin_x, margin_y)
+
+    def set_monitor(self, output):
+        native.set_monitor(self.win, output)
+
+    def set_visible(self, visible: bool):
+        if visible and not self.win.get_visible():
+            self.win.present()
+        else:
+            self.win.set_visible(visible)
+
+
+class RuneOverlay(HelperOverlay):
+    """The rune helper: the 33 runes by number, optionally with values."""
+
+    TITLE = "d2-overlay-runes"
+    KEY = "runes"
+    WORD = "RUNES"
+
+    def title(self, cfg):
+        title = head(self.WORD, self.KEY)
+        if cfg.get("sort", "number") == "value":
+            title += " " + dim("by value")
+        if cfg.get("values", True):
+            title += " " + dim(f"{runes.VALUES_UNIT}: {runes.VALUES_SOURCE}")
+        return title
+
+    @staticmethod
+    def style(name, field, text):
+        """Names in their drop-tier colour; values grey-to-green by worth."""
+        if field == "name":
+            return tier(text, runes.tier(name))
+        return valued(text, runes.VALUES[name], min(runes.VALUES.values()), max(runes.VALUES.values()))
+
+    def lines(self, cfg):
+        return runes.table(int(cfg.get("columns", 3)), values=bool(cfg.get("values", True)),
+                           sort=str(cfg.get("sort", "number")), style=self.style)
+
+
+class GemOverlay(HelperOverlay):
+    """The gem helper: the seven gems, Perfect only or every grade."""
+
+    TITLE = "d2-overlay-gems"
+    KEY = "gems"
+    WORD = "GEMS"
+
+    def title(self, cfg):
+        title = head(self.WORD, self.KEY)
+        if not cfg.get("grades", False):
+            title += " " + dim("perfect")
+        if cfg.get("sort", "name") == "value":
+            title += " " + dim("by value")
+        if cfg.get("values", True):
+            title += " " + dim(f"{gems.VALUES_UNIT}: {gems.VALUES_SOURCE}")
+            if cfg.get("grades", False):
+                title += " " + dim("(lower grades: a third per step, cube 3:1)")
+        return title
+
+    def lines(self, cfg):
+        values, sort = bool(cfg.get("values", True)), str(cfg.get("sort", "name"))
+        if cfg.get("grades", False):
+            return [esc(line) for line in gems.grade_table(values=values, sort=sort)]
+        return [esc(line) for line in gems.table(int(cfg.get("columns", 2)), values=values, sort=sort)]
+
 
 class Session:
     """Everything that runs: config, rules, recogniser, overlay window, OCR
@@ -699,6 +822,8 @@ class Session:
         self._closed = False
 
         self.overlay = Overlay(app, self)
+        self.runes = RuneOverlay(app, self)
+        self.gems = GemOverlay(app, self)
         self.server = ControlServer(SOCKET_PATH, self.handle) if native.HAS_CONTROL_SOCKET else None
         self.reader = Reader(config, areas.screen_names(rules),
                              self.on_reading, self.on_error, self.on_frame, self.on_focus)
@@ -808,6 +933,14 @@ class Session:
         self.config["overlay"]["hide_unread"] = enabled
         self.apply_visibility()
 
+    def set_runes(self, enabled: bool):
+        self.config["overlay"]["runes"]["enabled"] = bool(enabled)
+        self.apply_visibility()
+
+    def set_gems(self, enabled: bool):
+        self.config["overlay"]["gems"]["enabled"] = bool(enabled)
+        self.apply_visibility()
+
     UNREAD_GRACE = 2   # consecutive unreadable frames before hiding
 
     def apply_visibility(self):
@@ -825,6 +958,13 @@ class Session:
             if visible and ov.get("hide_unread", True) and not rec.frozen:
                 visible = rec.visible or rec.misses < self.UNREAD_GRACE
         self.overlay.set_visible(visible)
+        # The rune and gem lists are static, so an unreadable area name is no
+        # reason to drop them: they follow only Ctrl+F9 and the game's focus.
+        for helper in (self.runes, self.gems):
+            shown = not self.hidden and bool(ov[helper.KEY].get("enabled", False))
+            if shown and ov.get("follow_focus", True) and not self.overlay.editing:
+                shown = self.game_focused
+            helper.set_visible(shown)
 
     def set_frozen(self, frozen: bool):
         self.recognizer.frozen = frozen
@@ -897,6 +1037,8 @@ class Session:
         if self.tray is not None:
             self.tray.close()
         self.overlay.win.destroy()
+        self.runes.win.destroy()
+        self.gems.win.destroy()
         print("overlay stopped", flush=True)
         self.app.release()
         self.app.quit()

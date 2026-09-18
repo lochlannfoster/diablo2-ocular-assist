@@ -1,3 +1,4 @@
+import pytest
 import tomllib
 
 import config
@@ -96,3 +97,39 @@ def test_profile_validation(tmp_path):
     assert config.load(path)["overlay"]["profile"] == "all"
     path.write_text('[overlay.profiles]\n')                 # present but empty: no seeding
     assert config.load(path)["overlay"]["profiles"] == {}
+
+
+def test_runes_block_round_trip_and_default(tmp_path):
+    path = tmp_path / "config.toml"
+    cfg = config.load(path)
+    assert cfg["overlay"]["runes"] == {
+        "enabled": False, "anchor": "bottom-left", "margin_x": 12, "margin_y": 12, "columns": 3,
+        "values": True, "sort": "number"}
+    cfg["overlay"]["runes"].update(enabled=True, anchor="top-right", margin_y=300, columns=2,
+                                   values=False, sort="value")
+    config.save(cfg, path)
+    assert config.load(path)["overlay"]["runes"] == cfg["overlay"]["runes"]
+    # An old config without the block still loads with the defaults.
+    path.write_text('[overlay]\nmargin_x = 5\n')
+    assert config.load(path)["overlay"]["runes"]["enabled"] is False
+    path.write_text('[overlay.runes]\nanchor = "middle"\n')
+    with pytest.raises(config.ConfigError):
+        config.load(path)
+    path.write_text('[overlay.runes]\nsort = "price"\n')
+    with pytest.raises(config.ConfigError):
+        config.load(path)
+
+
+def test_gems_block_round_trip_and_default(tmp_path):
+    path = tmp_path / "config.toml"
+    cfg = config.load(path)
+    assert cfg["overlay"]["gems"] == {
+        "enabled": False, "anchor": "bottom-right", "margin_x": 12, "margin_y": 12, "columns": 2,
+        "values": True, "sort": "name", "grades": False}
+    cfg["overlay"]["gems"].update(enabled=True, anchor="top-left", margin_x=40, columns=1,
+                                  values=False, sort="value", grades=True)
+    config.save(cfg, path)
+    assert config.load(path)["overlay"]["gems"] == cfg["overlay"]["gems"]
+    path.write_text('[overlay.gems]\nsort = "number"\n')
+    with pytest.raises(config.ConfigError):
+        config.load(path)

@@ -17,6 +17,12 @@
    the picture shows the three lines, the *OCR read* line will show the area
    name and the overlay fills in.
 6. Tick **Edit mode** to drag the overlay where you want it; untick to lock it.
+   **Rune helper** (further down) adds a second box with the runes numbered
+   1 El … 33 Zod and their trade values in HR (names coloured by the
+   difficulty that drops them, values grey to green by worth); pick its
+   corner, margins, values on/off and by number or by value on the same row.
+   **Gem helper** is the same for gems: Perfect only, or *All grades* for a
+   Chipped … Perfect grid.
 7. Closing the settings window sends it to the system tray; right-click the
    icon for Show/Hide overlay and Quit, double-click to reopen settings.
 

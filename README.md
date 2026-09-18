@@ -98,7 +98,19 @@ down** — nothing keeps running in the background.
   (the calibration feedback loop).
 - **Overlay** — show / freeze / hotkeys switches; which sections to display;
   monitor, corner, margins, font size, width. Every change applies to the
-  overlay immediately.
+  overlay immediately. **Rune helper** is an optional second box listing the
+  33 runes by number (1 El … 33 Zod) in its own corner, with each rune's trade
+  value in HR (a snapshot of [traderie.com's value list](https://traderie.com/diablo2resurrected/values);
+  the **Values** switch hides the column). Names are coloured by the lowest
+  difficulty that drops them (grey Normal El–Dol, orange Nightmare Hel–Ist,
+  purple Hell Gul–Zod) and values shade from grey (El) to bright green (Ber);
+  **by value** lists the most valuable first. **Gem helper** is a third box
+  with the seven gems: Perfect only in columns, or **All grades** as a
+  Chipped … Perfect grid. Traderie only prices Perfect gems, so lower grades
+  are shown at a third per step (the cube's 3:1 upgrade). Both boxes follow
+  the Show switch / Ctrl+F9 and game focus, but stay up when the area name is
+  unreadable. `python3 tools/traderie_values.py` prints the current Traderie
+  figures next to the snapshot when it is time to refresh them.
 - **Capture** — the region as fractions of the game window, and the read interval.
   **Select on screen…** grabs a frame of the game and lets you drag a box around
   the clock / area / difficulty text; or nudge x/y/w/h while watching the
@@ -190,6 +202,25 @@ uniques = true
 [overlay.profiles]   # presets cycled with Ctrl+Shift+F10; edit or delete freely
 farming = ["farm", "drops", "immune", "uniques", "exp"]
 speedrun = ["waypoint", "next", "quests"]
+
+[overlay.runes]      # rune helper: second box, "1 El ... 33 Zod" in columns
+enabled = false
+anchor = "bottom-left"
+margin_x = 12
+margin_y = 12
+values = true        # trade value (HR, traderie.com snapshot) next to each rune
+columns = 3          # 1-6
+sort = "number"      # number | value
+
+[overlay.gems]       # gem helper: third box, the seven gems
+enabled = false
+anchor = "bottom-right"
+margin_x = 12
+margin_y = 12
+values = true        # HR; lower grades derived at a third per step
+columns = 2          # 1-7, Perfect-only list
+sort = "name"        # name | value
+grades = false       # every grade Chipped..Perfect instead of Perfect only
 
 [debug]
 save_lowconf = true  # keep crops of frames that matched poorly in debug/lowconf/

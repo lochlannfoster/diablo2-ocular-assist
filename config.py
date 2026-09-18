@@ -18,6 +18,8 @@ from native import config_dir  # noqa: E402
 CONFIG_PATH = config_dir() / "config.toml"
 
 ANCHORS = ("top-left", "top-right", "bottom-left", "bottom-right")
+RUNE_SORTS = ("number", "value")   # rune helper order
+GEM_SORTS = ("name", "value")      # gem helper order
 
 # Section key -> label shown in the settings window, in overlay order.
 SECTIONS = {
@@ -64,6 +66,27 @@ DEFAULTS = {
         "profile": "all",
         "sections": {key: True for key in SECTIONS},
         "profiles": {},
+        # Rune helper: a second, static box listing the runes by number.
+        "runes": {
+            "enabled": False,
+            "anchor": "bottom-left",
+            "margin_x": 12,
+            "margin_y": 12,
+            "columns": 3,
+            "values": True,     # trade value (HR) next to each rune
+            "sort": "number",   # number | value
+        },
+        # Gem helper: a third box, the seven gems (Perfect, or every grade).
+        "gems": {
+            "enabled": False,
+            "anchor": "bottom-right",
+            "margin_x": 12,
+            "margin_y": 12,
+            "columns": 2,
+            "values": True,
+            "sort": "name",     # name | value
+            "grades": False,    # every grade Chipped..Perfect, not just Perfect
+        },
     },
     "debug": {
         "save_lowconf": True,   # keep crops of frames that barely (or never) matched
@@ -112,6 +135,30 @@ profile = {profile}          # all | custom | a name from [overlay.profiles] (Ct
 [overlay.profiles]
 {profiles}
 
+# Rune helper: a second box listing the 33 runes by number (1 El ... 33 Zod).
+# Same monitor, font and style as the main overlay; its own corner.
+[overlay.runes]
+enabled = {runes_enabled}
+anchor = {runes_anchor}      # top-left | top-right | bottom-left | bottom-right
+margin_x = {runes_margin_x}
+margin_y = {runes_margin_y}
+columns = {runes_columns}    # 1-6
+values = {runes_values}      # show each rune's trade value in HR (traderie.com snapshot)
+sort = {runes_sort}          # number | value (most valuable first)
+
+# Gem helper: a third box with the seven gems. Perfect gems are priced from
+# traderie.com; with grades on, every grade is listed at a third per step
+# (the cube's 3:1 upgrade), since lower grades are not traded on their own.
+[overlay.gems]
+enabled = {gems_enabled}
+anchor = {gems_anchor}       # top-left | top-right | bottom-left | bottom-right
+margin_x = {gems_margin_x}
+margin_y = {gems_margin_y}
+columns = {gems_columns}     # 1-7 (Perfect-only list)
+values = {gems_values}       # show trade values in HR
+sort = {gems_sort}           # name | value (most valuable first)
+grades = {gems_grades}       # one row per gem, one column per grade Chipped..Perfect
+
 [debug]
 save_lowconf = {save_lowconf}  # save crops that matched poorly to debug/lowconf/ (for fixing OCR)
 lowconf_keep = {lowconf_keep}  # keep the newest N of them
@@ -145,6 +192,11 @@ def load(path: Path = CONFIG_PATH) -> dict:
     if config["overlay"]["anchor"] not in ANCHORS:
         raise ConfigError(f"anchor must be one of {', '.join(ANCHORS)}")
     ov = config["overlay"]
+    for block, sorts in (("runes", RUNE_SORTS), ("gems", GEM_SORTS)):
+        if ov[block]["anchor"] not in ANCHORS:
+            raise ConfigError(f"[overlay.{block}] anchor must be one of {', '.join(ANCHORS)}")
+        if ov[block]["sort"] not in sorts:
+            raise ConfigError(f"[overlay.{block}] sort must be one of {', '.join(sorts)}")
     if "profiles" not in data.get("overlay", {}):
         # Seed only when the table is absent, so a deleted default stays deleted.
         ov["profiles"] = copy.deepcopy(DEFAULT_PROFILES)
@@ -194,6 +246,8 @@ def _toml_bool(value: bool) -> str:
 def dumps(config: dict) -> str:
     cap, ov = config["capture"], config["overlay"]
     region = cap["region"]
+    runes = ov.get("runes", DEFAULTS["overlay"]["runes"])
+    gems = ov.get("gems", DEFAULTS["overlay"]["gems"])
     sections = "\n".join(
         f"{key} = {_toml_bool(bool(ov['sections'].get(key, True)))}" for key in SECTIONS
     )
@@ -223,6 +277,21 @@ def dumps(config: dict) -> str:
         save_lowconf=_toml_bool(bool(config.get("debug", {}).get("save_lowconf", True))),
         lowconf_keep=int(config.get("debug", {}).get("lowconf_keep", 200)),
         profile=_toml_str(str(ov.get("profile", "all"))),
+        runes_enabled=_toml_bool(bool(runes.get("enabled", False))),
+        runes_anchor=_toml_str(str(runes.get("anchor", "bottom-left"))),
+        runes_margin_x=int(runes.get("margin_x", 12)),
+        runes_margin_y=int(runes.get("margin_y", 12)),
+        runes_columns=int(runes.get("columns", 3)),
+        runes_values=_toml_bool(bool(runes.get("values", True))),
+        runes_sort=_toml_str(str(runes.get("sort", "number"))),
+        gems_enabled=_toml_bool(bool(gems.get("enabled", False))),
+        gems_anchor=_toml_str(str(gems.get("anchor", "bottom-right"))),
+        gems_margin_x=int(gems.get("margin_x", 12)),
+        gems_margin_y=int(gems.get("margin_y", 12)),
+        gems_columns=int(gems.get("columns", 2)),
+        gems_values=_toml_bool(bool(gems.get("values", True))),
+        gems_sort=_toml_str(str(gems.get("sort", "name"))),
+        gems_grades=_toml_bool(bool(gems.get("grades", False))),
     )
 
 

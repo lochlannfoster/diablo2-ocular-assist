@@ -34,7 +34,7 @@ profile = "custom"          # all | custom | a name from [overlay.profiles] (Ctr
 waypoint = true
 next = true
 farm = true
-quests = true
+quests = false
 exp = true
 drops = true
 immune = true
@@ -46,3 +46,31 @@ uniques = true
 [overlay.profiles]
 "farming" = ["farm", "drops", "uniques", "exp"]
 "speedrun" = ["waypoint", "next", "quests"]
+
+# Rune helper: a second box listing the 33 runes by number (1 El ... 33 Zod).
+# Same monitor, font and style as the main overlay; its own corner.
+[overlay.runes]
+enabled = true
+anchor = "bottom-left"      # top-left | top-right | bottom-left | bottom-right
+margin_x = 12
+margin_y = 12
+columns = 3    # 1-6
+values = true      # show each rune's trade value in HR (traderie.com snapshot)
+sort = "number"          # number | value (most valuable first)
+
+# Gem helper: a third box with the seven gems. Perfect gems are priced from
+# traderie.com; with grades on, every grade is listed at a third per step
+# (the cube's 3:1 upgrade), since lower grades are not traded on their own.
+[overlay.gems]
+enabled = true
+anchor = "bottom-right"       # top-left | top-right | bottom-left | bottom-right
+margin_x = 12
+margin_y = 12
+columns = 2     # 1-7 (Perfect-only list)
+values = true       # show trade values in HR
+sort = "name"           # name | value (most valuable first)
+grades = false       # one row per gem, one column per grade Chipped..Perfect
+
+[debug]
+save_lowconf = true  # save crops that matched poorly to debug/lowconf/ (for fixing OCR)
+lowconf_keep = 200  # keep the newest N of them

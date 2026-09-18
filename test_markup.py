@@ -24,3 +24,13 @@ def test_head_uses_section_colour_and_escapes():
 
 def test_rng():
     assert markup.rng((45, 55)) == "45–55" and markup.rng((3, 3)) == "3"
+
+
+def test_value_colour_ramps_grey_to_green_on_a_log_scale():
+    low, high = 0.0008, 3.5
+    assert markup.value_colour(low, low, high) == markup.DIM
+    assert markup.value_colour(high, low, high) == markup.GOOD
+    assert markup.value_colour(0.0001, low, high) == markup.DIM      # clamped below
+    mid = markup.value_colour(0.05, low, high)                        # roughly halfway in log terms
+    assert mid not in (markup.DIM, markup.GOOD) and mid.startswith("#")
+    assert markup.tier("El  ", "normal") == f'<span foreground="{markup.TIER_COLOURS["normal"]}">El  </span>'

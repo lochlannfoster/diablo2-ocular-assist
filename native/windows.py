@@ -28,7 +28,8 @@ user32 = ctypes.windll.user32 if sys.platform.startswith("win") else None
 kernel32 = ctypes.windll.kernel32 if sys.platform.startswith("win") else None
 
 GAME_WINDOW_TITLE = "Diablo II: Resurrected"
-OVERLAY_TITLE = "d2-overlay-surface"   # how we find our own HWND
+OVERLAY_TITLE = "d2-overlay-surface"   # how we find our own HWND (main box);
+                                       # the rune helper sets its own title first
 
 GWL_EXSTYLE = -20
 WS_EX_TRANSPARENT = 0x00000020
@@ -97,11 +98,12 @@ def init():
 # -- overlay window ---------------------------------------------------------
 
 def _hwnd(win):
-    return user32.FindWindowW(None, OVERLAY_TITLE) or None
+    return user32.FindWindowW(None, win.get_title() or OVERLAY_TITLE) or None
 
 
 def prepare_window(win):
-    win.set_title(OVERLAY_TITLE)
+    if not win.get_title():
+        win.set_title(OVERLAY_TITLE)
     win.set_decorated(False)
     win.set_resizable(False)
     # GTK4's win32 backend does not do per-pixel alpha on a layered window

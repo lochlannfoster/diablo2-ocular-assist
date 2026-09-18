@@ -22,6 +22,8 @@ import config as configmod  # noqa: E402
 import hotkeys  # noqa: E402
 import native  # noqa: E402
 import overlay as overlaymod  # noqa: E402
+import gems  # noqa: E402
+import runes  # noqa: E402
 
 SAVE_DEBOUNCE_MS = 500
 
@@ -185,6 +187,51 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.opacity_spin = self._spin(style, "opacity", 0.2, 1.0, 0.05, self._on_style, digits=2)
         self.padding_spin = self._spin(style, "padding px", 0, 40, 1, self._on_style)
         self._row(grid, row, "Style", style); row += 1
+
+        # Rune helper: a second static box, on/off with its own corner.
+        rune = Gtk.Box(spacing=8)
+        self.runes_switch = self._switch(rune, "Show", self._on_runes)
+        self.runes_switch.set_tooltip_text(
+            "A second box listing the 33 runes by number (1 El … 33 Zod).")
+        self.runes_anchor = Gtk.DropDown.new_from_strings(list(configmod.ANCHORS))
+        self.runes_anchor.connect("notify::selected", self._on_runes_placement)
+        rune.append(self.runes_anchor)
+        self.runes_margin_x = self._spin(rune, "x", 0, 4000, 1, self._on_runes_placement)
+        self.runes_margin_y = self._spin(rune, "y", 0, 4000, 1, self._on_runes_placement)
+        self.runes_columns = self._spin(rune, "columns", runes.MIN_COLUMNS, runes.MAX_COLUMNS,
+                                        1, self._on_runes_columns)
+        self.runes_values = self._switch(rune, "Values", self._on_runes_values)
+        self.runes_values.set_tooltip_text(
+            f"Trade value next to each rune, in {runes.VALUES_UNIT} ({runes.VALUES_SOURCE}). "
+            "Names are coloured by the lowest difficulty that drops them (grey Normal, "
+            "orange Nightmare, purple Hell); values grey-to-green by worth.")
+        self.runes_sort = Gtk.DropDown.new_from_strings([f"by {k}" for k in configmod.RUNE_SORTS])
+        self.runes_sort.connect("notify::selected", self._on_runes_sort)
+        rune.append(self.runes_sort)
+        self._row(grid, row, "Rune helper", rune); row += 1
+
+        # Gem helper: same idea, the seven gems; Perfect only or every grade.
+        gem = Gtk.Box(spacing=8)
+        self.gems_switch = self._switch(gem, "Show", self._on_gems)
+        self.gems_switch.set_tooltip_text("A third box listing the gems and their trade values.")
+        self.gems_anchor = Gtk.DropDown.new_from_strings(list(configmod.ANCHORS))
+        self.gems_anchor.connect("notify::selected", self._on_gems_placement)
+        gem.append(self.gems_anchor)
+        self.gems_margin_x = self._spin(gem, "x", 0, 4000, 1, self._on_gems_placement)
+        self.gems_margin_y = self._spin(gem, "y", 0, 4000, 1, self._on_gems_placement)
+        self.gems_columns = self._spin(gem, "columns", gems.MIN_COLUMNS, gems.MAX_COLUMNS,
+                                       1, self._on_gems_layout)
+        self.gems_values = self._switch(gem, "Values", self._on_gems_values)
+        self.gems_values.set_tooltip_text(
+            f"Trade value in {gems.VALUES_UNIT} ({gems.VALUES_SOURCE}); Traderie prices Perfect gems "
+            "only, lower grades are a third per step (cube 3:1).")
+        self.gems_sort = Gtk.DropDown.new_from_strings([f"by {k}" for k in configmod.GEM_SORTS])
+        self.gems_sort.connect("notify::selected", self._on_gems_sort)
+        gem.append(self.gems_sort)
+        self.gems_grades = self._switch(gem, "All grades", self._on_gems_grades)
+        self.gems_grades.set_tooltip_text(
+            "One row per gem, one column per grade Chipped … Perfect (columns then do not apply).")
+        self._row(grid, row, "Gem helper", gem); row += 1
         return frame
 
     def _build_capture_section(self):
@@ -268,6 +315,23 @@ class SettingsWindow(Gtk.ApplicationWindow):
         self.font_combo.set_selected(self._fonts.index(font))
         self.opacity_spin.set_value(float(ov.get("opacity", 0.82)))
         self.padding_spin.set_value(int(ov.get("padding", 12)))
+        rn = ov["runes"]
+        self.runes_switch.set_active(bool(rn.get("enabled", False)))
+        self.runes_anchor.set_selected(configmod.ANCHORS.index(rn["anchor"]))
+        self.runes_margin_x.set_value(rn["margin_x"])
+        self.runes_margin_y.set_value(rn["margin_y"])
+        self.runes_columns.set_value(int(rn.get("columns", 3)))
+        self.runes_values.set_active(bool(rn.get("values", True)))
+        self.runes_sort.set_selected(configmod.RUNE_SORTS.index(rn.get("sort", "number")))
+        gm = ov["gems"]
+        self.gems_switch.set_active(bool(gm.get("enabled", False)))
+        self.gems_anchor.set_selected(configmod.ANCHORS.index(gm["anchor"]))
+        self.gems_margin_x.set_value(gm["margin_x"])
+        self.gems_margin_y.set_value(gm["margin_y"])
+        self.gems_columns.set_value(int(gm.get("columns", 2)))
+        self.gems_values.set_active(bool(gm.get("values", True)))
+        self.gems_sort.set_selected(configmod.GEM_SORTS.index(gm.get("sort", "name")))
+        self.gems_grades.set_active(bool(gm.get("grades", False)))
         for key, spin in self.region_spins.items():
             spin.set_value(cap["region"][key])
         self.interval_spin.set_value(cap["interval"])
@@ -381,6 +445,8 @@ class SettingsWindow(Gtk.ApplicationWindow):
         output = self._outputs[combo.get_selected()]
         self.config["overlay"]["output"] = output
         self.session.overlay.set_monitor(output)
+        self.session.runes.set_monitor(output)
+        self.session.gems.set_monitor(output)
         self._schedule_save()
 
     def _on_placement(self, *_):
@@ -392,6 +458,87 @@ class SettingsWindow(Gtk.ApplicationWindow):
         ov["margin_y"] = int(self.margin_y.get_value())
         self.session.overlay.set_placement(ov["anchor"], ov["margin_x"], ov["margin_y"])
         self._schedule_save()
+
+    def _on_runes(self, switch, state):
+        if not self._loading:
+            self.session.set_runes(state)
+            self._schedule_save()
+        return False
+
+    def _on_runes_placement(self, *_):
+        if self._loading:
+            return
+        rn = self.config["overlay"]["runes"]
+        rn["anchor"] = configmod.ANCHORS[self.runes_anchor.get_selected()]
+        rn["margin_x"] = int(self.runes_margin_x.get_value())
+        rn["margin_y"] = int(self.runes_margin_y.get_value())
+        self.session.runes.set_placement(rn["anchor"], rn["margin_x"], rn["margin_y"])
+        self._schedule_save()
+
+    def _on_runes_columns(self, spin):
+        if self._loading:
+            return
+        self.config["overlay"]["runes"]["columns"] = int(spin.get_value())
+        self.session.runes.render()
+        self._schedule_save()
+
+    def _on_runes_values(self, switch, state):
+        if not self._loading:
+            self.config["overlay"]["runes"]["values"] = bool(state)
+            self.session.runes.render()
+            self._schedule_save()
+        return False
+
+    def _on_runes_sort(self, combo, *_):
+        if self._loading:
+            return
+        self.config["overlay"]["runes"]["sort"] = configmod.RUNE_SORTS[combo.get_selected()]
+        self.session.runes.render()
+        self._schedule_save()
+
+    def _on_gems(self, switch, state):
+        if not self._loading:
+            self.session.set_gems(state)
+            self._schedule_save()
+        return False
+
+    def _on_gems_placement(self, *_):
+        if self._loading:
+            return
+        gm = self.config["overlay"]["gems"]
+        gm["anchor"] = configmod.ANCHORS[self.gems_anchor.get_selected()]
+        gm["margin_x"] = int(self.gems_margin_x.get_value())
+        gm["margin_y"] = int(self.gems_margin_y.get_value())
+        self.session.gems.set_placement(gm["anchor"], gm["margin_x"], gm["margin_y"])
+        self._schedule_save()
+
+    def _on_gems_layout(self, spin):
+        if self._loading:
+            return
+        self.config["overlay"]["gems"]["columns"] = int(spin.get_value())
+        self.session.gems.render()
+        self._schedule_save()
+
+    def _on_gems_values(self, switch, state):
+        if not self._loading:
+            self.config["overlay"]["gems"]["values"] = bool(state)
+            self.session.gems.render()
+            self._schedule_save()
+        return False
+
+    def _on_gems_sort(self, combo, *_):
+        if self._loading:
+            return
+        self.config["overlay"]["gems"]["sort"] = configmod.GEM_SORTS[combo.get_selected()]
+        self.session.gems.render()
+        self._schedule_save()
+
+    def _on_gems_grades(self, switch, state):
+        if not self._loading:
+            self.config["overlay"]["gems"]["grades"] = bool(state)
+            self.session.gems.render()
+            self._schedule_save()
+        return False
 
     def _on_font(self, spin):
         if self._loading:
