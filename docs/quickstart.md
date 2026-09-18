@@ -22,7 +22,9 @@
 Hotkeys while the game is running: `Ctrl+F9` hide/show · `Ctrl+F10` freeze ·
 `Ctrl+F11` quit · `Ctrl+F12` flag the current area's rule as wrong.
 
-Settings are saved next to `overlay.exe` in `config.toml`.
+Settings are saved next to `overlay.exe` in `config.toml`. Everything the
+program prints (area reads, capture errors, crashes) goes to `overlay.log` in
+the same folder — send that file when reporting a problem.
 
 ## Linux (KDE Wayland, D2R under Proton)
 

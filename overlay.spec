@@ -42,7 +42,7 @@ exe = EXE(
     debug=False,
     strip=False,
     upx=False,
-    console=False,       # no console window; stdout goes to overlay.log via the launcher
+    console=False,       # no console window; native/windows.py redirects output to overlay.log
 )
 coll = COLLECT(
     exe,

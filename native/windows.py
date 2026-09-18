@@ -64,6 +64,27 @@ class MONITORINFOEXW(ctypes.Structure):
 
 
 def init():
+    # The bundle is built console=False, so stdout/stderr go nowhere: send
+    # them to overlay.log next to the exe (same place as config.toml), fresh
+    # each start, and record any uncaught exception there too. Without this a
+    # startup crash is a window that never appears and nothing to send back.
+    if getattr(sys, "frozen", False):
+        import faulthandler
+        log_path = config_dir() / "overlay.log"
+        try:
+            log = open(log_path, "w", buffering=1, encoding="utf-8", errors="replace")
+        except OSError:
+            log = None
+        if log is not None:
+            sys.stdout = sys.stderr = log
+            faulthandler.enable(log)
+            print(f"diablo2-ocular-assist starting; log at {log_path}", flush=True)
+
+            def hook(exc_type, exc, tb):
+                import traceback
+                traceback.print_exception(exc_type, exc, tb, file=log)
+                log.flush()
+            sys.excepthook = hook
     # Physical pixels everywhere (GetWindowRect, ImageGrab, monitor rects)
     # so the capture region and the placement maths agree. GTK may set this
     # itself; a second call just fails, harmlessly.

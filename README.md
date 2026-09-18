@@ -106,7 +106,8 @@ topmost/click-through window styles, `PIL.ImageGrab` of the game window, and
 - **D2R must be in Windowed or Windowed (Fullscreen) mode.** Nothing can draw
   over, or capture, an exclusive-fullscreen game on Windows.
 - The overlay draws on a solid dark background there (no per-pixel alpha).
-- `config.toml` is created next to `overlay.exe` on first run.
+- `config.toml` is created next to `overlay.exe` on first run; `overlay.log`
+  (all output, rewritten each start) sits beside it.
 - `--ctl` is Linux-only; use the settings window.
 
 ## Setup
