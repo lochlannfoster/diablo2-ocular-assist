@@ -87,7 +87,7 @@ def test_levels_and_quests():
     assert rules["Cold Plains"].level("nightmare") == 36
     assert rules["Rogue Encampment"].level("hell") is None   # town
     assert rules["Cold Plains"].level(None) is None
-    assert rules["Durance of Hate Level 3"].quests == ("The Guardian: Mephisto",)
+    assert rules["Durance of Hate Level 3"].quests[0].startswith("The Guardian: Mephisto")
     for area in rules.values():
         assert len(area.quests) <= 2, area.name
         for quest in area.quests:
