@@ -37,6 +37,7 @@ GLYPHS = {
 }
 
 CONFIDENCE = ("high", "medium", "low")
+DIFFICULTIES = {"normal": 0, "nightmare": 1, "hell": 2}
 
 
 class AreaError(Exception):
@@ -69,6 +70,15 @@ class Area:
     confidence: str
     source: str = ""
     ocr_name: str = ""   # on-screen name when it differs from the key
+    levels: tuple[int, int, int] = (0, 0, 0)   # Normal, Nightmare, Hell; 0 = town
+    quests: tuple[str, ...] = ()
+
+    def level(self, difficulty: str | None) -> int | None:
+        """Area level for a difficulty name, or None if unknown / town."""
+        index = DIFFICULTIES.get(difficulty or "")
+        if index is None:
+            return None
+        return self.levels[index] or None
 
     @property
     def screen_name(self) -> str:
@@ -102,8 +112,12 @@ def parse(data: dict) -> dict[str, Area]:
             confidence = str(raw.get("confidence", "low"))
             source = str(raw.get("source", ""))
             ocr_name = str(raw.get("ocr_name", ""))
+            levels = tuple(int(x) for x in raw.get("levels", (0, 0, 0)))
+            quests = tuple(str(q) for q in raw.get("quests", ()))
         except (KeyError, TypeError, ValueError) as exc:
             raise AreaError(f"{name}: {exc}")
+        if len(levels) != 3:
+            raise AreaError(f"{name}: levels must be [normal, nightmare, hell]")
         if not 1 <= act <= 5:
             raise AreaError(f"{name}: act must be 1-5, got {act}")
         if confidence not in CONFIDENCE:
@@ -118,6 +132,8 @@ def parse(data: dict) -> dict[str, Area]:
             confidence=confidence,
             source=source,
             ocr_name=ocr_name,
+            levels=levels,
+            quests=quests,
         )
     # Every `next` must be a real area, otherwise the overlay would happily
     # point at a place that does not exist.

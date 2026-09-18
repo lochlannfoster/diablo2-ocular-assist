@@ -135,6 +135,7 @@ class Overlay:
         self.wp_label = self._label("hint", "wp")
         self.next_label = self._label("hint", "next")
         self.next_tip_label = self._label("hint", "next")
+        self.quest_labels = [self._label("hint", "quest"), self._label("hint", "quest")]
 
         self._load_css()
         self.win.connect("realize", self._clear_input_region)
@@ -203,7 +204,7 @@ class Overlay:
     def on_reading(self, reading: ocr.Reading):
         self.error = None
         self.last_reading = reading
-        changed = self.recognizer.feed(reading.area)
+        changed = self.recognizer.feed(reading.area, reading.difficulty)
         if changed:
             raw = " / ".join(reading.raw.split("\n")).strip(" /")
             print(f"area: {self.recognizer.area}  (score {reading.score:.2f}, read {raw!r})",
@@ -222,12 +223,13 @@ class Overlay:
 
     def render(self):
         rec = self.recognizer
-        state = (rec.area, rec.visible, rec.frozen, self.error, self.hidden)
+        state = (rec.area, rec.difficulty, rec.visible, rec.frozen, self.error, self.hidden)
         if state == self._last_render:
             return
         self._last_render = state
 
-        for label in (self.title_label, self.wp_label, self.next_label, self.next_tip_label):
+        for label in (self.title_label, self.wp_label, self.next_label,
+                      self.next_tip_label, *self.quest_labels):
             for cls in ("stale", "frozen", "error"):
                 label.remove_css_class(cls)
 
@@ -243,12 +245,20 @@ class Overlay:
                 self.wp_label.set_text("area name must be on screen")
             self.next_label.set_text("")
             self.next_tip_label.set_text("")
+            for label in self.quest_labels:
+                label.set_text("")
             return
 
         area = areas.resolve(self.rules, rec.area, self.last_act)
         self.last_act = area.act
         dot = {"high": "●", "medium": "●", "low": "○"}[area.confidence]
         suffix = "  (frozen)" if rec.frozen else ""
+        level = area.level(rec.difficulty)
+        if level:
+            tag = {"normal": "N", "nightmare": "NM", "hell": "H"}[rec.difficulty]
+            suffix += f"   alvl {level} ({tag})"
+        elif not area.levels[0]:
+            suffix += "   town"
         self.title_label.set_text(f"{dot} {area.name}{suffix}")
         for cls in ("conf-high", "conf-medium", "conf-low"):
             self.title_label.remove_css_class(cls)
@@ -271,6 +281,10 @@ class Overlay:
         self.next_tip_label.set_text(f"      {nx.glyph:<2} {nx.tip}")
         (self.next_tip_label.add_css_class if nx.no_rule
          else self.next_tip_label.remove_css_class)("norule")
+
+        # One quest per line; a blank line keeps the box the same height.
+        for label, quest in zip(self.quest_labels, list(area.quests) + ["", ""]):
+            label.set_text(f"Q     {quest}" if quest else "")
 
     # -- commands ----------------------------------------------------------
 

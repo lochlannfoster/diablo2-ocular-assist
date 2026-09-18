@@ -8,6 +8,8 @@
 #   to_next        hint from the WAYPOINT (or entrance if no waypoint) to the exit
 #   confidence     high = both sources agree, medium = one source, low = inferred
 #   source         where the rule comes from (see below)
+#   levels         area level on [Normal, Nightmare, Hell]; [0,0,0] for towns
+#   quests         quest objectives located in this area (may be empty)
 #   ocr_name       optional: the on-screen name when it differs from the key
 #                  (Act 2 and Act 3 both have "Sewers Level 1/2"; the overlay
 #                  picks by the act you were last in)
@@ -24,6 +26,7 @@
 #   none                       not applicable (e.g. no waypoint here)
 #
 # Sources:
+#   levels     https://www.purediablo.com/diablo-2/diablo-2-area-levels
 #   maxroll    https://maxroll.gg/d2/resources/map-reading
 #   cheatsheet https://github.com/minimapletinytools/d2r-speedrun-cheatsheet
 #              (speedrun community, derived from Teo-'s guide on speedrun.com)
@@ -43,6 +46,8 @@ to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
 to_next = { dir = "fixed", tip = "gap in the palisade, fixed" }
 confidence = "high"
 source = "maxroll"
+levels = [0, 0, 0]
+quests = []
 
 [area."Blood Moor"]
 act = 1
@@ -52,6 +57,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "path", tip = "follow the path; Den is at the fork" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [1, 36, 67]
+quests = []
 
 [area."Den of Evil"]
 act = 1
@@ -61,6 +68,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; clear it all" }
 confidence = "high"
 source = "maxroll"
+levels = [1, 36, 79]
+quests = ["Den of Evil: clear every monster"]
 
 [area."Cold Plains"]
 act = 1
@@ -70,6 +79,8 @@ to_waypoint = { dir = "near", tip = "next to the entrance, in the corner" }
 to_next = { dir = "edge", tip = "mid-edge; corner path = Burial Grounds" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [2, 36, 68]
+quests = []
 
 [area."Burial Grounds"]
 act = 1
@@ -79,6 +90,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "semi-static; Blood Raven inside" }
 confidence = "high"
 source = "maxroll"
+levels = [3, 36, 80]
+quests = ["Sisters' Burial Grounds: Blood Raven"]
 
 [area."Crypt"]
 act = 1
@@ -88,6 +101,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "chest + Bonebreaker: left" }
 confidence = "medium"
 source = "maxroll"
+levels = [3, 37, 83]
+quests = []
 
 [area."Mausoleum"]
 act = 1
@@ -97,6 +112,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "golden chest: left" }
 confidence = "medium"
 source = "maxroll"
+levels = [3, 37, 85]
+quests = []
 
 [area."Cave Level 1"]
 act = 1
@@ -106,6 +123,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "medium"
 source = "maxroll"
+levels = [2, 36, 77]
+quests = []
 
 [area."Cave Level 2"]
 act = 1
@@ -115,6 +134,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; golden chest" }
 confidence = "high"
 source = "maxroll"
+levels = [2, 37, 78]
+quests = []
 
 [area."Stony Field"]
 act = 1
@@ -124,6 +145,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "path", tip = "follow path; Cairn Stones beside it" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [4, 37, 68]
+quests = ["Search for Cain: Cairn Stones + Scroll"]
 
 [area."Tristram"]
 act = 1
@@ -133,6 +156,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Cain caged near centre" }
 confidence = "high"
 source = "maxroll"
+levels = [6, 39, 76]
+quests = ["Search for Cain: free Cain"]
 
 [area."Underground Passage Level 1"]
 act = 1
@@ -142,6 +167,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "straight", tip = "straight; Level 2 is left" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [4, 37, 69]
+quests = []
 
 [area."Underground Passage Level 2"]
 act = 1
@@ -151,6 +178,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; golden chest" }
 confidence = "high"
 source = "maxroll"
+levels = [4, 38, 83]
+quests = []
 
 [area."Dark Wood"]
 act = 1
@@ -160,6 +189,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "path", tip = "path runs entrance→exit; on an edge" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [5, 38, 68]
+quests = ["Search for Cain: Tree of Inifuss"]
 
 [area."Hole Level 1"]
 act = 1
@@ -169,6 +200,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "medium"
 source = "maxroll"
+levels = [5, 38, 80]
+quests = []
 
 [area."Hole Level 2"]
 act = 1
@@ -178,6 +211,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; golden chest" }
 confidence = "high"
 source = "maxroll"
+levels = [5, 39, 81]
+quests = []
 
 [area."Black Marsh"]
 act = 1
@@ -187,6 +222,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "edge", tip = "another edge, never bottom-left" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [6, 38, 69]
+quests = []
 
 [area."Forgotten Tower"]
 act = 1
@@ -196,6 +233,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "stairs in the tower ruin" }
 confidence = "high"
 source = "maxroll"
+levels = [7, 38, 75]
+quests = []
 
 [area."Tower Cellar Level 1"]
 act = 1
@@ -205,6 +244,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [7, 38, 75]
+quests = []
 
 [area."Tower Cellar Level 2"]
 act = 1
@@ -214,6 +255,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [7, 39, 76]
+quests = []
 
 [area."Tower Cellar Level 3"]
 act = 1
@@ -223,6 +266,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [7, 40, 77]
+quests = []
 
 [area."Tower Cellar Level 4"]
 act = 1
@@ -232,6 +277,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [7, 41, 78]
+quests = []
 
 [area."Tower Cellar Level 5"]
 act = 1
@@ -241,6 +288,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Countess in the end room" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [7, 42, 79]
+quests = ["Forgotten Tower: the Countess"]
 
 [area."Tamoe Highland"]
 act = 1
@@ -250,6 +299,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "ne", tip = "top-right edge, always" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [8, 39, 69]
+quests = []
 
 [area."Pit Level 1"]
 act = 1
@@ -259,6 +310,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "random", tip = "no accepted rule" }
 confidence = "medium"
 source = "maxroll (not listed)"
+levels = [7, 39, 85]
+quests = []
 
 [area."Pit Level 2"]
 act = 1
@@ -268,6 +321,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; golden chest" }
 confidence = "high"
 source = "maxroll"
+levels = [7, 40, 85]
+quests = []
 
 [area."Monastery Gate"]
 act = 1
@@ -277,6 +332,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "straight", tip = "static; straight through" }
 confidence = "high"
 source = "cheatsheet"
+levels = [8, 40, 70]
+quests = []
 
 [area."Outer Cloister"]
 act = 1
@@ -286,6 +343,8 @@ to_waypoint = { dir = "straight", tip = "static; by the cross/fountain" }
 to_next = { dir = "ne", tip = "NE; WP SE of fountain→NW, NW→SE" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [9, 40, 70]
+quests = []
 
 [area."Barracks"]
 act = 1
@@ -295,6 +354,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left or straight; Malus left-straight" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [9, 40, 70]
+quests = ["Tools of the Trade: Horadric Malus"]
 
 [area."Jail Level 1"]
 act = 1
@@ -304,6 +365,8 @@ to_waypoint = { dir = "left", tip = "left from entrance" }
 to_next = { dir = "left", tip = "left from WP (straight from entrance)" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [10, 41, 71]
+quests = []
 
 [area."Jail Level 2"]
 act = 1
@@ -313,6 +376,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "straight", tip = "straight; Pitspawn is left" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [10, 41, 71]
+quests = []
 
 [area."Jail Level 3"]
 act = 1
@@ -322,6 +387,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [10, 41, 71]
+quests = []
 
 [area."Inner Cloister"]
 act = 1
@@ -331,6 +398,8 @@ to_waypoint = { dir = "fixed", tip = "static; centre" }
 to_next = { dir = "ne", tip = "static; NE" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [10, 41, 72]
+quests = []
 
 [area."Cathedral"]
 act = 1
@@ -340,6 +409,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; far end of the nave" }
 confidence = "low"
 source = "inferred (not in sources)"
+levels = [11, 42, 72]
+quests = []
 
 [area."Catacombs Level 1"]
 act = 1
@@ -349,6 +420,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "random", tip = "no accepted rule" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [11, 42, 72]
+quests = []
 
 [area."Catacombs Level 2"]
 act = 1
@@ -358,6 +431,8 @@ to_waypoint = { dir = "random", tip = "no accepted rule" }
 to_next = { dir = "right", tip = "right from WP, only" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [11, 42, 73]
+quests = []
 
 [area."Catacombs Level 3"]
 act = 1
@@ -367,6 +442,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "random", tip = "no accepted rule" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [12, 43, 73]
+quests = []
 
 [area."Catacombs Level 4"]
 act = 1
@@ -376,6 +453,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Andariel at the far end" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [12, 43, 73]
+quests = ["Sisters to the Slaughter: Andariel"]
 
 [area."Moo Moo Farm"]
 act = 1
@@ -385,6 +464,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "random", tip = "no accepted rule; King in a pen" }
 confidence = "medium"
 source = "inferred"
+levels = [28, 64, 81]
+quests = ["Cow King: kill = no more cow portals"]
 
 # ---------------------------------------------------------------------------
 # Act 2
@@ -398,6 +479,8 @@ to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
 to_next = { dir = "fixed", tip = "top gate; Sewers by the docks" }
 confidence = "high"
 source = "maxroll"
+levels = [0, 0, 0]
+quests = []
 
 [area."Sewers Level 1"]
 act = 2
@@ -407,6 +490,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "random", tip = "no accepted rule" }
 confidence = "medium"
 source = "maxroll (not listed)"
+levels = [13, 43, 74]
+quests = []
 
 [area."Sewers Level 2"]
 act = 2
@@ -416,6 +501,8 @@ to_waypoint = { dir = "left", tip = "left from entrance" }
 to_next = { dir = "left", tip = "left from WP (straight from entrance)" }
 confidence = "medium"
 source = "maxroll"
+levels = [13, 43, 74]
+quests = []
 
 [area."Sewers Level 3"]
 act = 2
@@ -425,6 +512,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "Radament: left from entrance" }
 confidence = "medium"
 source = "maxroll"
+levels = [14, 44, 75]
+quests = ["Radament's Lair: Radament"]
 
 [area."Rocky Waste"]
 act = 2
@@ -434,6 +523,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "corner", tip = "another corner; can be right beside you" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [14, 43, 75]
+quests = []
 
 [area."Stony Tomb Level 1"]
 act = 2
@@ -443,6 +534,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "medium"
 source = "maxroll"
+levels = [12, 44, 78]
+quests = []
 
 [area."Stony Tomb Level 2"]
 act = 2
@@ -452,6 +545,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "chest left; Creeping Feature straight" }
 confidence = "medium"
 source = "maxroll"
+levels = [12, 44, 79]
+quests = []
 
 [area."Dry Hills"]
 act = 2
@@ -461,6 +556,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "corner", tip = "other corner, not on entrance's edge" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [15, 44, 76]
+quests = []
 
 [area."Halls of the Dead Level 1"]
 act = 2
@@ -470,6 +567,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [12, 44, 75]
+quests = []
 
 [area."Halls of the Dead Level 2"]
 act = 2
@@ -479,6 +578,8 @@ to_waypoint = { dir = "straight", tip = "straight from entrance" }
 to_next = { dir = "right", tip = "right from WP (left from entrance)" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [13, 45, 81]
+quests = []
 
 [area."Halls of the Dead Level 3"]
 act = 2
@@ -488,6 +589,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "Cube + Bloodwitch: left" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [13, 45, 82]
+quests = ["Horadric Staff: Horadric Cube"]
 
 [area."Far Oasis"]
 act = 2
@@ -497,6 +600,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "corner", tip = "one of the 3 other corners" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [16, 45, 76]
+quests = []
 
 [area."Maggot Lair Level 1"]
 act = 2
@@ -506,6 +611,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "right", tip = "right from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [17, 45, 84]
+quests = []
 
 [area."Maggot Lair Level 2"]
 act = 2
@@ -515,6 +622,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "right", tip = "right from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [17, 45, 84]
+quests = []
 
 [area."Maggot Lair Level 3"]
 act = 2
@@ -524,6 +633,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "straight", tip = "Coldworm + Staff: straight" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [17, 46, 85]
+quests = ["Horadric Staff: Staff of Kings"]
 
 [area."Lost City"]
 act = 2
@@ -533,6 +644,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "corner", tip = "W, N or E corner — never South" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [17, 46, 77]
+quests = []
 
 [area."Ancient Tunnels"]
 act = 2
@@ -542,6 +655,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "golden chest: left" }
 confidence = "medium"
 source = "maxroll"
+levels = [17, 46, 85]
+quests = []
 
 [area."Valley of Snakes"]
 act = 2
@@ -551,6 +666,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; temple in the centre" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [18, 46, 77]
+quests = []
 
 [area."Claw Viper Temple Level 1"]
 act = 2
@@ -560,6 +677,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [14, 47, 82]
+quests = []
 
 [area."Claw Viper Temple Level 2"]
 act = 2
@@ -569,6 +688,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; altar in the centre" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [14, 47, 83]
+quests = ["Tainted Sun: altar", "Horadric Staff: Amulet of the Viper"]
 
 [area."Harem Level 1"]
 act = 2
@@ -578,6 +699,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "static; left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [13, 47, 78]
+quests = []
 
 [area."Harem Level 2"]
 act = 2
@@ -587,6 +710,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "straight", tip = "static; straight from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [13, 47, 78]
+quests = []
 
 [area."Palace Cellar Level 1"]
 act = 2
@@ -596,6 +721,8 @@ to_waypoint = { dir = "fixed", tip = "static; close to entrance" }
 to_next = { dir = "straight", tip = "static; straight from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [13, 47, 78]
+quests = []
 
 [area."Palace Cellar Level 2"]
 act = 2
@@ -605,6 +732,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "straight", tip = "static; straight from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [13, 47, 78]
+quests = []
 
 [area."Palace Cellar Level 3"]
 act = 2
@@ -614,6 +743,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; portal in the centre" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [13, 48, 78]
+quests = ["Arcane Sanctuary: the portal"]
 
 [area."Arcane Sanctuary"]
 act = 2
@@ -623,6 +754,8 @@ to_waypoint = { dir = "fixed", tip = "centre hub" }
 to_next = { dir = "random", tip = "no accepted rule; 1 of 4 arms" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [14, 48, 79]
+quests = ["The Summoner"]
 
 [area."Canyon of the Magi"]
 act = 2
@@ -632,6 +765,8 @@ to_waypoint = { dir = "fixed", tip = "static; by the arrival portal" }
 to_next = { dir = "fixed", tip = "tombs L→R: ○ ◡ ☐ ⊹ ≫ △ ⚇" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [16, 48, 79]
+quests = ["Seven Tombs: find the true tomb"]
 
 [area."Tal Rasha's Tomb"]
 act = 2
@@ -641,6 +776,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "Orifice (or chest): left" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [17, 49, 80]
+quests = ["Seven Tombs: Staff into the Orifice"]
 
 [area."Tal Rasha's Chamber"]
 act = 2
@@ -650,6 +787,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Duriel" }
 confidence = "high"
 source = "maxroll"
+levels = [17, 49, 80]
+quests = ["Seven Tombs: Duriel"]
 
 # ---------------------------------------------------------------------------
 # Act 3
@@ -663,6 +802,8 @@ to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
 to_next = { dir = "fixed", tip = "top of the docks" }
 confidence = "high"
 source = "maxroll"
+levels = [0, 0, 0]
+quests = []
 
 [area."Spider Forest"]
 act = 3
@@ -672,6 +813,8 @@ to_waypoint = { dir = "inside", tip = "2-pole camp with Arachnid Lair" }
 to_next = { dir = "n", tip = "tile 3/5/6 (Marsh always, Jungle maybe)" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [21, 49, 79]
+quests = []
 
 [area."Spider Cavern"]
 act = 3
@@ -681,6 +824,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Khalim's Eye" }
 confidence = "high"
 source = "maxroll"
+levels = [21, 50, 79]
+quests = ["Khalim's Will: Khalim's Eye"]
 
 [area."Arachnid Lair"]
 act = 3
@@ -690,6 +835,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "random", tip = "no accepted rule; optional" }
 confidence = "medium"
 source = "maxroll (not listed)"
+levels = [21, 50, 79]
+quests = []
 
 [area."Great Marsh"]
 act = 3
@@ -699,6 +846,8 @@ to_waypoint = { dir = "inside", tip = "one of the 3 two-pole camps" }
 to_next = { dir = "n", tip = "tile 3/5/6 — NOT guaranteed; river" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [21, 50, 80]
+quests = []
 
 [area."Flayer Jungle"]
 act = 3
@@ -708,6 +857,8 @@ to_waypoint = { dir = "inside", tip = "camp with Swampy Pit entrance" }
 to_next = { dir = "n", tip = "tile 6 (Stormtree); follow the river" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [22, 50, 80]
+quests = ["Blade of the Old Religion: Gidbinn"]
 
 [area."Swampy Pit Level 1"]
 act = 3
@@ -717,6 +868,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "medium"
 source = "maxroll"
+levels = [21, 51, 80]
+quests = []
 
 [area."Swampy Pit Level 2"]
 act = 3
@@ -726,6 +879,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "medium"
 source = "maxroll"
+levels = [21, 51, 81]
+quests = []
 
 [area."Swampy Pit Level 3"]
 act = 3
@@ -735,6 +890,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; golden chest" }
 confidence = "high"
 source = "maxroll"
+levels = [21, 51, 82]
+quests = []
 
 [area."Flayer Dungeon Level 1"]
 act = 3
@@ -744,6 +901,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "medium"
 source = "maxroll"
+levels = [22, 51, 81]
+quests = []
 
 [area."Flayer Dungeon Level 2"]
 act = 3
@@ -753,6 +912,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "medium"
 source = "maxroll"
+levels = [22, 51, 82]
+quests = []
 
 [area."Flayer Dungeon Level 3"]
 act = 3
@@ -762,6 +923,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Khalim's Brain" }
 confidence = "high"
 source = "maxroll"
+levels = [22, 51, 83]
+quests = ["Khalim's Will: Khalim's Brain"]
 
 [area."Lower Kurast"]
 act = 3
@@ -771,6 +934,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "corner", tip = "North or East corner" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [22, 52, 80]
+quests = []
 
 [area."Kurast Bazaar"]
 act = 3
@@ -780,6 +945,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "opposite", tip = "opposite corner from the entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [22, 52, 81]
+quests = []
 
 [area."Ruined Temple"]
 act = 3
@@ -789,6 +956,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Lam Esen's Tome" }
 confidence = "high"
 source = "maxroll"
+levels = [23, 53, 84]
+quests = ["Lam Esen's Tome"]
 
 [area."Disused Fane"]
 act = 3
@@ -798,6 +967,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [23, 53, 84]
+quests = []
 
 [area."Kurast Sewers Level 1"]
 ocr_name = "Sewers Level 1"
@@ -808,6 +979,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "right", tip = "right from the sparkling chest" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [23, 52, 84]
+quests = []
 
 [area."Kurast Sewers Level 2"]
 ocr_name = "Sewers Level 2"
@@ -818,6 +991,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Khalim's Heart" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [24, 53, 85]
+quests = ["Khalim's Will: Khalim's Heart"]
 
 [area."Upper Kurast"]
 act = 3
@@ -827,6 +1002,8 @@ to_waypoint = { dir = "inside", tip = "random, somewhere inside" }
 to_next = { dir = "ne", tip = "centre of the NE edge" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [23, 52, 81]
+quests = []
 
 [area."Forgotten Temple"]
 act = 3
@@ -836,6 +1013,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [24, 54, 85]
+quests = []
 
 [area."Forgotten Reliquary"]
 act = 3
@@ -845,6 +1024,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [23, 53, 84]
+quests = []
 
 [area."Kurast Causeway"]
 act = 3
@@ -854,6 +1035,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; straight up the causeway" }
 confidence = "high"
 source = "maxroll"
+levels = [24, 53, 81]
+quests = []
 
 [area."Ruined Fane"]
 act = 3
@@ -863,6 +1046,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [24, 54, 85]
+quests = []
 
 [area."Disused Reliquary"]
 act = 3
@@ -872,6 +1057,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [24, 54, 85]
+quests = []
 
 [area."Travincal"]
 act = 3
@@ -881,6 +1068,8 @@ to_waypoint = { dir = "fixed", tip = "static; up-left of entrance" }
 to_next = { dir = "straight", tip = "static; straight to Council + Orb" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [24, 54, 82]
+quests = ["Blackened Temple: Council + Orb", "Khalim's Will: Khalim's Flail"]
 
 [area."Durance of Hate Level 1"]
 act = 3
@@ -890,6 +1079,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "left", tip = "left from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [25, 55, 83]
+quests = []
 
 [area."Durance of Hate Level 2"]
 act = 3
@@ -899,6 +1090,8 @@ to_waypoint = { dir = "left", tip = "left from entrance" }
 to_next = { dir = "left", tip = "left from WP (straight from entrance)" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [25, 55, 83]
+quests = []
 
 [area."Durance of Hate Level 3"]
 act = 3
@@ -908,6 +1101,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "nw", tip = "static; Mephisto NW of entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [25, 55, 83]
+quests = ["The Guardian: Mephisto"]
 
 # ---------------------------------------------------------------------------
 # Act 4
@@ -921,6 +1116,8 @@ to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
 to_next = { dir = "fixed", tip = "bottom of the fortress" }
 confidence = "high"
 source = "maxroll"
+levels = [0, 0, 0]
+quests = []
 
 [area."Outer Steppes"]
 act = 4
@@ -930,6 +1127,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "edge", tip = "any edge except the NW one you came in" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [26, 56, 82]
+quests = []
 
 [area."Plains of Despair"]
 act = 4
@@ -939,6 +1138,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "edge", tip = "any edge except the entrance edge" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [26, 56, 83]
+quests = ["The Fallen Angel: Izual"]
 
 [area."City of the Damned"]
 act = 4
@@ -948,6 +1149,8 @@ to_waypoint = { dir = "random", tip = "no accepted rule; WP is by the stairs" }
 to_next = { dir = "near", tip = "stairs are right next to the WP" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [27, 57, 84]
+quests = []
 
 [area."River of Flame"]
 act = 4
@@ -957,6 +1160,8 @@ to_waypoint = { dir = "straight", tip = "straight; Hellforge is left or right" }
 to_next = { dir = "straight", tip = "straight on from the WP" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [27, 57, 85]
+quests = ["Hell's Forge: Hephasto, smash Soulstone"]
 
 [area."Chaos Sanctuary"]
 act = 4
@@ -966,6 +1171,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; 5 seals around the star" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [28, 58, 85]
+quests = ["Terror's End: Diablo"]
 
 # ---------------------------------------------------------------------------
 # Act 5
@@ -979,6 +1186,8 @@ to_waypoint = { dir = "fixed", tip = "town, fixed layout" }
 to_next = { dir = "fixed", tip = "top gate of town" }
 confidence = "high"
 source = "maxroll"
+levels = [0, 0, 0]
+quests = []
 
 [area."Bloody Foothills"]
 act = 5
@@ -988,6 +1197,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "straight", tip = "static; keep going forward" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [24, 58, 80]
+quests = ["Siege on Harrogath: Shenk"]
 
 [area."Frigid Highlands"]
 act = 5
@@ -997,6 +1208,8 @@ to_waypoint = { dir = "near", tip = "near the entrance, with Eldritch" }
 to_next = { dir = "straight", tip = "far short edge; forward past 3 walls" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [25, 59, 81]
+quests = ["Rescue on Mount Arreat: 3 cages"]
 
 [area."Abaddon"]
 act = 5
@@ -1006,6 +1219,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [39, 60, 81]
+quests = []
 
 [area."Arreat Plateau"]
 act = 5
@@ -1015,6 +1230,8 @@ to_waypoint = { dir = "inside", tip = "random, between the walls" }
 to_next = { dir = "straight", tip = "centre of the far short edge" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [26, 60, 81]
+quests = []
 
 [area."Pit of Acheron"]
 act = 5
@@ -1024,6 +1241,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [39, 61, 82]
+quests = []
 
 [area."Crystalline Passage"]
 act = 5
@@ -1033,6 +1252,8 @@ to_waypoint = { dir = "right", tip = "right from entrance" }
 to_next = { dir = "straight", tip = "straight from WP; Frozen River right" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [29, 61, 82]
+quests = []
 
 [area."Frozen River"]
 act = 5
@@ -1042,6 +1263,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Anya at the far end" }
 confidence = "high"
 source = "maxroll"
+levels = [29, 61, 83]
+quests = ["Prison of Ice: Anya"]
 
 [area."Glacial Trail"]
 act = 5
@@ -1051,6 +1274,8 @@ to_waypoint = { dir = "back", tip = "behind you; WP faces same way as entry" }
 to_next = { dir = "left", tip = "left; Drifter straight, chest right" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [29, 61, 83]
+quests = []
 
 [area."Drifter Cavern"]
 act = 5
@@ -1060,6 +1285,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [29, 61, 84]
+quests = []
 
 [area."Frozen Tundra"]
 act = 5
@@ -1069,6 +1296,8 @@ to_waypoint = { dir = "inside", tip = "random, between the walls" }
 to_next = { dir = "opposite", tip = "opposite short edge from entrance" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [27, 60, 81]
+quests = []
 
 [area."Infernal Pit"]
 act = 5
@@ -1078,6 +1307,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [39, 62, 83]
+quests = []
 
 [area."The Ancients' Way"]
 act = 5
@@ -1087,6 +1318,8 @@ to_waypoint = { dir = "right", tip = "right from entrance" }
 to_next = { dir = "straight", tip = "straight from WP; Icy Cellar right" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [29, 62, 82]
+quests = []
 
 [area."Icy Cellar"]
 act = 5
@@ -1096,6 +1329,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; optional" }
 confidence = "high"
 source = "maxroll"
+levels = [29, 62, 83]
+quests = []
 
 [area."Arreat Summit"]
 act = 5
@@ -1105,6 +1340,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; altar, Ancients, door at top" }
 confidence = "high"
 source = "maxroll"
+levels = [37, 68, 87]
+quests = ["Rite of Passage: the Ancients"]
 
 [area."The Worldstone Keep Level 1"]
 act = 5
@@ -1114,6 +1351,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "random", tip = "no accepted rule" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [39, 65, 85]
+quests = []
 
 [area."The Worldstone Keep Level 2"]
 act = 5
@@ -1123,6 +1362,8 @@ to_waypoint = { dir = "random", tip = "no accepted rule" }
 to_next = { dir = "right", tip = "right from WP, only" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [40, 65, 85]
+quests = []
 
 [area."The Worldstone Keep Level 3"]
 act = 5
@@ -1132,6 +1373,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "random", tip = "no accepted rule" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [42, 66, 85]
+quests = []
 
 [area."Throne of Destruction"]
 act = 5
@@ -1141,6 +1384,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; throne at the top" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [43, 66, 85]
+quests = ["Eve of Destruction: Baal's waves"]
 
 [area."The Worldstone Chamber"]
 act = 5
@@ -1150,6 +1395,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Baal" }
 confidence = "high"
 source = "maxroll"
+levels = [43, 66, 85]
+quests = ["Eve of Destruction: Baal"]
 
 [area."Nihlathak's Temple"]
 act = 5
@@ -1159,6 +1406,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; stairs ahead" }
 confidence = "high"
 source = "maxroll"
+levels = [32, 63, 83]
+quests = []
 
 [area."Halls of Anguish"]
 act = 5
@@ -1168,6 +1417,8 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static layout (memorise)" }
 confidence = "medium"
 source = "maxroll"
+levels = [33, 63, 83]
+quests = []
 
 [area."Halls of Pain"]
 act = 5
@@ -1177,6 +1428,8 @@ to_waypoint = { dir = "fixed", tip = "static layout (memorise)" }
 to_next = { dir = "fixed", tip = "static layout (memorise)" }
 confidence = "medium"
 source = "maxroll"
+levels = [34, 64, 84]
+quests = []
 
 [area."Halls of Vaught"]
 act = 5
@@ -1186,3 +1439,5 @@ to_waypoint = { dir = "none", tip = "no WP" }
 to_next = { dir = "fixed", tip = "static; Nihlathak in a corner room" }
 confidence = "medium"
 source = "maxroll"
+levels = [36, 64, 84]
+quests = ["Betrayal of Harrogath: Nihlathak"]

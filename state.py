@@ -23,13 +23,16 @@ class Recognizer:
     area: str | None = None       # committed
     visible: bool = False         # was the last reading readable?
     frozen: bool = False          # Ctrl+F10: stop updating
+    difficulty: str | None = None # last difficulty read off the screen
     _candidate: str | None = field(default=None, repr=False)
     _streak: int = field(default=0, repr=False)
 
-    def feed(self, reading: str | None) -> bool:
+    def feed(self, reading: str | None, difficulty: str | None = None) -> bool:
         """Feed one reading. Returns True if the committed area changed."""
         if self.frozen:
             return False
+        if difficulty:
+            self.difficulty = difficulty
         self.visible = reading is not None
         if reading is None:
             self._candidate, self._streak = None, 0

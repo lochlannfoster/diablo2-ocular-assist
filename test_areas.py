@@ -78,3 +78,16 @@ def test_shared_names_resolve_by_act():
     assert areas.resolve(rules, "Sewers Level 1", 2).name == "Sewers Level 1"
     assert areas.resolve(rules, "Sewers Level 1", None).act == 2
     assert areas.resolve(rules, "Cold Plains", 5).name == "Cold Plains"
+
+
+def test_levels_and_quests():
+    rules = areas.load()
+    assert rules["Cold Plains"].levels == (2, 36, 68)
+    assert rules["Cold Plains"].level("nightmare") == 36
+    assert rules["Rogue Encampment"].level("hell") is None   # town
+    assert rules["Cold Plains"].level(None) is None
+    assert rules["Durance of Hate Level 3"].quests == ("The Guardian: Mephisto",)
+    for area in rules.values():
+        assert len(area.quests) <= 2, area.name
+        for quest in area.quests:
+            assert len(quest) <= 42, quest

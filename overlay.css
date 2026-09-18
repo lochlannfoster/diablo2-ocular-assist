@@ -53,6 +53,10 @@ label {
   color: #9be59b;
 }
 
+.hint.quest {
+  color: #e8c46a;
+}
+
 /* "No accepted rule": the sources say so explicitly. Stands out so you know
    not to look for a pattern. */
 .hint.norule {

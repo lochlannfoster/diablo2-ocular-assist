@@ -6,12 +6,16 @@ It reads the area name the game draws in the top-right corner, looks it up in a
 hand-written table, and shows two hints on top of the game:
 
 ```
-● Jail Level 1
-WP    ↰  left from entrance
-NEXT  Jail Level 2  (from WP)
-      ↰  left from WP (straight from entrance)
+● Tower Cellar Level 5   alvl 42 (NM)
+WP    -  none here
+NEXT  end of the line  (from entry)
+      ▣  static; Countess in the end room
+Q     Forgotten Tower: the Countess
 ```
 
+- **alvl** — the area level for the difficulty read off the screen
+  (N / NM / H); towns show "town".
+- **Q** — quest objectives located in this area (up to two lines).
 - **WP** — where the waypoint is, from the entrance.
 - **NEXT** — the next area and where its exit is, from the waypoint (or the
   entrance if the area has no waypoint).
@@ -115,6 +119,8 @@ to_waypoint = { dir = "near", tip = "next to the entrance, in the corner" }
 to_next     = { dir = "edge", tip = "mid-edge; corner path = Burial Grounds" }
 confidence = "high"
 source = "maxroll, cheatsheet"
+levels = [2, 36, 68]          # Normal, Nightmare, Hell
+quests = []                   # e.g. ["Search for Cain: Tree of Inifuss"]
 ```
 
 `dir` vocabulary (glyphs in `areas.py`): `left straight right back` (character-
@@ -128,6 +134,7 @@ error at startup rather than a hint that silently never appears.
 Every entry has a `source` field. Two independent write-ups of the speedrun
 community's map-reading knowledge, which agree closely:
 
+- [PureDiablo — Area Levels](https://www.purediablo.com/diablo-2/diablo-2-area-levels) for `levels`
 - [Maxroll — D2R Map Reading](https://maxroll.gg/d2/resources/map-reading)
 - [d2r-speedrun-cheatsheet](https://github.com/minimapletinytools/d2r-speedrun-cheatsheet)
   (derived from Teo-'s general map reading guide on speedrun.com)

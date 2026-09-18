@@ -32,11 +32,31 @@ _DIGIT_FIXES = {"i": "1", "l": "1", "|": "1", "!": "1", "z": "2", "s": "5",
                 "b": "6", "g": "9", "o": "0"}
 
 
+_DIFFICULTY = re.compile(r"difficulty\W*([^\n]+)", re.IGNORECASE)
+_DIFFICULTY_NAMES = ("normal", "nightmare", "hell")
+
+
 @dataclass(frozen=True)
 class Reading:
     raw: str          # what tesseract returned, all lines
     area: str | None  # best matching area name, or None
     score: float      # similarity of that match (0..1)
+    difficulty: str | None = None  # "normal" | "nightmare" | "hell"
+
+
+def read_difficulty(raw: str) -> str | None:
+    """The difficulty line, fuzzy-matched the same way as area names
+    ("NIGHTITIARE" is what tesseract makes of the game's font)."""
+    found = _DIFFICULTY.search(raw)
+    if not found:
+        return None
+    word = normalise(found.group(1))
+    best, best_score = None, 0.0
+    for name in _DIFFICULTY_NAMES:
+        score = difflib.SequenceMatcher(None, word, name).ratio()
+        if score > best_score:
+            best, best_score = name, score
+    return best if best_score >= 0.6 else None
 
 
 def preprocess(image: Image.Image, scale: int = 2) -> Image.Image:
@@ -69,6 +89,10 @@ def run_tesseract(image: Image.Image, timeout: float = 5.0) -> str:
 
 def normalise(text: str) -> str:
     words = _NOISE.sub(" ", text).lower().split()
+    # The game prefixes some names with "The" inconsistently between the
+    # on-screen label and the wikis; ignore it on both sides.
+    if words and words[0] == "the":
+        words = words[1:]
     for i in range(1, len(words)):
         if words[i - 1] == "level" and len(words[i]) == 1:
             words[i] = _DIGIT_FIXES.get(words[i], words[i])
@@ -82,7 +106,7 @@ def match(text: str, names: list[str]) -> tuple[str | None, float]:
         return None, 0.0
     best, best_score = None, 0.0
     for name in names:
-        score = difflib.SequenceMatcher(None, cleaned, name.lower()).ratio()
+        score = difflib.SequenceMatcher(None, cleaned, normalise(name)).ratio()
         if score > best_score:
             best, best_score = name, score
     return best, best_score
@@ -97,9 +121,10 @@ def recognise(raw: str, names: list[str]) -> Reading:
         candidate, score = match(line, names)
         if score > best_score:
             best, best_score = candidate, score
+    difficulty = read_difficulty(raw)
     if best_score < MIN_SCORE:
-        return Reading(raw, None, best_score)
-    return Reading(raw, best, best_score)
+        return Reading(raw, None, best_score, difficulty)
+    return Reading(raw, best, best_score, difficulty)
 
 
 def read_area(image: Image.Image, names: list[str]) -> Reading:

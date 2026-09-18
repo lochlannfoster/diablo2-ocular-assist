@@ -36,3 +36,11 @@ def test_frozen_ignores_input():
     r.toggle_frozen()
     r.feed("Stony Field"); r.feed("Stony Field")
     assert r.area == "Stony Field"
+
+
+def test_difficulty_is_remembered_across_blank_reads():
+    r = Recognizer()
+    r.feed("Cold Plains", "hell")
+    assert r.difficulty == "hell"
+    r.feed(None, None)
+    assert r.difficulty == "hell"

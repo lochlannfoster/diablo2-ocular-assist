@@ -35,3 +35,18 @@ def test_recognise_rejects_junk():
     assert ocr.recognise("", NAMES).area is None
     assert ocr.recognise("[1:25 AT\nDIFFICULTY: NIGHTMARE\n", NAMES).area is None
     assert ocr.recognise("PRESS ESC TO CANCEL\n", NAMES).area is None
+
+
+def test_difficulty_is_read_despite_ocr_noise():
+    assert ocr.read_difficulty("DIFFICULTY: NIGHTITIARE") == "nightmare"
+    assert ocr.read_difficulty("X SDIFFICULTY: NIGHTMARE") == "nightmare"
+    assert ocr.read_difficulty("DIFFICULTY: N®RMAL") == "normal"
+    assert ocr.read_difficulty("DIFFICULTY: HELL") == "hell"
+    assert ocr.read_difficulty("SPIDER FOREST") is None
+    reading = ocr.recognise("[1:25 AT\nSPIDER F®REST\nDIFFICULTY: HELL\n", NAMES)
+    assert (reading.area, reading.difficulty) == ("Spider Forest", "hell")
+
+
+def test_leading_the_is_ignored():
+    assert ocr.match("THE CAVE LEVEL 1", NAMES) == ("Cave Level 1", 1.0)
+    assert ocr.match("PANDEMONIUM FORTRESS", NAMES) == ("The Pandemonium Fortress", 1.0)
