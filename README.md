@@ -73,9 +73,9 @@ h = 0.09
 
 [overlay]
 output = "DP-1"      # monitor the game is on
-anchor = "top-left"  # top-left | top-right | bottom-left | bottom-right
-margin_x = 20
-margin_y = 130
+anchor = "top-right" # top-left | top-right | bottom-left | bottom-right
+margin_x = 12
+margin_y = 122        # just under the clock/area/difficulty block
 font_size = 15
 width = 48           # fixed characters per line
 ```
