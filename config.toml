@@ -26,7 +26,9 @@ hotkeys = true          # read /dev/input for Ctrl+F9..F12 while D2R runs
 [overlay.sections]
 waypoint = true
 next = true
+farm = true
 quests = true
 exp = true
+drops = true
 notes = true
 uniques = true

@@ -163,15 +163,18 @@ class Overlay:
         self.wp_label = self._label("hint", "wp")
         self.next_head_label = self._label("head", "next", wrap=False)
         self.next_tip_label = self._label("hint", "next")
+        self.farm_label = self._label("hint", "farm")
         self.quest_labels = [self._label("hint", "quest"), self._label("hint", "quest")]
         self.exp_head_label = self._label("head", "exp", wrap=False)
         self.exp_label = self._label("hint", "exp")
+        self.drops_label = self._label("hint", "drops")
         self.notes_label = self._label("hint", "notes")
         self.uniques_label = self._label("hint", "uniques")
         self.next_label = self.next_head_label
         # Gaps between sections.
-        for label in (self.wp_head_label, self.next_head_label, self.quest_labels[0],
-                      self.exp_head_label, self.notes_label, self.uniques_label):
+        for label in (self.wp_head_label, self.next_head_label, self.farm_label,
+                      self.quest_labels[0], self.exp_head_label, self.drops_label,
+                      self.notes_label, self.uniques_label):
             label.set_margin_top(10)
 
         self._load_css()
@@ -432,9 +435,9 @@ class Overlay:
         self._last_render = state
 
         for label in (self.title_label, self.wp_head_label, self.wp_label,
-                      self.next_head_label, self.next_tip_label, *self.quest_labels,
-                      self.exp_head_label, self.exp_label, self.notes_label,
-                      self.uniques_label):
+                      self.next_head_label, self.next_tip_label, self.farm_label,
+                      *self.quest_labels, self.exp_head_label, self.exp_label,
+                      self.drops_label, self.notes_label, self.uniques_label):
             for cls in ("stale", "frozen", "error"):
                 label.remove_css_class(cls)
             label.set_visible(True)
@@ -450,8 +453,9 @@ class Overlay:
                 self.title_label.add_css_class("stale")
                 self.wp_label.set_text("area name must be on screen")
             for label in (self.wp_head_label, self.next_label, self.next_tip_label,
-                          *self.quest_labels, self.exp_head_label, self.exp_label,
-                          self.notes_label, self.uniques_label):
+                          self.farm_label, *self.quest_labels, self.exp_head_label,
+                          self.exp_label, self.drops_label, self.notes_label,
+                          self.uniques_label):
                 label.set_visible(False)
             return
 
@@ -491,6 +495,10 @@ class Overlay:
         (self.next_tip_label.add_css_class if nx.no_rule
          else self.next_tip_label.remove_css_class)("norule")
 
+        self.farm_label.set_visible(bool(area.farm))
+        if area.farm:
+            self.farm_label.set_markup("FARM  " + esc("  ·  ".join(area.farm)))
+
         # One quest per line; unused lines are hidden so the box stays tight.
         for label, quest in zip(self.quest_labels, list(area.quests) + ["", ""]):
             label.set_visible(bool(quest))
@@ -509,10 +517,12 @@ class Overlay:
             self.exp_head_label.set_visible(False)
             self.exp_label.set_visible(False)
 
-        notes = list(area.notes)
         drops = areas.drop_note(area.act, rec.difficulty, level)
+        self.drops_label.set_visible(bool(drops))
         if drops:
-            notes.insert(0, drops)
+            self.drops_label.set_markup("DROPS  " + esc(drops))
+
+        notes = list(area.notes)
         self.notes_label.set_visible(bool(notes))
         if notes:
             self.notes_label.set_markup("NOTE  " + esc("  ·  ".join(notes)))
@@ -527,8 +537,10 @@ class Overlay:
         for key, labels in (
             ("waypoint", (self.wp_head_label, self.wp_label)),
             ("next", (self.next_head_label, self.next_tip_label)),
+            ("farm", (self.farm_label,)),
             ("quests", self.quest_labels),
             ("exp", (self.exp_head_label, self.exp_label)),
+            ("drops", (self.drops_label,)),
             ("notes", (self.notes_label,)),
             ("uniques", (self.uniques_label,)),
         ):

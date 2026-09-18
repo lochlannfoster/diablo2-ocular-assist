@@ -12,6 +12,8 @@
 #   quests         quest objectives located in this area (may be empty)
 #   uniques        superunique monsters that spawn here
 #   notes          other zone-specific facts worth a line
+#   farm           farm-run routes through this area (Countess, Pit, ...):
+#                  how to reach the target fast, not the story path
 #   ocr_name       optional: the on-screen name when it differs from the key
 #                  (Act 2 and Act 3 both have "Sewers Level 1/2"; the overlay
 #                  picks by the act you were last in)
@@ -261,6 +263,7 @@ levels = [6, 38, 69]
 quests = []
 uniques = []
 notes = []
+farm = ["Countess: the Tower is random. From the WP trace the map edge; it also sits by the Hole entrance or a bridge. Found it before the WP? TP there."]
 
 [area."Forgotten Tower"]
 act = 1
@@ -274,6 +277,7 @@ levels = [7, 38, 75]
 quests = []
 uniques = []
 notes = []
+farm = ["Countess: exit left on Cellar 1-4, skip the trash; she is on 5."]
 
 [area."Tower Cellar Level 1"]
 act = 1
@@ -287,6 +291,7 @@ levels = [7, 38, 75]
 quests = []
 uniques = []
 notes = []
+farm = ["Countess: exit left; skip the trash, she is on Cellar 5."]
 
 [area."Tower Cellar Level 2"]
 act = 1
@@ -300,6 +305,7 @@ levels = [7, 39, 76]
 quests = []
 uniques = []
 notes = []
+farm = ["Countess: exit left; skip the trash, she is on Cellar 5."]
 
 [area."Tower Cellar Level 3"]
 act = 1
@@ -313,6 +319,7 @@ levels = [7, 40, 77]
 quests = []
 uniques = []
 notes = []
+farm = ["Countess: exit left; skip the trash, she is on Cellar 5."]
 
 [area."Tower Cellar Level 4"]
 act = 1
@@ -326,6 +333,7 @@ levels = [7, 41, 78]
 quests = []
 uniques = []
 notes = []
+farm = ["Countess: exit left; skip the trash, she is on Cellar 5."]
 
 [area."Tower Cellar Level 5"]
 act = 1
@@ -339,6 +347,7 @@ levels = [7, 42, 79]
 quests = ["Forgotten Tower: the Countess"]
 uniques = ["The Countess"]
 notes = ["Countess rune drops: up to Ral (Normal), Io (Nightmare), Lo (Hell)."]
+farm = ["Countess: small room behind the fire wall at the end. Save+exit and re-run."]
 
 [area."Tamoe Highland"]
 act = 1

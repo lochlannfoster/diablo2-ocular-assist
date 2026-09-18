@@ -22,8 +22,10 @@ ANCHORS = ("top-left", "top-right", "bottom-left", "bottom-right")
 SECTIONS = {
     "waypoint": "Waypoint",
     "next": "Next area",
+    "farm": "Farm routes",
     "quests": "Quests",
     "exp": "Exp ranges",
+    "drops": "Drops",
     "notes": "Notes",
     "uniques": "Superuniques",
 }

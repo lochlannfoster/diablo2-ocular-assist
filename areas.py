@@ -74,6 +74,7 @@ class Area:
     quests: tuple[str, ...] = ()
     uniques: tuple[str, ...] = ()
     notes: tuple[str, ...] = ()
+    farm: tuple[str, ...] = ()   # farm-run routes that pass through here
 
     def level(self, difficulty: str | None) -> int | None:
         """alvl for a difficulty name, or None if unknown / town."""
@@ -118,6 +119,7 @@ def parse(data: dict) -> dict[str, Area]:
             quests = tuple(str(q) for q in raw.get("quests", ()))
             uniques = tuple(str(q) for q in raw.get("uniques", ()))
             notes = tuple(str(q) for q in raw.get("notes", ()))
+            farm = tuple(str(q) for q in raw.get("farm", ()))
         except (KeyError, TypeError, ValueError) as exc:
             raise AreaError(f"{name}: {exc}")
         if len(levels) != 3:
@@ -140,6 +142,7 @@ def parse(data: dict) -> dict[str, Area]:
             quests=quests,
             uniques=uniques,
             notes=notes,
+            farm=farm,
         )
     # Every `next` must be a real area, otherwise the overlay would happily
     # point at a place that does not exist.

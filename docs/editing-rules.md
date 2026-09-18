@@ -16,6 +16,7 @@ levels = [10, 41, 71]          # alvl on Normal, Nightmare, Hell
 quests = []                    # quest objectives located here
 uniques = []                   # superuniques that spawn here
 notes = []                     # anything else worth a line
+farm = []                      # farm-run routes: how to reach Countess/Pit/... fast
 ```
 
 | Field | Meaning |

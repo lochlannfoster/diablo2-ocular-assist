@@ -43,6 +43,11 @@ SUPERUNIQUE  Stormtree
 - **WP** — where the waypoint is, from the entrance.
 - **NEXT** — the next area and where its exit is, from the waypoint (or the
   entrance if the area has no waypoint).
+- **FARM** — farm-run routes that pass through here (Countess from Black
+  Marsh, ...): how to reach the target fast, and what to skip.
+- **DROPS** — what can drop at this alvl in the current difficulty: item qlvl
+  cap, the act's rune tier, and the Hell 78 / 81 / 85 thresholds for Zod and
+  "everything".
 - **TURN LEFT / STRAIGHT / TURN RIGHT are relative to how your character
   faces on arriving** — the speedrunners' convention, never compass
   directions. Tips are full sentences and wrap inside the fixed-width box.
@@ -152,8 +157,10 @@ hotkeys = true
 [overlay.sections]   # which blocks the overlay shows
 waypoint = true
 next = true
+farm = true
 quests = true
 exp = true
+drops = true
 notes = true
 uniques = true
 ```

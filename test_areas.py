@@ -109,8 +109,15 @@ def test_uniques_and_notes_load():
     assert len(rules["Throne of Destruction"].uniques) == 5
     assert rules["Pit Level 2"].levels[2] == 85   # gets the derived alvl-85 note
     for area in rules.values():
-        for text in area.uniques + area.notes:
+        for text in area.uniques + area.notes + area.farm:
             assert text.strip() == text
+
+
+def test_farm_routes_load():
+    rules = areas.load()
+    assert any("Tower" in f for f in rules["Black Marsh"].farm)
+    assert rules["Tower Cellar Level 3"].farm
+    assert rules["Rogue Encampment"].farm == ()
 
 
 def test_drop_note_per_difficulty():
